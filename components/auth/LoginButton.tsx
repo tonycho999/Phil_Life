@@ -10,6 +10,10 @@ export default function LoginButton() {
       provider: "google",
       options: {
         redirectTo: `${location.origin}/auth/callback`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
       },
     });
   };
@@ -17,9 +21,10 @@ export default function LoginButton() {
   return (
     <button
       onClick={handleLogin}
-      className="w-full py-3 bg-white border border-gray-300 text-gray-700 font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition shadow-sm"
+      className="w-full flex items-center justify-center gap-3 bg-white text-gray-700 font-medium py-3 px-4 rounded-lg border border-gray-300 hover:bg-gray-50 hover:shadow-md transition-all duration-200 shadow-sm group"
     >
-      <svg className="w-5 h-5" viewBox="0 0 24 24">
+      {/* 구글 공식 G 로고 (SVG) */}
+      <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
           fill="#4285F4"
@@ -37,7 +42,9 @@ export default function LoginButton() {
           fill="#EA4335"
         />
       </svg>
-      구글로 3초 만에 시작하기
+      <span className="group-hover:text-black transition-colors">
+        구글로 3초 만에 시작하기
+      </span>
     </button>
   );
 }
