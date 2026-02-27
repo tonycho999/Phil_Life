@@ -1,40 +1,48 @@
 import { createClient } from "@/lib/supabase";
 import SidebarLeft from "@/components/layout/SidebarLeft";
 import SidebarRight from "@/components/layout/SidebarRight";
+import Pagination from "@/components/ui/Pagination"; // ★ 추가됨
 import Link from "next/link";
 import { PenSquare } from "lucide-react";
-import { MENUS } from "@/lib/constants"; // ★ 메뉴 데이터 가져오기
+import { MENUS } from "@/lib/constants";
 
 interface PageProps {
   params: { category: string; subcategory: string };
-  searchParams: { q?: string };
+  searchParams: { q?: string; page?: string }; // ★ page 파라미터 추가
 }
 
 export default async function BoardPage({ params, searchParams }: PageProps) {
   const supabase = createClient();
+  
+  // 1. 현재 페이지 계산 (기본값 1)
+  const currentPage = Number(searchParams.page) || 1;
+  const pageSize = 15; // 한 페이지에 보여줄 글 개수
+  const from = (currentPage - 1) * pageSize;
+  const to = from + pageSize - 1;
 
-  // 1. 현재 대분류 찾기 (예: info)
+  // 2. 현재 메뉴 정보 찾기
   const currentMenu = MENUS.find((m) => m.id === params.category);
-  // 2. 현재 소분류 찾기 (예: visa) - 제목 표시용
   const currentSub = currentMenu?.sub.find((s) => s.id === params.subcategory);
 
-  // 3. DB에서 글 가져오기
+  // 3. DB에서 글 가져오기 (데이터 + 전체 개수 count)
   let query = supabase
     .from("posts")
-    .select("*")
+    .select("*", { count: "exact" }) // count: exact 옵션으로 전체 개수도 가져옴
     .eq("category_main", params.category)
     .eq("category_sub", params.subcategory)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(from, to); // ★ 범위 지정
 
   if (searchParams.q) {
     query = query.ilike("title", `%${searchParams.q}%`);
   }
 
-  const { data: posts } = await query;
+  const { data: posts, count } = await query;
+  const totalCount = count || 0;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-      {/* 좌측 사이드바 (PC에서만 보임) */}
+      {/* 좌측 사이드바 */}
       <div className="hidden md:block md:col-span-2">
         <SidebarLeft />
       </div>
@@ -42,10 +50,9 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
       {/* 중앙 메인 피드 */}
       <main className="md:col-span-7 space-y-4">
         
-        {/* ★ [모바일 전용] 상단 소분류 탭 (PC에선 숨김 md:hidden) ★ */}
+        {/* 모바일 탭 메뉴 */}
         {currentMenu && (
           <div className="md:hidden bg-white p-3 rounded-lg shadow-sm border border-gray-200 mb-4">
-            <h3 className="text-xs font-bold text-gray-500 mb-2">{currentMenu.label} 메뉴</h3>
             <div className="flex overflow-x-auto gap-2 pb-1 scrollbar-hide">
               {currentMenu.sub.map((sub) => {
                 const isActive = sub.id === params.subcategory;
@@ -56,7 +63,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
                     className={`whitespace-nowrap px-3 py-1.5 rounded-full text-sm border transition-colors ${
                       isActive
                         ? "bg-blue-600 text-white border-blue-600 font-bold"
-                        : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
+                        : "bg-gray-50 text-gray-600 border-gray-200"
                     }`}
                   >
                     {sub.label}
@@ -67,7 +74,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
           </div>
         )}
 
-        {/* 게시판 헤더 & 글쓰기 버튼 */}
+        {/* 헤더 */}
         <div className="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm border border-gray-200">
           <h2 className="text-lg font-bold text-gray-700">
             {currentSub ? currentSub.label : params.subcategory}
@@ -85,7 +92,6 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
           {!posts || posts.length === 0 ? (
             <div className="p-10 text-center text-gray-500 flex flex-col items-center justify-center h-full">
               <p className="mb-2">아직 등록된 글이 없습니다.</p>
-              <p className="text-xs">첫 번째 글의 주인공이 되어보세요!</p>
             </div>
           ) : (
             posts.map((post: any) => (
@@ -96,7 +102,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
               >
                 <div className="flex items-center gap-2 mb-1">
                   <span className="bg-blue-50 text-blue-600 text-[10px] px-2 py-0.5 rounded font-bold border border-blue-100">
-                    {currentSub?.label || post.category_sub}
+                    {currentSub?.label}
                   </span>
                 </div>
                 <h3 className="font-bold text-gray-900 text-md mb-1 line-clamp-1">
@@ -110,9 +116,19 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
             ))
           )}
         </div>
+
+        {/* ★ 페이지네이션 (글이 있을 때만 표시) */}
+        {totalCount > 0 && (
+          <Pagination 
+            totalCount={totalCount}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            basePath={`/${params.category}/${params.subcategory}`}
+          />
+        )}
       </main>
 
-      {/* 우측 사이드바 (PC에서만 보임) */}
+      {/* 우측 사이드바 */}
       <div className="hidden md:block md:col-span-3">
         <SidebarRight />
       </div>
