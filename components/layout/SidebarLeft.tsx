@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MENUS } from "@/lib/constants";
 import { createClient } from "@/lib/supabase";
-import { useEffect, useState } from "react";
 import LoginButton from "@/components/auth/LoginButton";
 import NicknameModal from "@/components/auth/NicknameModal";
+import { useAuth } from "@/components/auth/AuthProvider"; // ★ import 변경
 
 export default function SidebarLeft() {
   const pathname = usePathname();
@@ -14,45 +14,31 @@ export default function SidebarLeft() {
   const currentMenu = MENUS.find((m) => m.id === currentMainId);
   const supabase = createClient();
 
-  const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchProfile = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
-    if (user) {
-      const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-      setProfile(data);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
+  // ★ 기존 useEffect, useState 다 지우고 이거 한 줄이면 끝!
+  const { user, profile, loading, refreshProfile } = useAuth();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    location.reload();
+    location.reload(); // 로그아웃은 새로고침이 깔끔함
   };
 
   return (
     <>
+      {/* 닉네임 저장 시 refreshProfile 호출 */}
       {user && profile && !profile.nickname && (
-        <NicknameModal userId={user.id} onComplete={fetchProfile} />
+        <NicknameModal userId={user.id} onComplete={refreshProfile} />
       )}
 
       <aside className="space-y-4 w-full">
-        {/* 로그인 박스 영역 */}
         <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200 w-full">
           {loading ? (
+            // 로딩 중 (AuthContext가 로딩 중일 때만 잠깐 보임)
             <div className="animate-pulse space-y-2">
               <div className="h-4 bg-gray-200 w-1/2 mx-auto rounded"></div>
               <div className="h-10 bg-gray-200 w-full rounded"></div>
             </div>
           ) : user ? (
-            // 로그인 했을 때
+            // 로그인 상태 (데이터가 이미 있으므로 즉시 보임)
             <div className="text-center w-full">
               <div className="mb-4">
                 <span className="inline-block px-2 py-0.5 text-[10px] font-bold text-white bg-green-500 rounded mb-1">
@@ -76,7 +62,7 @@ export default function SidebarLeft() {
               </button>
             </div>
           ) : (
-            // ★ 로그인 안 했을 때 (여기가 깨졌던 부분)
+            // 비로그인 상태
             <div className="text-center w-full">
               <p className="text-sm text-gray-600 mb-4 font-medium break-keep">
                 로그인하고 더 많은<br/>활동을 해보세요!
