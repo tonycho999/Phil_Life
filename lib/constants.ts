@@ -1,5 +1,5 @@
 // lib/constants.ts
-export const SITE_NAME = "PHIL-INFO";
+export const SITE_NAME = "PHIL-LIFE";
 
 export const MENUS = [
   {
