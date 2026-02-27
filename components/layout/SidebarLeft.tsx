@@ -6,7 +6,7 @@ import { MENUS } from "@/lib/constants";
 import { createClient } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 import LoginButton from "@/components/auth/LoginButton";
-import NicknameForm from "@/components/auth/NicknameForm";
+import NicknameModal from "@/components/auth/NicknameModal"; // ★ 모달 import
 
 export default function SidebarLeft() {
   const pathname = usePathname();
@@ -44,29 +44,30 @@ export default function SidebarLeft() {
   };
 
   return (
-    <aside className="space-y-4">
-      {/* 1. 회원 정보 / 로그인 박스 */}
-      <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
-        {loading ? (
-          // 로딩 중
-          <div className="animate-pulse space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
-            <div className="h-8 bg-gray-200 rounded w-full"></div>
-          </div>
-        ) : user ? (
-          // 로그인 했을 때
-          profile && !profile.nickname ? (
-            // 닉네임 없을 때 (닉네임 설정 폼)
-            <NicknameForm userId={user.id} onComplete={fetchProfile} />
-          ) : (
-            // 닉네임 있을 때 (내 정보 표시)
+    <>
+      {/* ★ 팝업 조건: 로그인 함 + 프로필 있음 + 닉네임 없음 */}
+      {user && profile && !profile.nickname && (
+        <NicknameModal userId={user.id} onComplete={fetchProfile} />
+      )}
+
+      <aside className="space-y-4">
+        {/* 1. 회원 정보 / 로그인 박스 */}
+        <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+          {loading ? (
+            // 로딩 중
+            <div className="animate-pulse space-y-2">
+              <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+              <div className="h-8 bg-gray-200 rounded w-full"></div>
+            </div>
+          ) : user ? (
+            // 로그인 했을 때 (닉네임이 없어도 여기는 그냥 보여줌, 팝업이 위를 덮음)
             <div className="text-center">
               <div className="mb-3">
                 <span className="inline-block px-2 py-0.5 text-[10px] font-bold text-white bg-green-500 rounded mb-1">
                   {profile?.grade || "새싹"}
                 </span>
                 <p className="font-bold text-lg text-gray-800">
-                  {profile?.nickname || "회원"}님
+                  {profile?.nickname || "닉네임 설정 중..."}님
                 </p>
               </div>
               
@@ -84,44 +85,44 @@ export default function SidebarLeft() {
                 </button>
               </div>
             </div>
-          )
-        ) : (
-          // 로그인 안 했을 때
-          <>
-            <p className="text-xs text-gray-500 mb-3 text-center">로그인하고 더 많은 활동을 해보세요!</p>
-            <LoginButton />
-          </>
-        )}
-      </div>
-
-      {/* 2. 소분류 메뉴 (기존 코드) */}
-      {currentMenu && (
-        <div className="bg-white py-2 rounded-lg shadow-sm border border-gray-200 hidden md:block">
-          <h3 className="px-4 py-2 text-xs font-bold text-gray-400 border-b border-gray-100">
-            {currentMenu.label} 메뉴
-          </h3>
-          <ul>
-            {currentMenu.sub.map((sub) => {
-              const isActive = pathname.includes(sub.id);
-              return (
-                <li key={sub.id}>
-                  <Link 
-                    href={`/${currentMenu.id}/${sub.id}`}
-                    className={`block px-4 py-2 text-sm hover:bg-gray-50 ${isActive ? "text-blue-600 font-bold bg-blue-50" : "text-gray-600"}`}
-                  >
-                    {sub.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          ) : (
+            // 로그인 안 했을 때
+            <>
+              <p className="text-xs text-gray-500 mb-3 text-center">로그인하고 더 많은 활동을 해보세요!</p>
+              <LoginButton />
+            </>
+          )}
         </div>
-      )}
-      
-      {/* 3. 광고 영역 */}
-      <div className="bg-slate-100 p-4 rounded-lg text-center text-xs text-gray-400 min-h-[150px] flex items-center justify-center">
-        광고 문의
-      </div>
-    </aside>
+
+        {/* 2. 소분류 메뉴 */}
+        {currentMenu && (
+          <div className="bg-white py-2 rounded-lg shadow-sm border border-gray-200 hidden md:block">
+            <h3 className="px-4 py-2 text-xs font-bold text-gray-400 border-b border-gray-100">
+              {currentMenu.label} 메뉴
+            </h3>
+            <ul>
+              {currentMenu.sub.map((sub) => {
+                const isActive = pathname.includes(sub.id);
+                return (
+                  <li key={sub.id}>
+                    <Link 
+                      href={`/${currentMenu.id}/${sub.id}`}
+                      className={`block px-4 py-2 text-sm hover:bg-gray-50 ${isActive ? "text-blue-600 font-bold bg-blue-50" : "text-gray-600"}`}
+                    >
+                      {sub.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+        
+        {/* 3. 광고 영역 */}
+        <div className="bg-slate-100 p-4 rounded-lg text-center text-xs text-gray-400 min-h-[150px] flex items-center justify-center">
+          광고 문의
+        </div>
+      </aside>
+    </>
   );
 }
