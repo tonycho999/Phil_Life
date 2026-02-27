@@ -44,7 +44,7 @@ export default function LoginButton() {
           />
         </svg>
       </div>
-      <span className="text-sm md:text-base">구글로 시작하기</span>
+      <span className="text-sm md:text-base">로그인</span>
     </button>
   );
 }
