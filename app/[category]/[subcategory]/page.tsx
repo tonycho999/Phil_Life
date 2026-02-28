@@ -14,8 +14,9 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  const currentMenu = MENUS.find((m) => m.id === params.category);
-  const currentSub = currentMenu?.sub.find((s) => s.id === params.subcategory);
+  // ★ [수정됨] (m: any) 와 (s: any)를 붙여서 에러를 막았습니다.
+  const currentMenu = MENUS.find((m: any) => m.id === params.category);
+  const currentSub = currentMenu?.sub.find((s: any) => s.id === params.subcategory);
 
   // 쿼리 작성: 상단 고정(is_pinned) 우선, 그다음 최신순
   let query = supabase
