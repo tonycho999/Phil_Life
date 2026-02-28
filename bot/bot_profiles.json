@@ -2,28 +2,28 @@
   {
     "id": "bot-news-korea",
     "nickname": "필한뉴스",
-    "role": "SYSTEM",
+    "role": "운영자",
     "post_p": 1,
     "comm_p": 0
   },
   {
     "id": "bot-news-phil",
     "nickname": "필뉴스",
-    "role": "SYSTEM",
+    "role": "운영자",
     "post_p": 1,
     "comm_p": 0
   },
   {
     "id": "bot-travel-phil",
     "nickname": "필여행",
-    "role": "SYSTEM",
+    "role": "운영자",
     "post_p": 1,
     "comm_p": 0
   },
     {
     "id": "bot-info-phil",
     "nickname": "필정보",
-    "role": "SYSTEM",
+    "role": "운영자",
     "post_p": 1.0,
     "comm_p": 0
   },
