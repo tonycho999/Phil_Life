@@ -3,137 +3,20 @@ import random
 import uuid
 from faker import Faker
 
-# ---------------------------------------------------------
-# 1. 설정 및 상수 정의
-# ---------------------------------------------------------
-
-# 가짜 데이터 생성기 초기화
-fake = Faker("ko_KR")
-NUM_BOTS = 1000
-
-# [단순 리스트 데이터]
-AGE_GROUPS =
-AGE_WEIGHTS =
-
-JOBS = [
-    "식당업(한식)", "여행사/가이드", "부동산업", "어학원 운영", "어학원 매니저",
-    "대기업 주재원", "개인사업(무역)", "IT 프리랜서", "콜센터 관리자",
-    "호텔/리조트 매니저", "다이빙 강사", "마사지샵 운영", "유학생",
-    "어학연수생", "은퇴 이민자", "전업주부", "선교사", "건설업", "무직(휴식중)"
-]
-
-NICK_PREFIX = ["마닐라", "세부", "앙헬", "클락", "바기오", "필", "따가이", "골프", "다이빙", "맛집", "초보", "프로", "행복한", "자유"]
-NICK_SUFFIX = ["아빠", "맘", "대디", "러버", "고수", "김사장", "박사장", "이프로", "투어", "라이프", "살이", "형", "오빠", "누나"]
-
-# [딕셔너리 데이터]
-LOCATIONS = {
-    "메트로 마닐라": 45,
-    "앙헬레스/클락": 20,
-    "세부/막탄": 15,
-    "바기오": 5,
-    "카비테/라구나": 10,
-    "다바오/기타": 5
-}
-
-MBTI_TYPES = {
-    "ISTJ": 20, "ESTJ": 15, "ISTP": 10, "ISFJ": 10,
-    "ENFP": 8, "ESFJ": 6, "INFP": 5, "ESFP": 5,
-    "ENTP": 3, "INTP": 3, "ESTP": 5, "ENFJ": 3,
-    "INFJ": 3, "ENTJ": 2, "INTJ": 2
-}
-
-# 활동 성향 (가중치 w, 글확률 p, 댓글확률 c)
-ACTIVITY_TYPES = {
-    "헤비 업로더 (글 위주)": {"w": 5, "p": 0.8, "c": 0.2},
-    "댓글 요정 (댓글 위주)": {"w": 30, "p": 0.1, "c": 0.9},
-    "파워 유저 (둘 다 활발)": {"w": 5, "p": 0.7, "c": 0.8},
-    "눈팅족 (가끔 글/댓)": {"w": 40, "p": 0.1, "c": 0.1},
-    "일반 유저 (평범)": {"w": 20, "p": 0.3, "c": 0.3}
-}
-
-# ---------------------------------------------------------
-# 2. 로직 함수
-# ---------------------------------------------------------
-
-def get_weighted_choice(items_dict):
-    """딕셔너리의 가중치를 기반으로 키 하나를 선택"""
-    keys = list(items_dict.keys())
-    values = list(items_dict.values())
-    
-    # 값이 딕셔너리인 경우(ACTIVITY_TYPES) 'w' 키 사용
-    if isinstance(values, dict):
-        weights = [v["w"] for v in values]
-    else:
-        weights = values
-    
-    return random.choices(keys, weights=weights, k=1)
-
-def generate_age():
-    base = random.choices(AGE_GROUPS, weights=AGE_WEIGHTS, k=1)
-    return base + random.randint(0, 9)
-
-def generate_job(age):
-    if age < 26:
-        return random.choice(["유학생", "어학연수생", "워킹홀리데이", "무직(휴식중)"])
-    elif age > 65:
-        return random.choice(["은퇴 이민자", "식당업(한식)", "부동산업", "골프 가이드"])
-    else:
-        return random.choice(JOBS)
-
-def generate_visa(job, age):
-    if "은퇴" in job or age >= 60: return "SRRV (은퇴비자)"
-    if "유학생" in job or "연수" in job: return "SSP/학생비자"
-    if "관광" in job or "무직" in job: return "관광비자 (연장중)"
-    if "주재원" in job: return "9G (워킹비자 - 회사지원)"
-    if random.random() < 0.2: return "13A (결혼비자)"
-    return "9G (워킹비자)"
-
-def generate_residence(age, job):
-    if age < 25: return random.randint(0, 3)
-    if "주재원" in job: return random.randint(1, 5)
-    max_residence = max(0, min(30, age - 20))
-    return random.randint(0, max_residence)
-
-def generate_nickname(location, job, real_name):
-    r = random.random()
-    if r < 0.3:
-        # 지역명 기반 (예: 세부박사)
-        loc_short = location.split("/")[:2]
-        suffix = random.choice(["박사", "대장", "지킴이", "가이드", "삼촌"])
-        return f"{loc_short}{suffix}"
-    elif r < 0.6:
-        # 닉네임 조합 (예: 골프왕)
-        return f"{random.choice(NICK_PREFIX)}{random.choice(NICK_SUFFIX)}"
-    else:
-        # 실명 기반 (예: 철수파파)
-        suffix = random.choice(["파파", "맘", "대디", "Vlog", "TV"])
-        return f"{real_name[1:]}{suffix}"
-
-def get_tone_by_mbti(mbti):
-    if "ST" in mbti: return "팩트 중심, 간결함"
-    if "NF" in mbti: return "감성적, 이모티콘 사용"
-    if "NT" in mbti: return "논리적, 분석적"
-    if "SF" in mbti: return "친절함, 경험담 위주"
-    return "평범한 존댓말"
-
-# ---------------------------------------------------------
-# 3. 메인 실행 함수
-# ---------------------------------------------------------
-
 def main():
+    # Faker 초기화 (GitHub Action에서 이미 설치됨)
+    fake = Faker("ko_KR")
     profiles = []
-    print(f"🔄 봇 프로필 생성 시작 (특수봇 3명 + 일반봇 {NUM_BOTS}명)...")
+    
+    print("🔄 봇 프로필 생성 시작 (1003명)...")
 
-    # [A] 특수 관리자 봇 3명
+    # 특수 관리자 봇 3명 고정 생성
     special_bots = [
         {
             "id": "bot-news-korea",
-            "real_name": "관리자_뉴스",
             "nickname": "필한뉴스",
+            "real_name": "관리자_뉴스",
             "role": "SYSTEM",
-            "job": "뉴스 에디터",
-            "location": "서울/마닐라",
-            "mbti": "ISTJ",
             "writing_tone": "공식적 뉴스 브리핑",
             "activity_type": "뉴스 봇",
             "post_probability": 1.0,
@@ -141,12 +24,9 @@ def main():
         },
         {
             "id": "bot-news-phil",
-            "real_name": "관리자_필리핀",
             "nickname": "필뉴스",
+            "real_name": "관리자_필리핀",
             "role": "SYSTEM",
-            "job": "현지 소식통",
-            "location": "메트로 마닐라",
-            "mbti": "ESTJ",
             "writing_tone": "현지 전문가 어조",
             "activity_type": "뉴스 봇",
             "post_probability": 1.0,
@@ -154,12 +34,9 @@ def main():
         },
         {
             "id": "bot-travel-phil",
-            "real_name": "관리자_여행",
             "nickname": "필여행",
+            "real_name": "관리자_여행",
             "role": "SYSTEM",
-            "job": "여행 가이드",
-            "location": "전역",
-            "mbti": "ENFP",
             "writing_tone": "설레는 가이드 어조",
             "activity_type": "여행 봇",
             "post_probability": 0.9,
@@ -168,48 +45,57 @@ def main():
     ]
     profiles.extend(special_bots)
 
-    # [B] 일반 유저 봇 생성
-    for _ in range(NUM_BOTS):
-        name = fake.name()
-        age = generate_age()
-        location = get_weighted_choice(LOCATIONS)
-        mbti = get_weighted_choice(MBTI_TYPES)
-        job = generate_job(age)
+    # 일반 유저 봇 1000명 생성
+    for _ in range(1000):
+        # 데이터 리스트를 루프 안에 직접 정의 (변수 참조 에러 방지)
+        locs = ["메트로 마닐라", "앙헬레스/클락", "세부/막탄", "바기오", "카비테/라구나", "다바오/기타"]
+        loc_weights =
         
-        # 활동 성향 선택
-        act_name = get_weighted_choice(ACTIVITY_TYPES)
-        act_data = ACTIVITY_TYPES[act_name]
+        mbtis = ["ISTJ", "ESTJ", "ISTP", "ISFJ", "ENFP", "ESFJ", "INFP", "ESFP", "ENTP", "INTP", "ESTP", "ENFJ", "INFJ", "ENTJ", "INTJ"]
+        mbti_weights =
 
-        # 기러기 가족 여부
-        is_goose = (age > 40 and random.random() < 0.3)
-        family_status = "기러기" if is_goose else "일반 거주"
+        # 나이 생성
+        age_base = random.choices(, weights=, k=1)
+        age = age_base + random.randint(0, 9)
+
+        # 직업 선택
+        job_list = ["식당업", "여행사", "부동산", "어학원", "주재원", "IT프리랜서", "다이빙강사", "주부", "유학생", "은퇴자", "무직"]
+        job = random.choice(job_list)
+
+        # 활동 성향 (가중치 순서: 헤비, 댓글요정, 파워유저, 눈팅족, 일반)
+        act_names = ["헤비 업로더", "댓글 요정", "파워 유저", "눈팅족", "일반 유저"]
+        act_choice = random.choices(act_names, weights=, k=1)
+        
+        # 성향별 확률 설정
+        probs = {"헤비 업로더": [0.8, 0.2], "댓글 요정": [0.1, 0.9], "파워 유저": [0.7, 0.8], "눈팅족": [0.1, 0.1], "일반 유저": [0.3, 0.3]}
+        post_p, comm_p = probs[act_choice]
+
+        # 닉네임 생성 (지역 + 랜덤접미사)
+        location = random.choices(locs, weights=loc_weights, k=1)
+        nick = f"{location[:2]}{random.choice(['박사', '아빠', '맘', '대장', '가이드'])}"
 
         profile = {
             "id": str(uuid.uuid4()),
-            "real_name": name,
-            "nickname": generate_nickname(location, job, name),
+            "nickname": nick,
+            "real_name": fake.name(),
             "role": "USER",
-            "gender": random.choice(["남성", "여성"]),
             "age": age,
-            "mbti": mbti,
-            "writing_tone": get_tone_by_mbti(mbti),
+            "mbti": random.choices(mbtis, weights=mbti_weights, k=1),
             "location": location,
             "job": job,
-            "residence_years": generate_residence(age, job),
-            "visa_status": generate_visa(job, age),
-            "family_status": family_status,
-            "interests": random.sample(["골프", "다이빙", "맛집", "부동산", "국제학교", "밤문화", "마사지", "쇼핑", "주식"], k=2),
-            "activity_type": act_name,
-            "post_probability": act_data["p"],
-            "comment_probability": act_data["c"]
+            "residence_years": random.randint(0, min(30, max(1, age-20))),
+            "activity_type": act_choice,
+            "post_probability": post_p,
+            "comment_probability": comm_p,
+            "interests": random.sample(["골프", "맛집", "부동산", "학교", "마사지"], k=2)
         }
-        profiles.extend([profile])
+        profiles.append(profile)
 
-    # 파일 저장
+    # 결과 저장
     with open("bot_profiles.json", "w", encoding="utf-8") as f:
         json.dump(profiles, f, ensure_ascii=False, indent=2)
     
-    print(f"✅ 완료! 총 {len(profiles)}명의 프로필이 생성되었습니다.")
+    print(f"✅ 총 {len(profiles)}명의 데이터 생성 완료!")
 
 if __name__ == "__main__":
     main()
