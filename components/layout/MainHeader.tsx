@@ -8,7 +8,7 @@ import LoginButton from "@/components/auth/LoginButton";
 import { useAuth } from "@/components/auth/AuthProvider";
 import NicknameModal from "@/components/auth/NicknameModal";
 
-export default function Header() {
+export default function MainHeader() {
   const { user, profile, loading, refreshProfile } = useAuth();
   const router = useRouter();
   const [keyword, setKeyword] = useState("");
@@ -32,6 +32,7 @@ export default function Header() {
               {SITE_NAME}
             </Link>
 
+            {/* 검색창 */}
             <form onSubmit={handleSearch} className="flex-1 max-w-md hidden md:block">
               <div className="relative">
                 <input 
@@ -60,7 +61,7 @@ export default function Header() {
           </div>
         </div>
         
-        {/* 파란색 메뉴바 */}
+        {/* 파란색 메뉴바 (100% 꽉 차게) */}
         <nav className="bg-blue-600 text-white">
             <div className="max-w-7xl mx-auto px-4">
                 <ul className="flex w-full justify-between items-center overflow-x-auto scrollbar-hide">
