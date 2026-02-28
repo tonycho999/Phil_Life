@@ -15,37 +15,47 @@ def main():
     ]
     profiles.extend(special_bots)
 
+    # 데이터 리스트 정의 (줄바꿈 없이 한 줄로 선언하여 누락 방지)
+    age_list =
+    age_weights =
+    loc_list = ["메트로 마닐라", "앙헬레스/클락", "세부/막탄", "바기오", "카비테/라구나", "다바오"]
+    loc_weights =
+    act_list = ["헤비 업로더", "댓글 요정", "파워 유저", "눈팅족", "일반 유저"]
+    act_weights =
+    mbti_list = ["ISTJ", "ESTJ", "ENFP", "ISFJ", "ENTP", "INFJ", "INTJ", "ESTP"]
+    job_list = ["식당업", "여행사", "부동산", "어학원", "주재원", "가이드", "유학생", "은퇴자"]
+
     # 일반 유저 봇 1000명 생성
     for _ in range(1000):
-        # 나이 및 지역 (데이터를 한 줄로 선언하여 누락 방지)
-        age_val = random.choices(, weights=, k=1)
-        age = age_val + random.randint(0, 9)
-        location = random.choices(["메트로 마닐라", "앙헬레스/클락", "세부/막탄", "바기오", "카비테/라구나", "다바오"], weights=, k=1)
-
-        # 활동 성향 및 확률 설정
-        act_names = ["헤비 업로더", "댓글 요정", "파워 유저", "눈팅족", "일반 유저"]
-        act_weights =
-        act_choice = random.choices(act_names, weights=act_weights, k=1)
+        # 가중치 기반 선택
+        sel_age = random.choices(age_list, weights=age_weights, k=1)
+        age = sel_age + random.randint(0, 9)
+        
+        sel_loc = random.choices(loc_list, weights=loc_weights, k=1)
+        
+        sel_act = random.choices(act_list, weights=act_weights, k=1)
         
         # 성향별 [글확률, 댓글확률] 매핑
-        probs = {"헤비 업로더": [0.8, 0.2], "댓글 요정": [0.1, 0.9], "파워 유저": [0.7, 0.8], "눈팅족": [0.1, 0.1], "일반 유저": [0.3, 0.3]}
-        post_p, comm_p = probs[act_choice]
+        prob_map = {"헤비 업로더": [0.8, 0.2], "댓글 요정": [0.1, 0.9], "파워 유저": [0.7, 0.8], "눈팅족": [0.1, 0.1], "일반 유저": [0.3, 0.3]}
+        p_p, c_p = prob_map[sel_act]
 
         # 데이터 조립
+        res_years = random.randint(0, max(0, age - 20))
+        
         p = {
             "id": str(uuid.uuid4()),
-            "nickname": f"{location[:2]}{random.choice(['아빠', '맘', '대장', '가이드', '사장', '프로'])}",
+            "nickname": f"{sel_loc[:2]}{random.choice(['아빠', '맘', '대장', '가이드', '사장', '프로'])}",
             "real_name": fake.name(),
             "role": "USER",
             "age": age,
             "gender": random.choice(["남성", "여성"]),
-            "mbti": random.choice(["ISTJ", "ESTJ", "ENFP", "ISFJ", "ENTP", "INFJ", "INTJ"]),
-            "location": location,
-            "job": random.choice(["식당업", "여행사", "부동산", "어학원", "주재원", "가이드", "유학생", "은퇴자"]),
-            "residence_years": random.randint(0, max(0, age - 20)),
-            "activity_type": act_choice,
-            "post_probability": post_p,
-            "comment_probability": comm_p,
+            "mbti": random.choice(mbti_list),
+            "location": sel_loc,
+            "job": random.choice(job_list),
+            "residence_years": res_years,
+            "activity_type": sel_act,
+            "post_probability": p_p,
+            "comment_probability": c_p,
             "interests": random.sample(["골프", "맛집", "부동산", "학교", "마사지", "쇼핑"], k=2)
         }
         profiles.append(p)
