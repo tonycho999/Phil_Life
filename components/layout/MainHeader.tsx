@@ -6,10 +6,9 @@ import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
 import { useAuth } from "@/components/auth/AuthProvider";
 import NicknameModal from "@/components/auth/NicknameModal";
-import LoginButton from "@/components/auth/LoginButton";
 
 export default function MainHeader() {
-  const { user, profile, loading, refreshProfile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const router = useRouter();
   const [keyword, setKeyword] = useState("");
 
@@ -27,7 +26,7 @@ export default function MainHeader() {
 
       <header className="bg-white sticky top-0 z-50 shadow-sm">
         
-        {/* 1. 최상단 정보 바 (높이 최소화) */}
+        {/* 1. 최상단 정보 바 */}
         <div className="bg-gray-50 border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 h-7 flex justify-end items-center text-[10px] text-gray-500 gap-3">
             <span className="flex items-center gap-2">
@@ -42,14 +41,14 @@ export default function MainHeader() {
           </div>
         </div>
 
-        {/* 2. 메인 헤더 (여백 py-4 -> py-2로 축소) */}
+        {/* 2. 메인 헤더 (로고 + 검색창) */}
         <div className="max-w-7xl mx-auto px-4 py-2">
           <div className="flex justify-between items-center gap-4">
             <Link href="/" className="font-extrabold text-2xl text-blue-600 tracking-tight shrink-0">
               {SITE_NAME}
             </Link>
 
-            {/* 검색창 (높이 조절) */}
+            {/* 검색창 */}
             <form onSubmit={handleSearch} className="flex-1 max-w-md hidden md:block">
               <div className="relative">
                 <input 
@@ -62,12 +61,14 @@ export default function MainHeader() {
                  <svg className="w-3.5 h-3.5 text-gray-400 absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
               </div>
             </form>
+
+            {/* 우측 로그인 버튼 삭제됨 */}
+            
           </div>
         </div>
         
-        {/* 3. 메뉴바 (파란색 배경 복구 + 사이트 크기에 맞춤) */}
+        {/* 3. 메뉴바 */}
         <div className="max-w-7xl mx-auto px-4 pb-0">
-            {/* nav에 rounded-t-lg를 주어 위쪽만 둥글게, 파란색 배경 적용 */}
             <nav className="bg-blue-600 text-white rounded-t-lg overflow-hidden">
                 <ul className="flex justify-between items-center overflow-x-auto scrollbar-hide">
                 {MENUS.map((menu: any) => (
