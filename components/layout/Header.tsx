@@ -18,7 +18,7 @@ export default function Header() {
 
   return (
     <>
-      {/* 닉네임 설정 모달 (로그인은 했는데 닉네임 없으면 표시) */}
+      {/* 닉네임 설정 모달 */}
       {user && profile && !profile.nickname && (
         <NicknameModal userId={user.id} onComplete={refreshProfile} />
       )}
@@ -26,14 +26,12 @@ export default function Header() {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4">
           
-          {/* 상단: 로고 및 로그인/회원가입 */}
+          {/* 상단: 로고 및 로그인 */}
           <div className="flex justify-between items-center h-16">
-            {/* 로고 */}
             <Link href="/" className="font-extrabold text-2xl text-blue-600 tracking-tight">
               {SITE_NAME}
             </Link>
 
-            {/* 우측 로그인/유저 정보 (모바일에서는 햄버거 메뉴 등으로 대체 가능하지만 일단 심플하게) */}
             <div className="flex items-center gap-3">
               {loading ? (
                 <div className="w-20 h-8 bg-gray-100 animate-pulse rounded"></div>
@@ -55,17 +53,15 @@ export default function Header() {
             </div>
           </div>
 
-          {/* 하단: 네비게이션 메뉴 (가로 스크롤 가능) */}
+          {/* 하단: 네비게이션 메뉴 (100% 넓이 사용) */}
           <nav className="overflow-x-auto pb-1 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
-            <ul className="flex space-x-6 min-w-max border-t border-gray-100 pt-1">
-              {/* ★ [핵심 수정] 
-                  여기서 (menu: any) 라고 타입을 명시해야 에러가 안 납니다.
-              */}
+            {/* ★ [수정됨] w-full과 justify-between을 사용하여 메뉴를 양끝으로 정렬 */}
+            <ul className="flex w-full justify-between items-center border-t border-gray-100 pt-1">
               {MENUS.map((menu: any) => (
-                <li key={menu.id} className="py-3">
+                <li key={menu.id} className="py-3 flex-1 text-center">
                   <Link 
                     href={`/${menu.id}/${menu.sub.id}`}
-                    className="text-sm font-bold text-gray-600 hover:text-blue-600 transition whitespace-nowrap"
+                    className="text-sm font-bold text-gray-600 hover:text-blue-600 transition whitespace-nowrap block w-full"
                   >
                     {menu.label}
                   </Link>
