@@ -9,6 +9,16 @@ export const GRADE_LEVELS: Record<string, number> = {
   "새싹": 1,
 };
 
+export type SubMenu = {
+  id: string;
+  label: string;
+};
+
+export type MainMenu = {
+  id: string;
+  label: string;
+  sub: SubMenu[]; // 배열임을 명시
+};
 
 export const MENUS = [
   {
