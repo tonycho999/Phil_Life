@@ -1,4 +1,3 @@
-// app/[category]/[subcategory]/loading.tsx
 import SidebarLeft from "@/components/layout/SidebarLeft";
 import SidebarRight from "@/components/layout/SidebarRight";
 
@@ -21,7 +20,7 @@ export default function Loading() {
 
         {/* 게시글 리스트 로딩바 (가짜 글 8개) */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 divide-y divide-gray-100">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+          {.map((i) => (
             <div key={i} className="p-4 block">
               <div className="flex items-center gap-2 mb-2">
                 <div className="h-4 w-12 bg-gray-100 rounded animate-pulse"></div>
