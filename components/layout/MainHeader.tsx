@@ -4,9 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
-import LoginButton from "@/components/auth/LoginButton";
 import { useAuth } from "@/components/auth/AuthProvider";
 import NicknameModal from "@/components/auth/NicknameModal";
+import LoginButton from "@/components/auth/LoginButton";
 
 export default function MainHeader() {
   const { user, profile, loading, refreshProfile } = useAuth();
@@ -25,10 +25,27 @@ export default function MainHeader() {
         <NicknameModal userId={user.id} onComplete={refreshProfile} />
       )}
 
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center h-16 gap-4">
-            <Link href="/" className="font-extrabold text-2xl text-blue-600 tracking-tight shrink-0">
+      <header className="bg-white sticky top-0 z-50 shadow-sm">
+        
+        {/* 1. 최상단 정보 바 (날씨, 환율 복구) */}
+        <div className="bg-gray-50 border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 h-8 flex justify-center md:justify-end items-center text-[11px] text-gray-500 gap-4">
+            <span className="flex items-center gap-1">
+              <span className="text-red-500 font-bold">$1 = 57.68 PHP</span>
+              <span className="w-px h-3 bg-gray-300 mx-1"></span>
+              <span className="text-blue-600 font-bold">1 PHP = 25.00 KRW</span>
+            </span>
+            <span className="hidden md:flex items-center gap-2">
+              <span>🌤️ 마닐라 28°C</span>
+              <span>🌴 세부 29°C</span>
+            </span>
+          </div>
+        </div>
+
+        {/* 2. 메인 헤더 (로고, 검색) */}
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex justify-between items-center gap-4">
+            <Link href="/" className="font-extrabold text-3xl text-blue-600 tracking-tight shrink-0">
               {SITE_NAME}
             </Link>
 
@@ -38,46 +55,38 @@ export default function MainHeader() {
                 <input 
                   type="text" 
                   placeholder="검색어를 입력하세요" 
-                  className="w-full bg-gray-100 border border-gray-200 rounded-full py-2 px-4 pl-10 text-sm focus:outline-blue-500 transition"
+                  className="w-full bg-gray-100 border border-gray-200 rounded-full py-2.5 px-4 pl-10 text-sm focus:outline-blue-500 transition"
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                 />
+                 <svg className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
               </div>
             </form>
 
-            <div className="flex items-center gap-3 shrink-0">
-              {loading ? (
-                <div className="w-20 h-8 bg-gray-100 animate-pulse rounded"></div>
-              ) : user ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-gray-700">
-                    {profile?.nickname || "회원"}님
-                  </span>
-                </div>
-              ) : (
-                <LoginButton />
-              )}
+            {/* 우측 공간 (로그인 안 했을 때만 로그인 버튼 표시, 로그인하면 사이드바에 정보 있음) */}
+            <div className="shrink-0">
+               {!loading && !user && <LoginButton />}
             </div>
           </div>
         </div>
         
-        {/* 파란색 메뉴바 (100% 꽉 차게) */}
-        <nav className="bg-blue-600 text-white">
-            <div className="max-w-7xl mx-auto px-4">
-                <ul className="flex w-full justify-between items-center overflow-x-auto scrollbar-hide">
+        {/* 3. 메뉴바 (사이트 크기에 맞게 수정) */}
+        <div className="max-w-7xl mx-auto px-4 pb-4">
+            <nav className="bg-white border-t border-gray-100">
+                <ul className="flex justify-between items-center overflow-x-auto scrollbar-hide py-2">
                 {MENUS.map((menu: any) => (
-                    <li key={menu.id} className="flex-1 text-center hover:bg-blue-700 transition">
+                    <li key={menu.id} className="flex-1 text-center">
                     <Link 
                         href={`/${menu.id}/${menu.sub.id}`}
-                        className="block py-3 text-sm font-bold whitespace-nowrap w-full"
+                        className="block py-3 text-sm font-bold text-gray-700 hover:text-blue-600 transition whitespace-nowrap"
                     >
                         {menu.label}
                     </Link>
                     </li>
                 ))}
                 </ul>
-            </div>
-        </nav>
+            </nav>
+        </div>
       </header>
     </>
   );
