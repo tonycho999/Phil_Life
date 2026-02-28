@@ -1,116 +1,67 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { MENUS } from "@/lib/constants";
-import { createClient } from "@/lib/supabase";
-import LoginButton from "@/components/auth/LoginButton";
-import NicknameModal from "@/components/auth/NicknameModal";
-import { useAuth } from "@/components/auth/AuthProvider";
 
 export default function SidebarLeft() {
+  const params = useParams();
   const pathname = usePathname();
   
-  // 주소에서 대분류 ID 추출 (예: /news/local -> news)
-  const currentMainId = (pathname || "").split("/");
-  
-  // ★ [수정됨] (m: any) 추가 -> 타입 에러 방지
-  const currentMenu = MENUS.find((m: any) => m.id === currentMainId);
-  
-  const supabase = createClient();
-  const { user, profile, loading, refreshProfile } = useAuth();
+  // 현재 URL의 category 부분 (예: 'news', 'community') 가져오기
+  const currentCategory = params?.category as string;
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    location.reload();
-  };
+  // 전체 메뉴 목록에서 현재 카테고리와 일치하는 것 찾기
+  const menuData = MENUS.find((menu: any) => menu.id === currentCategory);
+
+  // 만약 일치하는 메뉴가 없다면(메인화면 등) 아무것도 표시 안 함
+  if (!menuData) return null;
 
   return (
-    <>
-      {user && profile && !profile.nickname && (
-        <NicknameModal userId={user.id} onComplete={refreshProfile} />
-      )}
+    <aside className="w-full space-y-4">
+      {/* 카테고리 제목 박스 */}
+      <div className="bg-blue-600 text-white p-4 rounded-lg shadow-sm">
+        <h2 className="text-lg font-bold flex items-center gap-2">
+          📌 {menuData.label}
+        </h2>
+        <p className="text-xs text-blue-100 mt-1">
+          {menuData.label} 관련 정보입니다.
+        </p>
+      </div>
 
-      <aside className="space-y-4 w-full">
-        {/* 프로필 박스 */}
-        <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200 w-full">
-          {loading ? (
-            <div className="animate-pulse space-y-2">
-              <div className="h-4 bg-gray-200 w-1/2 mx-auto rounded"></div>
-              <div className="h-10 bg-gray-200 w-full rounded"></div>
-            </div>
-          ) : user ? (
-            <div className="text-center w-full">
-              <div className="mb-4">
-                <span className="inline-block px-2 py-0.5 text-[10px] font-bold text-white bg-green-500 rounded mb-1">
-                  {profile?.grade || "새싹"}
-                </span>
-                <p className="font-bold text-lg text-gray-800 break-words">
-                  {profile?.nickname || "회원"}님
-                </p>
-              </div>
-              <div className="bg-gray-50 rounded p-3 mb-4 flex justify-between text-sm">
-                <span className="text-gray-500">포인트</span>
-                <span className="font-bold text-blue-600">
-                  {profile?.points?.toLocaleString()} P
-                </span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2">
-                {/* 관리자 버튼 */}
-                {profile?.grade === "관리자" && (
-                    <Link href="/admin" className="col-span-2 py-2 bg-gray-800 text-white text-xs font-bold rounded hover:bg-black transition text-center">
-                        ⚙️ 관리자 페이지
-                    </Link>
-                )}
-                
-                <button className="py-2 bg-blue-50 text-blue-600 text-xs font-bold rounded hover:bg-blue-100 transition">
-                  내 글 보기
-                </button>
-                <button 
-                  onClick={handleLogout} 
-                  className="py-2 bg-gray-100 text-gray-600 text-xs font-bold rounded hover:bg-gray-200 transition"
+      {/* 서브 메뉴 리스트 */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <ul className="divide-y divide-gray-100">
+          {menuData.sub.map((sub: any) => {
+            // 현재 보고 있는 서브메뉴인지 확인 (하이라이트용)
+            const isActive = pathname === `/${currentCategory}/${sub.id}`;
+            
+            return (
+              <li key={sub.id}>
+                <Link
+                  href={`/${currentCategory}/${sub.id}`}
+                  className={`block px-4 py-3 text-sm transition hover:bg-gray-50 flex justify-between items-center ${
+                    isActive 
+                      ? "text-blue-600 font-bold bg-blue-50 border-l-4 border-blue-600" 
+                      : "text-gray-600 border-l-4 border-transparent"
+                  }`}
                 >
-                  로그아웃
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center w-full">
-              <p className="text-sm text-gray-600 mb-4 font-medium break-keep">
-                로그인하고 더 많은<br/>활동을 해보세요!
-              </p>
-              <div className="w-full">
-                <LoginButton />
-              </div>
-            </div>
-          )}
-        </div>
+                  <span>{sub.label}</span>
+                  {isActive && <span className="text-xs text-blue-500">▶</span>}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-        {/* 메뉴 리스트 */}
-        {currentMenu && (
-          <div className="bg-white py-2 rounded-lg shadow-sm border border-gray-200 hidden md:block">
-            <h3 className="px-4 py-2 text-xs font-bold text-gray-400 border-b border-gray-100">
-              {currentMenu.label} 메뉴
-            </h3>
-            <ul>
-              {/* ★ [수정됨] (sub: any) 추가 -> 타입 에러 방지 */}
-              {currentMenu.sub.map((sub: any) => (
-                <li key={sub.id}>
-                  <Link 
-                    href={`/${currentMenu.id}/${sub.id}`} 
-                    className={`block px-4 py-2 text-sm hover:bg-gray-50 transition ${
-                      pathname.includes(sub.id) ? "text-blue-600 font-bold bg-blue-50" : "text-gray-600"
-                    }`}
-                  >
-                    {sub.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </aside>
-    </>
+      {/* 글쓰기 바로가기 버튼 (편의성 추가) */}
+      <Link 
+        href="/post/write"
+        className="block w-full py-3 bg-gray-800 text-white text-center text-sm font-bold rounded-lg hover:bg-gray-700 transition shadow-sm"
+      >
+        ✏️ 새 글 작성하기
+      </Link>
+    </aside>
   );
 }
