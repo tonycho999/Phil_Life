@@ -14,13 +14,12 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // 1. 현재 메뉴 정보 가져오기
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
   const currentSub = currentMenu?.sub.find((s: any) => s.id === params.subcategory);
 
-  // 2. 유저 정보 및 레벨 가져오기
+  // 1. 유저 정보 및 권한 가져오기
   const { data: { user } } = await supabase.auth.getUser();
-  let userLevel = 0; // 비로그인 시 0 레벨
+  let userLevel = 0;
 
   if (user) {
     const { data: profile } = await supabase
@@ -28,10 +27,10 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
       .select("level")
       .eq("id", user.id)
       .single();
-    userLevel = profile?.level || 1; // 프로필 없으면 기본 1
+    userLevel = profile?.level || 1;
   }
 
-  // 3. 게시판 설정(권한) 가져오기
+  // 2. 게시판 설정 가져오기
   const { data: boardConfig } = await supabase
     .from("boards")
     .select("write_level")
@@ -39,12 +38,12 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
     .eq("category_sub", params.subcategory)
     .single();
 
-  const writeLevel = boardConfig?.write_level || 1; // 설정 없으면 기본 1 (회원만)
+  const writeLevel = boardConfig?.write_level || 1;
 
-  // ★ 핵심 조건: 로그인 했고(user) && 내 레벨이 게시판 제한보다 높아야 함(userLevel >= writeLevel)
-  const showWriteButton = user && (userLevel >= writeLevel);
+  // ★ 핵심 수정: user가 있어야 하고(AND), 레벨도 만족해야 함
+  const showWriteButton = !!user && (userLevel >= writeLevel);
 
-  // 4. 게시글 목록 쿼리
+  // 3. 게시글 목록 조회
   let query = supabase
     .from("posts")
     .select("id, title, created_at, views, is_pinned, pinned_reason, profiles(nickname)", { count: "exact" })
@@ -71,7 +70,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
             <p className="text-xs text-gray-500 mt-1">{currentMenu?.label} &gt; {currentSub?.label}</p>
           </div>
           
-          {/* ★ 조건부 렌더링: 로그인 & 레벨 체크 통과 시에만 버튼 표시 */}
+          {/* 글쓰기 버튼 (로그인 안하면 아예 렌더링 안됨) */}
           {showWriteButton && (
             <Link 
               href={`/post/write?main=${params.category}&sub=${params.subcategory}`} 
@@ -101,7 +100,6 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
                         {post.pinned_reason || "공지"}
                       </span>
                   )}
-                  {/* 모바일용 카테고리 태그 */}
                   <span className="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold">
                     {currentSub?.label}
                   </span>
