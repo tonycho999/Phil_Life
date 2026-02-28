@@ -1,6 +1,15 @@
 // lib/constants.ts
 export const SITE_NAME = "Phil Life";
 
+export const GRADE_LEVELS: Record<string, number> = {
+  "관리자": 99,
+  "운영자": 10,
+  "우수회원": 3,
+  "정회원": 2,
+  "새싹": 1,
+};
+
+
 export const MENUS = [
   {
     id: "news",
@@ -31,7 +40,6 @@ export const MENUS = [
       { id: "qna", label: "질문과 답변" },
       { id: "report", label: "사건제보" },
       { id: "couple", label: "코필/다문화" },
-      { id: "gallery", label: "포토/영상" },
     ],
   },
   {
