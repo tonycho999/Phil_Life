@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
 import WriteButton from "@/components/ui/WriteButton";
 
-// ★ 글 목록 실시간 갱신
 export const dynamic = "force-dynamic";
 
 type PageProps = {
@@ -21,7 +20,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
   const currentSub = currentMenu?.sub.find((s: any) => s.id === params.subcategory);
 
-  // 1. 게시판 권한 설정 가져오기
+  // 1. 권한 확인 (DB)
   const { data: boardConfig } = await supabase
     .from("boards")
     .select("write_level")
@@ -31,12 +30,12 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
 
   const requiredLevel = boardConfig?.write_level ?? 1;
 
-  // 2. 해당 소분류의 글만 조회
+  // 2. 글 조회 (조건: 대분류 + 소분류 일치)
   let query = supabase
     .from("posts")
     .select("*, profiles(nickname)", { count: "exact" })
     .eq("category_main", params.category)
-    .eq("category_sub", params.subcategory) // ★ 소분류까지 일치해야 함
+    .eq("category_sub", params.subcategory) // ★ 소분류 일치
     .neq("is_hidden", true)
     .order("is_pinned", { ascending: false }) 
     .order("created_at", { ascending: false })
@@ -51,14 +50,14 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
 
   return (
     <div className="space-y-4">
-      {/* 헤더 영역 */}
+      {/* 헤더 영역: 글쓰기 버튼 있음 */}
       <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <div>
           <h2 className="text-xl font-bold text-gray-800">{currentSub?.label || "게시판"}</h2>
           <p className="text-xs text-gray-500 mt-1">{currentMenu?.label} &gt; {currentSub?.label}</p>
         </div>
         
-        {/* ★★★ 여기에만 글쓰기 버튼이 있어야 합니다 ★★★ */}
+        {/* ★ 글쓰기 버튼 (권한 체크) */}
         <WriteButton 
           requiredLevel={requiredLevel} 
           href={`/post/write?main=${params.category}&sub=${params.subcategory}`}
@@ -69,7 +68,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 divide-y divide-gray-100 min-h-[500px]">
         {!posts || posts.length === 0 ? (
           <div className="p-10 text-center text-gray-500">
-            {searchParams.q ? `'${searchParams.q}' 검색 결과가 없습니다.` : "아직 등록된 글이 없습니다."}
+            {searchParams.q ? `'${searchParams.q}' 검색 결과가 없습니다.` : "등록된 글이 없습니다."}
           </div>
         ) : (
           posts.map((post: any) => (
@@ -84,7 +83,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
                     {post.pinned_reason || "공지"}
                   </span>
                 )}
-                {/* 소분류 화면이므로 굳이 [소분류] 표시 안 해도 되지만, 통일성을 위해 뱃지로 표시 */}
+                {/* 여기는 이미 소분류 페이지라 굳이 [제목] 안붙여도 됨, 뱃지로 표시 */}
                 <span className="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold">
                   {currentSub?.label}
                 </span>
