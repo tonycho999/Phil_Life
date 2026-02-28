@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
 import Link from "next/link";
 
-// ★ 캐싱 방지: 글이 안 보이는 문제 해결
+// ★ 글 썼을 때 바로 보이게 하는 설정 (캐싱 방지)
 export const dynamic = "force-dynamic";
 
 type PageProps = {
@@ -17,14 +17,14 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // 1. 현재 대분류 메뉴 정보 찾기
+  // 1. 현재 대분류 메뉴 정보 찾기 (예: 'news')
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
 
-  // 2. 글 목록 조회 (조건: 대분류 일치 + 숨김 아님)
+  // 2. 해당 대분류의 **모든** 게시글 가져오기 (소분류 상관없음)
   let query = supabase
     .from("posts")
     .select("*, profiles(nickname)", { count: "exact" })
-    .eq("category_main", params.category) // ★ 중요: 서브카테고리 상관없이 다 가져옴
+    .eq("category_main", params.category) // 대분류만 일치하면 다 가져옴
     .neq("is_hidden", true)
     .order("is_pinned", { ascending: false })
     .order("created_at", { ascending: false })
@@ -39,7 +39,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
   return (
     <div className="space-y-4">
-      {/* 헤더 영역: 버튼 없음 */}
+      {/* 헤더 영역: 글쓰기 버튼 없음 */}
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <h2 className="text-xl font-bold text-gray-800">
           {currentMenu?.label || params.category}
@@ -59,7 +59,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
           </div>
         ) : (
           posts.map((post: any) => {
-            // ★ [소카테고리] 이름 찾기 로직
+            // [소분류] 이름 찾기 로직
             const subMenu = currentMenu?.sub.find((s: any) => s.id === post.category_sub);
             const subLabel = subMenu ? subMenu.label : post.category_sub;
 
@@ -82,14 +82,10 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
                   </span>
                 </div>
 
-                {/* ★ 제목 앞 [소카테고리] 표시 */}
-                <h3
-                  className={`text-md mb-1.5 line-clamp-1 group-hover:text-blue-600 transition ${
-                    post.is_pinned
-                      ? "font-bold text-gray-900"
-                      : "font-medium text-gray-800"
-                  }`}
-                >
+                {/* ★ 제목 앞 [소분류] 표시 */}
+                <h3 className={`text-md mb-1.5 line-clamp-1 group-hover:text-blue-600 transition ${
+                    post.is_pinned ? "font-bold text-gray-900" : "font-medium text-gray-800"
+                  }`}>
                   <span className="text-blue-600 mr-1 font-bold text-sm">
                     [{subLabel}]
                   </span>
