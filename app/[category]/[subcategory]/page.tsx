@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
-// 아이콘을 사용 중이시라면 import가 필요합니다. 
-// 만약 lucide-react가 없다면 이 줄을 지우고 아래 <PenSquare>를 ✏️ 이모지로 바꾸세요.
-import { PenSquare } from "lucide-react"; 
+import WriteButton from "@/components/ui/WriteButton"; // 스마트 버튼 import
 
 type PageProps = {
   params: { category: string; subcategory: string };
@@ -17,24 +15,11 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // 1. 현재 메뉴 정보 확인
+  // 1. 현재 메뉴 정보 (제목 표시용)
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
   const currentSub = currentMenu?.sub.find((s: any) => s.id === params.subcategory);
 
-  // 2. [핵심] 로그인 유저 정보 및 레벨 가져오기
-  const { data: { user } } = await supabase.auth.getUser();
-  let userLevel = 0;
-
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("level")
-      .eq("id", user.id)
-      .single();
-    userLevel = profile?.level || 1; 
-  }
-
-  // 3. [핵심] 게시판의 글쓰기 권한 설정 가져오기
+  // 2. ★ 핵심: 이 게시판의 '쓰기 권한 레벨' DB에서 가져오기
   const { data: boardConfig } = await supabase
     .from("boards")
     .select("write_level")
@@ -42,15 +27,13 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
     .eq("category_sub", params.subcategory)
     .single();
 
-  const writeLevel = boardConfig?.write_level || 1; // 기본값 1 (회원만)
+  // 설정이 없으면 기본값 1 (일반 회원 이상)
+  const requiredLevel = boardConfig?.write_level ?? 1;
 
-  // 4. [핵심] 버튼 보여줄지 결정 (로그인 필수 AND 레벨 충족)
-  const showWriteButton = !!user && (userLevel >= writeLevel);
-
-  // 5. 게시글 목록 쿼리
+  // 3. 게시글 목록 쿼리
   let query = supabase
     .from("posts")
-    .select("id, title, created_at, views, is_pinned, pinned_reason, profiles(nickname)", { count: "exact" })
+    .select("*, profiles(nickname)", { count: "exact" })
     .eq("category_main", params.category)
     .eq("category_sub", params.subcategory)
     .eq("is_hidden", false)
@@ -74,17 +57,14 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
             <p className="text-xs text-gray-500 mt-1">{currentMenu?.label} &gt; {currentSub?.label}</p>
           </div>
           
-          {/* ★★★ 여기서 showWriteButton 변수로 감싸야 비로그인 시 안 보입니다 ★★★ */}
-          {showWriteButton && (
-            <Link 
-              href={`/post/write?main=${params.category}&sub=${params.subcategory}`} 
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded flex items-center gap-2 transition"
-            >
-              {/* 아이콘 라이브러리가 없다면 <PenSquare> 대신 ✏️ 등을 사용하세요 */}
-              <PenSquare size={16} /> 
-              글쓰기
-            </Link>
-          )}
+          {/* ★ 스마트 버튼 배치 
+            - requiredLevel: DB에서 가져온 쓰기 등급
+            - href: 카테고리를 쿼리 파라미터로 전달
+          */}
+          <WriteButton 
+            requiredLevel={requiredLevel} 
+            href={`/post/write?main=${params.category}&sub=${params.subcategory}`}
+          />
         </div>
 
         {/* 게시글 리스트 */}
@@ -119,9 +99,9 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
                 </h3>
                 
                 <div className="flex justify-between items-center text-xs text-gray-400">
-                  <span>작성자: {post.profiles?.nickname || "익명"}</span>
                   <div className="flex gap-2">
-                      <span>조회 {post.views || 0}</span>
+                    <span>{post.profiles?.nickname || "익명"}</span>
+                    <span>조회 {post.views || 0}</span>
                   </div>
                 </div>
               </Link>
