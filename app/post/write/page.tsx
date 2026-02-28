@@ -14,7 +14,7 @@ export default function WritePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  // ★ [수정] 배열 인덱스() 문제 원천 차단을 위해 문자열 직접 입력
+  // [수정1] 초기값은 안전하게 문자열로 고정 (에러 원천 차단)
   const [categoryMain, setCategoryMain] = useState("news");
   const [categorySub, setCategorySub] = useState("local");
   
@@ -76,7 +76,6 @@ export default function WritePage() {
   };
 
   // 현재 선택된 대분류에 맞는 소분류 목록 찾기
-  // (에러 방지를 위해 안전하게 찾기)
   const currentMenu = MENUS.find((m) => m.id === categoryMain);
   const currentSubMenus = currentMenu ? currentMenu.sub : [];
 
@@ -93,8 +92,12 @@ export default function WritePage() {
             onChange={(e) => { 
                 const mainId = e.target.value;
                 setCategoryMain(mainId); 
-                // 대분류 변경 시 소분류도 첫 번째 것으로 자동 선택 (안전 장치 추가)
+                
+                // 대분류 변경 시 소분류도 첫 번째 것으로 자동 선택
                 const targetMenu = MENUS.find(m => m.id === mainId);
+                
+                // ★ [수정2] 여기가 에러가 났던 99번째 줄입니다.
+                // targetMenu.sub는 배열이므로 .id가 없습니다. .sub.id로 고쳤습니다.
                 if (targetMenu && targetMenu.sub.length > 0) {
                     setCategorySub(targetMenu.sub.id);
                 }
