@@ -13,6 +13,8 @@ export default function WritePage() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  
+  // ★ 여기가 수정되었습니다 (배열의 첫 번째 항목 선택)
   const [categoryMain, setCategoryMain] = useState(MENUS.id);
   const [categorySub, setCategorySub] = useState(MENUS.sub.id);
   
@@ -87,7 +89,9 @@ export default function WritePage() {
             onChange={(e) => { 
                 const mainId = e.target.value;
                 setCategoryMain(mainId); 
-                setCategorySub(MENUS.find(m => m.id === mainId)!.sub.id); 
+                // 대분류 변경 시 소분류도 첫 번째 것으로 자동 선택
+                const subMenu = MENUS.find(m => m.id === mainId)?.sub;
+                if (subMenu) setCategorySub(subMenu.id);
             }}
             className="p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none"
           >
