@@ -4,21 +4,20 @@ import SidebarRight from "@/components/layout/SidebarRight";
 export default function Loading() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-      {/* 좌측 사이드바 (즉시 표시) */}
+      {/* 좌측 사이드바 */}
       <div className="hidden md:block md:col-span-2">
         <SidebarLeft />
       </div>
 
-      {/* 중앙 메인 피드 (로딩 스켈레톤 UI) */}
+      {/* 중앙 메인 피드 로딩 */}
       <main className="md:col-span-7 space-y-4">
-        
-        {/* 헤더 로딩바 */}
+        {/* 헤더 */}
         <div className="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm border border-gray-200">
           <div className="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
           <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
         </div>
 
-        {/* 게시글 리스트 로딩바 (가짜 글 8개) */}
+        {/* 리스트 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 divide-y divide-gray-100">
           {.map((i) => (
             <div key={i} className="p-4 block">
@@ -35,7 +34,7 @@ export default function Loading() {
         </div>
       </main>
 
-      {/* 우측 사이드바 (즉시 표시) */}
+      {/* 우측 사이드바 */}
       <div className="hidden md:block md:col-span-3">
         <SidebarRight />
       </div>
