@@ -14,10 +14,37 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
+  // 1. 현재 메뉴 정보 가져오기 (제목 표시용)
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
   const currentSub = currentMenu?.sub.find((s: any) => s.id === params.subcategory);
 
-  // 데이터 로딩 (가운데 내용만)
+  // 2. 유저 정보 및 권한(Level) 가져오기
+  const { data: { user } } = await supabase.auth.getUser();
+  let userLevel = 0;
+  
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("level")
+      .eq("id", user.id)
+      .single();
+    userLevel = profile?.level || 1; // 기본 레벨 1
+  }
+
+  // 3. 현재 게시판의 설정(권한) 가져오기
+  // (boards 테이블이 없으면 에러가 날 수 있으니, DB에 boards 테이블을 확인해주세요)
+  const { data: boardConfig } = await supabase
+    .from("boards")
+    .select("write_level, read_level")
+    .eq("category_main", params.category)
+    .eq("category_sub", params.subcategory)
+    .single();
+
+  // 게시판 설정이 DB에 없으면 기본값(0)으로 처리
+  const writeLevel = boardConfig?.write_level || 0;
+  const canWrite = userLevel >= writeLevel;
+
+  // 4. 게시글 목록 가져오기
   let query = supabase
     .from("posts")
     .select("id, title, created_at, views, is_pinned, pinned_reason, profiles(nickname)", { count: "exact" })
@@ -43,9 +70,16 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
             <h2 className="text-xl font-bold text-gray-800">{currentSub?.label || "게시판"}</h2>
             <p className="text-xs text-gray-500 mt-1">{currentMenu?.label} &gt; {currentSub?.label}</p>
           </div>
-          <Link href="/post/write" className="px-4 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 transition text-sm shadow-sm">
-            ✏️ 글쓰기
-          </Link>
+          
+          {/* ★ 권한 체크: 권한이 있을 때만 버튼 표시 & 카테고리 자동 설정 파라미터 추가 */}
+          {canWrite && (
+            <Link 
+              href={`/post/write?main=${params.category}&sub=${params.subcategory}`} 
+              className="px-4 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 transition text-sm shadow-sm"
+            >
+              ✏️ 글쓰기
+            </Link>
+          )}
         </div>
 
         {/* 게시글 리스트 */}
@@ -67,7 +101,6 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
                         {post.pinned_reason || "공지"}
                       </span>
                   )}
-                  {/* 모바일 등 좁은 화면을 위해 카테고리 태그 표시 */}
                   <span className="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold">
                     {currentSub?.label}
                   </span>
