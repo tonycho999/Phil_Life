@@ -14,17 +14,18 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // ★ [수정됨] (m: any) 와 (s: any)를 붙여서 에러를 막았습니다.
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
   const currentSub = currentMenu?.sub.find((s: any) => s.id === params.subcategory);
 
-  // 쿼리 작성: 상단 고정(is_pinned) 우선, 그다음 최신순
+  // ★★★ [속도 개선 핵심] ★★★
+  // "*" (전체 가져오기)를 지우고, 목록에 필요한 것만 가져옵니다.
+  // content(본문)를 제외했기 때문에 엄청나게 가벼워집니다.
   let query = supabase
     .from("posts")
-    .select("*, profiles(nickname)", { count: "exact" })
+    .select("id, title, created_at, views, is_pinned, pinned_reason, profiles(nickname)", { count: "exact" })
     .eq("category_main", params.category)
     .eq("category_sub", params.subcategory)
-    .eq("is_hidden", false) // 숨김 처리된 글 제외
+    .eq("is_hidden", false)
     .order("is_pinned", { ascending: false }) 
     .order("created_at", { ascending: false })
     .range(from, to);
@@ -60,7 +61,6 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
                 className={`block p-4 hover:bg-gray-50 transition group ${post.is_pinned ? 'bg-blue-50/40' : ''}`}
             >
               <div className="flex items-center gap-2 mb-1.5">
-                {/* 상단 고정 뱃지 */}
                 {post.is_pinned && (
                     <span className="bg-red-100 text-red-600 text-[10px] px-2 py-0.5 rounded font-bold border border-red-200 shadow-sm">
                       {post.pinned_reason || "공지"}
