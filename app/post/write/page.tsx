@@ -13,11 +13,10 @@ export default function WritePage() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  
-  // ★ [수정됨] MENUS는 배열이므로번째를 지정해야 에러가 안 납니다.
-  const [categoryMain, setCategoryMain] = useState(MENUS.id);
-  // ★ [수정됨] sub 역시 배열이므로번째를 지정해야 합니다.
-  const [categorySub, setCategorySub] = useState(MENUS.sub.id);
+
+  // ★ [수정] 배열 인덱스() 문제 원천 차단을 위해 문자열 직접 입력
+  const [categoryMain, setCategoryMain] = useState("news");
+  const [categorySub, setCategorySub] = useState("local");
   
   // 기능 옵션
   const [isHtml, setIsHtml] = useState(false);
@@ -77,7 +76,7 @@ export default function WritePage() {
   };
 
   // 현재 선택된 대분류에 맞는 소분류 목록 찾기
-  // (옵셔널 체이닝 ?. 사용 및 빈 배열 [] 처리로 에러 방지)
+  // (에러 방지를 위해 안전하게 찾기)
   const currentMenu = MENUS.find((m) => m.id === categoryMain);
   const currentSubMenus = currentMenu ? currentMenu.sub : [];
 
@@ -94,9 +93,11 @@ export default function WritePage() {
             onChange={(e) => { 
                 const mainId = e.target.value;
                 setCategoryMain(mainId); 
-                // 대분류 변경 시 소분류도 첫 번째 것으로 자동 선택하여 에러 방지
-                const subMenu = MENUS.find(m => m.id === mainId)?.sub;
-                if (subMenu) setCategorySub(subMenu.id);
+                // 대분류 변경 시 소분류도 첫 번째 것으로 자동 선택 (안전 장치 추가)
+                const targetMenu = MENUS.find(m => m.id === mainId);
+                if (targetMenu && targetMenu.sub.length > 0) {
+                    setCategorySub(targetMenu.sub.id);
+                }
             }}
             className="p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none"
           >
