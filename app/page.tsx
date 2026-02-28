@@ -2,15 +2,15 @@ import { createClient } from "@/lib/supabase";
 import SidebarLeft from "@/components/layout/SidebarLeft";
 import SidebarRight from "@/components/layout/SidebarRight";
 import Link from "next/link";
-import WriteButton from "@/components/ui/WriteButton"; // ★ 방금 만든 버튼 import
 
 export default async function Home() {
   const supabase = createClient();
 
-  // 최신글 20개 가져오기 (작성자 닉네임 포함)
+  // 최신글 20개 가져오기
   const { data: posts } = await supabase
     .from("posts")
     .select("*, profiles(nickname)")
+    .eq("is_hidden", false)
     .order("created_at", { ascending: false })
     .limit(20);
 
@@ -26,9 +26,7 @@ export default async function Home() {
         {/* 헤더 */}
         <div className="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm border border-gray-200">
           <h2 className="text-lg font-bold text-gray-700">📌 최신 글</h2>
-          
-          {/* ★★★ 복잡한 조건문 삭제! 이 컴포넌트가 알아서 로그인/레벨 체크함 ★★★ */}
-          <WriteButton minLevel={1} /> 
+          {/* 홈 화면에는 글쓰기 버튼 삭제 */}
         </div>
 
         {/* 게시글 리스트 */}
@@ -57,7 +55,6 @@ export default async function Home() {
                     <span>{post.profiles?.nickname || "익명"}</span>
                     <span>{new Date(post.created_at).toLocaleDateString()}</span>
                   </div>
-                  {/* views 컬럼 사용 (없으면 0) */}
                   <span>조회 {post.views || 0}</span>
                 </div>
               </Link>
