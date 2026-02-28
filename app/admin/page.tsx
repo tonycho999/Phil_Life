@@ -13,8 +13,11 @@ export default function AdminPage() {
   const [settings, setSettings] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
 
-  // 모든 서브 메뉴 ID 추출
-  const allSubMenus = MENUS.flatMap((m) => m.sub.map((s) => ({ ...s, parent: m.label })));
+  // ★ [수정됨] (m: any)와 (s: any)를 추가하여 에러를 막았습니다.
+  const allSubMenus = MENUS.flatMap((m: any) => 
+    m.sub.map((s: any) => ({ ...s, parent: m.label }))
+  );
+
   const gradeOptions = Object.keys(GRADE_LEVELS).reverse(); // 높은 등급부터 표시
 
   useEffect(() => {
@@ -75,7 +78,7 @@ export default function AdminPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {allSubMenus.map((menu) => (
+            {allSubMenus.map((menu: any) => (
               <tr key={menu.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-4 font-medium text-gray-500">{menu.parent}</td>
                 <td className="px-6 py-4 font-bold text-gray-800">{menu.label}</td>
