@@ -1,3 +1,5 @@
+import React from "react"; 
+
 export default function Loading() {
   return (
     <div className="space-y-4">
@@ -7,7 +9,7 @@ export default function Loading() {
         <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
       </div>
 
-      {/* 게시글 리스트 로딩바 (가운데만 로딩) */}
+      {/* 게시글 리스트 로딩바 (가운데 내용만 로딩) */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 divide-y divide-gray-100">
         {.map((i) => (
           <div key={i} className="p-4 block">
