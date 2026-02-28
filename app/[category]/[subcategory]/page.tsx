@@ -14,37 +14,37 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // 1. 현재 메뉴 정보 가져오기 (제목 표시용)
+  // 1. 현재 메뉴 정보 가져오기
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
   const currentSub = currentMenu?.sub.find((s: any) => s.id === params.subcategory);
 
-  // 2. 유저 정보 및 권한(Level) 가져오기
+  // 2. 유저 정보 및 레벨 가져오기
   const { data: { user } } = await supabase.auth.getUser();
-  let userLevel = 0;
-  
+  let userLevel = 0; // 비로그인 시 0 레벨
+
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("level")
       .eq("id", user.id)
       .single();
-    userLevel = profile?.level || 1; // 기본 레벨 1
+    userLevel = profile?.level || 1; // 프로필 없으면 기본 1
   }
 
-  // 3. 현재 게시판의 설정(권한) 가져오기
-  // (boards 테이블이 없으면 에러가 날 수 있으니, DB에 boards 테이블을 확인해주세요)
+  // 3. 게시판 설정(권한) 가져오기
   const { data: boardConfig } = await supabase
     .from("boards")
-    .select("write_level, read_level")
+    .select("write_level")
     .eq("category_main", params.category)
     .eq("category_sub", params.subcategory)
     .single();
 
-  // 게시판 설정이 DB에 없으면 기본값(0)으로 처리
-  const writeLevel = boardConfig?.write_level || 0;
-  const canWrite = userLevel >= writeLevel;
+  const writeLevel = boardConfig?.write_level || 1; // 설정 없으면 기본 1 (회원만)
 
-  // 4. 게시글 목록 가져오기
+  // ★ 핵심 조건: 로그인 했고(user) && 내 레벨이 게시판 제한보다 높아야 함(userLevel >= writeLevel)
+  const showWriteButton = user && (userLevel >= writeLevel);
+
+  // 4. 게시글 목록 쿼리
   let query = supabase
     .from("posts")
     .select("id, title, created_at, views, is_pinned, pinned_reason, profiles(nickname)", { count: "exact" })
@@ -71,8 +71,8 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
             <p className="text-xs text-gray-500 mt-1">{currentMenu?.label} &gt; {currentSub?.label}</p>
           </div>
           
-          {/* ★ 권한 체크: 권한이 있을 때만 버튼 표시 & 카테고리 자동 설정 파라미터 추가 */}
-          {canWrite && (
+          {/* ★ 조건부 렌더링: 로그인 & 레벨 체크 통과 시에만 버튼 표시 */}
+          {showWriteButton && (
             <Link 
               href={`/post/write?main=${params.category}&sub=${params.subcategory}`} 
               className="px-4 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 transition text-sm shadow-sm"
@@ -101,6 +101,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
                         {post.pinned_reason || "공지"}
                       </span>
                   )}
+                  {/* 모바일용 카테고리 태그 */}
                   <span className="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold">
                     {currentSub?.label}
                   </span>
