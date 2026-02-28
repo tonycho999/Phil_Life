@@ -3,72 +3,60 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 
-type AuthContextType = {
-  user: any;
-  profile: any;
-  loading: boolean;
-  refreshProfile: () => Promise<void>;
-};
-
-const AuthContext = createContext<AuthContextType>({
+// 1. Context 생성
+const AuthContext = createContext({
   user: null,
   profile: null,
   loading: true,
   refreshProfile: async () => {},
 });
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+// 2. 훅 내보내기 (Named Export)
+export const useAuth = () => useContext(AuthContext);
+
+// 3. ★ 핵심: Provider를 "default export"로 내보내기
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  
+  // Supabase 클라이언트 생성
   const supabase = createClient();
 
-  // 프로필 가져오기 함수 (따로 뺌)
-  const fetchProfileData = async (userId: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-    setProfile(data);
+  const refreshProfile = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+      setProfile(data);
+    }
   };
 
   useEffect(() => {
-    const initAuth = async () => {
-      // 1. 현재 로그인 유저 확인
+    const init = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
-
       if (user) {
-        await fetchProfileData(user.id);
+        const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+        setProfile(data);
       }
       setLoading(false);
-
-      // 2. 로그인 상태 변경 감지 (로그인/로그아웃 시 자동 업데이트)
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        async (event, session) => {
-          if (session?.user) {
-            setUser(session.user);
-            await fetchProfileData(session.user.id);
-          } else {
-            setUser(null);
-            setProfile(null);
-          }
-          setLoading(false);
-        }
-      );
-
-      return () => {
-        subscription.unsubscribe();
-      };
     };
+    init();
 
-    initAuth();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        refreshProfile();
+      } else {
+        setProfile(null);
+      }
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
-
-  const refreshProfile = async () => {
-    if (user) await fetchProfileData(user.id);
-  };
 
   return (
     <AuthContext.Provider value={{ user, profile, loading, refreshProfile }}>
@@ -76,6 +64,3 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     </AuthContext.Provider>
   );
 }
-
-// 다른 컴포넌트에서 쉽게 쓰기 위한 훅
-export const useAuth = () => useContext(AuthContext);
