@@ -7,10 +7,26 @@ import { PenSquare } from "lucide-react";
 export default async function Home() {
   const supabase = createClient();
 
-  // 최신글 20개 가져오기
+  // 1. [추가] 로그인 상태 및 레벨 확인
+  const { data: { user } } = await supabase.auth.getUser();
+  let userLevel = 0;
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("level")
+      .eq("id", user.id)
+      .single();
+    userLevel = profile?.level || 1;
+  }
+
+  // 2. [추가] 버튼 표시 여부 결정 (로그인 필수 + 레벨 1 이상)
+  const showWriteButton = !!user && (userLevel >= 1);
+
+  // 3. 최신글 20개 가져오기 (작성자 닉네임 포함)
   const { data: posts } = await supabase
     .from("posts")
-    .select("*")
+    .select("*, profiles(nickname)") // profiles 테이블 연결
     .order("created_at", { ascending: false })
     .limit(20);
 
@@ -26,12 +42,16 @@ export default async function Home() {
         {/* 헤더 */}
         <div className="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm border border-gray-200">
           <h2 className="text-lg font-bold text-gray-700">📌 최신 글</h2>
-          <Link 
-            href="/post/write" 
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded flex items-center gap-2 transition"
-          >
-            <PenSquare size={16} /> 글쓰기
-          </Link>
+          
+          {/* ★ 조건부 렌더링: 로그인한 유저에게만 버튼 표시 */}
+          {showWriteButton && (
+            <Link 
+              href="/post/write" 
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded flex items-center gap-2 transition"
+            >
+              <PenSquare size={16} /> 글쓰기
+            </Link>
+          )}
         </div>
 
         {/* 게시글 리스트 */}
@@ -52,12 +72,16 @@ export default async function Home() {
                     {post.category_sub || '전체'}
                   </span>
                 </div>
-                <h3 className="font-bold text-gray-900 text-md mb-1">
+                <h3 className="font-bold text-gray-900 text-md mb-1 line-clamp-1">
                   {post.title}
                 </h3>
-                <div className="text-xs text-gray-400 flex gap-3">
-                  <span>{new Date(post.created_at).toLocaleDateString()}</span>
-                  <span>조회 {post.view_count}</span>
+                <div className="flex justify-between items-center text-xs text-gray-400">
+                  <div className="flex gap-2">
+                    <span>{post.profiles?.nickname || "익명"}</span>
+                    <span>{new Date(post.created_at).toLocaleDateString()}</span>
+                  </div>
+                  {/* DB 컬럼명이 views인지 view_count인지 확인 필요 (기본값 views로 설정) */}
+                  <span>조회 {post.views || post.view_count || 0}</span>
                 </div>
               </Link>
             ))
