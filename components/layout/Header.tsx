@@ -53,9 +53,9 @@ export default function Header() {
             </div>
           </div>
 
-          {/* 하단: 네비게이션 메뉴 (100% 넓이 사용) */}
+          {/* 하단: 네비게이션 메뉴 (100% 넓이 꽉 차게) */}
           <nav className="overflow-x-auto pb-1 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
-            {/* ★ [수정됨] w-full과 justify-between을 사용하여 메뉴를 양끝으로 정렬 */}
+            {/* w-full로 넓이를 꽉 채우고, 각 li에 flex-1을 주어 균등 분할 */}
             <ul className="flex w-full justify-between items-center border-t border-gray-100 pt-1">
               {MENUS.map((menu: any) => (
                 <li key={menu.id} className="py-3 flex-1 text-center">
