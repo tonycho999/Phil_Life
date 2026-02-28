@@ -17,15 +17,15 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // 1. 현재 대분류 메뉴 정보 찾기
+  // 1. 현재 대분류 메뉴 정보 찾기 (예: 'news')
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
 
-  // 2. 해당 대분류에 속한 모든 게시글 가져오기
+  // 2. 해당 대분류에 속한 **모든** 게시글 가져오기 (소분류 구분 없음)
   let query = supabase
     .from("posts")
     .select("*, profiles(nickname)", { count: "exact" })
-    .eq("category_main", params.category) // 대분류 일치
-    .neq("is_hidden", true) // 숨김 글 제외
+    .eq("category_main", params.category) // ★ 대분류만 일치하면 다 가져옴
+    .neq("is_hidden", true)
     .order("is_pinned", { ascending: false })
     .order("created_at", { ascending: false })
     .range(from, to);
@@ -47,7 +47,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
         <p className="text-xs text-gray-500 mt-1">
           {currentMenu?.label} 카테고리의 전체 글 목록입니다.
         </p>
-        {/* ★ 요청하신 대로 글쓰기 버튼을 아예 넣지 않았습니다. ★ */}
+        {/* ★★★ 주의: 여기에 글쓰기 버튼 코드가 아예 없어야 합니다. ★★★ */}
       </div>
 
       {/* 게시글 리스트 */}
@@ -60,7 +60,8 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
           </div>
         ) : (
           posts.map((post: any) => {
-            // 소분류 라벨 찾기 (화면 표시용)
+            // 소분류 이름(한글) 찾기
+            // DB에는 id(local 등)가 있고, MENUS 상수에서 label(교민뉴스 등)을 찾음
             const subLabel = currentMenu?.sub.find(
               (s: any) => s.id === post.category_sub
             )?.label;
@@ -79,15 +80,13 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
                       {post.pinned_reason || "공지"}
                     </span>
                   )}
-                  {/* 소분류 표시 */}
-                  <span className="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold">
-                    {subLabel || post.category_sub}
-                  </span>
+                  {/* 날짜 표시 */}
                   <span className="text-xs text-gray-400">
                     {new Date(post.created_at).toLocaleDateString()}
                   </span>
                 </div>
 
+                {/* ★ 제목 영역: [소카테고리] 제목 형태 */}
                 <h3
                   className={`text-md mb-1.5 line-clamp-1 group-hover:text-blue-600 transition ${
                     post.is_pinned
@@ -95,6 +94,9 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
                       : "font-medium text-gray-800"
                   }`}
                 >
+                  <span className="text-blue-600 mr-1">
+                    [{subLabel || post.category_sub || "일반"}]
+                  </span>
                   {post.title}
                 </h3>
 
