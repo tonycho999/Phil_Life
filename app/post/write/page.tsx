@@ -14,8 +14,9 @@ export default function WritePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   
-  // ★ 여기가 수정되었습니다 (배열의 첫 번째 항목 선택)
+  // ★ [수정됨] MENUS는 배열이므로번째를 지정해야 에러가 안 납니다.
   const [categoryMain, setCategoryMain] = useState(MENUS.id);
+  // ★ [수정됨] sub 역시 배열이므로번째를 지정해야 합니다.
   const [categorySub, setCategorySub] = useState(MENUS.sub.id);
   
   // 기능 옵션
@@ -75,7 +76,10 @@ export default function WritePage() {
     setLoading(false);
   };
 
-  const currentSubMenus = MENUS.find((m) => m.id === categoryMain)?.sub || [];
+  // 현재 선택된 대분류에 맞는 소분류 목록 찾기
+  // (옵셔널 체이닝 ?. 사용 및 빈 배열 [] 처리로 에러 방지)
+  const currentMenu = MENUS.find((m) => m.id === categoryMain);
+  const currentSubMenus = currentMenu ? currentMenu.sub : [];
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
@@ -84,12 +88,13 @@ export default function WritePage() {
       <div className="space-y-4 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         {/* 카테고리 선택 */}
         <div className="grid grid-cols-2 gap-4">
+          {/* 대분류 선택 */}
           <select 
             value={categoryMain} 
             onChange={(e) => { 
                 const mainId = e.target.value;
                 setCategoryMain(mainId); 
-                // 대분류 변경 시 소분류도 첫 번째 것으로 자동 선택
+                // 대분류 변경 시 소분류도 첫 번째 것으로 자동 선택하여 에러 방지
                 const subMenu = MENUS.find(m => m.id === mainId)?.sub;
                 if (subMenu) setCategorySub(subMenu.id);
             }}
@@ -97,6 +102,8 @@ export default function WritePage() {
           >
             {MENUS.map(m => <option key={m.id} value={m.id}>{m.label}</option>)}
           </select>
+          
+          {/* 소분류 선택 */}
           <select 
             value={categorySub} 
             onChange={(e) => setCategorySub(e.target.value)}
