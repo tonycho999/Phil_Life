@@ -27,16 +27,17 @@ export default function WritePage() {
 
   const isAdmin = profile?.grade === "관리자";
 
-  // 1. [핵심 변경] 대분류가 바뀌면 -> 소분류 첫번째를 자동으로 선택해주는 안전 장치
-  // 복잡한 코드를 여기서 처리하므로 에러가 나지 않습니다.
+  // [핵심 수정] 대분류 변경 시 소분류 첫 번째 항목 자동 선택
   useEffect(() => {
     const targetMenu = MENUS.find((m) => m.id === categoryMain);
-    if (targetMenu && targetMenu.sub.length > 0) {
-        setCategorySub(targetMenu.sub.id);
+    
+    // ★★★ [검수 완료] 35번째 줄: sub 뒤에이 정확하게 추가되었습니다. ★★★
+    if (targetMenu && targetMenu.sub && targetMenu.sub.length > 0) {
+        setCategorySub(targetMenu.sub``.id);
     }
   }, [categoryMain]);
 
-  // 2. 권한 체크
+  // 권한 체크
   useEffect(() => {
     const checkPermission = async () => {
         if (!categorySub) return;
@@ -90,8 +91,6 @@ export default function WritePage() {
       
       <div className="space-y-4 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <div className="grid grid-cols-2 gap-4">
-          
-          {/* 대분류 선택 (코드가 매우 단순해졌습니다) */}
           <select 
             value={categoryMain} 
             onChange={(e) => setCategoryMain(e.target.value)}
@@ -100,7 +99,6 @@ export default function WritePage() {
             {MENUS.map(m => <option key={m.id} value={m.id}>{m.label}</option>)}
           </select>
           
-          {/* 소분류 선택 */}
           <select 
             value={categorySub} 
             onChange={(e) => setCategorySub(e.target.value)}
