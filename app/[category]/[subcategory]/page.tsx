@@ -1,136 +1,106 @@
-import { createClient } from "@/lib/supabase";
-import SidebarLeft from "@/components/layout/SidebarLeft";
-import SidebarRight from "@/components/layout/SidebarRight";
-import Pagination from "@/components/ui/Pagination"; // ★ 추가됨
 import Link from "next/link";
-import { PenSquare } from "lucide-react";
+import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
 
-interface PageProps {
+type PageProps = {
   params: { category: string; subcategory: string };
-  searchParams: { q?: string; page?: string }; // ★ page 파라미터 추가
-}
+  searchParams: { page?: string; q?: string };
+};
 
 export default async function BoardPage({ params, searchParams }: PageProps) {
   const supabase = createClient();
-  
-  // 1. 현재 페이지 계산 (기본값 1)
-  const currentPage = Number(searchParams.page) || 1;
-  const pageSize = 15; // 한 페이지에 보여줄 글 개수
-  const from = (currentPage - 1) * pageSize;
+  const page = Number(searchParams.page) || 1;
+  const pageSize = 15;
+  const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // 2. 현재 메뉴 정보 찾기
   const currentMenu = MENUS.find((m) => m.id === params.category);
   const currentSub = currentMenu?.sub.find((s) => s.id === params.subcategory);
 
-  // 3. DB에서 글 가져오기 (데이터 + 전체 개수 count)
+  // 쿼리 작성: 상단 고정(is_pinned) 우선, 그다음 최신순
   let query = supabase
     .from("posts")
-    .select("*", { count: "exact" }) // count: exact 옵션으로 전체 개수도 가져옴
+    .select("*, profiles(nickname)", { count: "exact" })
     .eq("category_main", params.category)
     .eq("category_sub", params.subcategory)
+    .eq("is_hidden", false) // 숨김 처리된 글 제외
+    .order("is_pinned", { ascending: false }) 
     .order("created_at", { ascending: false })
-    .range(from, to); // ★ 범위 지정
+    .range(from, to);
 
   if (searchParams.q) {
-    query = query.ilike("title", `%${searchParams.q}%`);
+    query = query.like("title", `%${searchParams.q}%`);
   }
 
   const { data: posts, count } = await query;
-  const totalCount = count || 0;
+  const totalPages = count ? Math.ceil(count / pageSize) : 1;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-      {/* 좌측 사이드바 */}
-      <div className="hidden md:block md:col-span-2">
-        <SidebarLeft />
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="flex justify-between items-end mb-6 border-b pb-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">{currentSub?.label || "게시판"}</h2>
+          <p className="text-sm text-gray-500 mt-1">{currentMenu?.label} &gt; {currentSub?.label}</p>
+        </div>
+        <Link href="/post/write" className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition text-sm shadow-md">
+          ✏️ 글쓰기
+        </Link>
       </div>
 
-      {/* 중앙 메인 피드 */}
-      <main className="md:col-span-7 space-y-4">
-        
-        {/* 모바일 탭 메뉴 */}
-        {currentMenu && (
-          <div className="md:hidden bg-white p-3 rounded-lg shadow-sm border border-gray-200 mb-4">
-            <div className="flex overflow-x-auto gap-2 pb-1 scrollbar-hide">
-              {currentMenu.sub.map((sub) => {
-                const isActive = sub.id === params.subcategory;
-                return (
-                  <Link
-                    key={sub.id}
-                    href={`/${currentMenu.id}/${sub.id}`}
-                    className={`whitespace-nowrap px-3 py-1.5 rounded-full text-sm border transition-colors ${
-                      isActive
-                        ? "bg-blue-600 text-white border-blue-600 font-bold"
-                        : "bg-gray-50 text-gray-600 border-gray-200"
-                    }`}
-                  >
-                    {sub.label}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* 헤더 */}
-        <div className="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm border border-gray-200">
-          <h2 className="text-lg font-bold text-gray-700">
-            {currentSub ? currentSub.label : params.subcategory}
-          </h2>
-          <Link 
-            href="/post/write" 
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded flex items-center gap-2 transition"
-          >
-            <PenSquare size={16} /> <span className="hidden sm:inline">글쓰기</span>
-          </Link>
-        </div>
-
-        {/* 게시글 리스트 */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 divide-y divide-gray-100 min-h-[300px]">
-          {!posts || posts.length === 0 ? (
-            <div className="p-10 text-center text-gray-500 flex flex-col items-center justify-center h-full">
-              <p className="mb-2">아직 등록된 글이 없습니다.</p>
-            </div>
-          ) : (
-            posts.map((post: any) => (
-              <Link 
+      {/* 게시글 리스트 */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 divide-y divide-gray-100 min-h-[500px]">
+        {!posts || posts.length === 0 ? (
+          <div className="p-10 text-center text-gray-500">아직 등록된 글이 없습니다.</div>
+        ) : (
+          posts.map((post: any) => (
+            <Link 
                 key={post.id} 
                 href={`/post/${post.id}`} 
-                className="block p-4 hover:bg-gray-50 transition"
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="bg-blue-50 text-blue-600 text-[10px] px-2 py-0.5 rounded font-bold border border-blue-100">
-                    {currentSub?.label}
-                  </span>
+                className={`block p-4 hover:bg-gray-50 transition group ${post.is_pinned ? 'bg-blue-50/40' : ''}`}
+            >
+              <div className="flex items-center gap-2 mb-1.5">
+                {/* 상단 고정 뱃지 */}
+                {post.is_pinned && (
+                    <span className="bg-red-100 text-red-600 text-[10px] px-2 py-0.5 rounded font-bold border border-red-200 shadow-sm">
+                      {post.pinned_reason || "공지"}
+                    </span>
+                )}
+                <span className="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold">
+                  {currentSub?.label}
+                </span>
+                <span className="text-xs text-gray-400">
+                  {new Date(post.created_at).toLocaleDateString()}
+                </span>
+              </div>
+              
+              <h3 className={`text-md mb-1.5 line-clamp-1 group-hover:text-blue-600 transition ${post.is_pinned ? 'font-bold text-gray-900' : 'font-medium text-gray-800'}`}>
+                {post.title}
+              </h3>
+              
+              <div className="flex justify-between items-center text-xs text-gray-400">
+                <span>작성자: {post.profiles?.nickname || "익명"}</span>
+                <div className="flex gap-2">
+                    <span>조회 {post.views || 0}</span>
                 </div>
-                <h3 className="font-bold text-gray-900 text-md mb-1 line-clamp-1">
-                  {post.title}
-                </h3>
-                <div className="text-xs text-gray-400 flex gap-3">
-                  <span>{new Date(post.created_at).toLocaleDateString()}</span>
-                  <span>조회 {post.view_count || 0}</span>
-                </div>
-              </Link>
-            ))
-          )}
-        </div>
-
-        {/* ★ 페이지네이션 (글이 있을 때만 표시) */}
-        {totalCount > 0 && (
-          <Pagination 
-            totalCount={totalCount}
-            currentPage={currentPage}
-            pageSize={pageSize}
-            basePath={`/${params.category}/${params.subcategory}`}
-          />
+              </div>
+            </Link>
+          ))
         )}
-      </main>
+      </div>
 
-      {/* 우측 사이드바 */}
-      <div className="hidden md:block md:col-span-3">
-        <SidebarRight />
+      {/* 페이지네이션 */}
+      <div className="flex justify-center mt-8 gap-2">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+          <Link
+            key={p}
+            href={`/${params.category}/${params.subcategory}?page=${p}`}
+            className={`px-3 py-1 rounded border text-sm ${
+              p === page ? "bg-blue-600 text-white border-blue-600 font-bold" : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+            }`}
+          >
+            {p}
+          </Link>
+        ))}
       </div>
     </div>
   );
