@@ -10,7 +10,11 @@ import { useAuth } from "@/components/auth/AuthProvider";
 
 export default function SidebarLeft() {
   const pathname = usePathname();
+  
+  // ★ [수정됨] pathname.split("/") 뒤에을 붙여야 문자열이 됩니다.
+  // 예: "/news/local" -> ["", "news", "local"] ->번째인 "news"를 가져옴
   const currentMainId = pathname.split("/");
+  
   const currentMenu = MENUS.find((m) => m.id === currentMainId);
   const supabase = createClient();
   const { user, profile, loading, refreshProfile } = useAuth();
@@ -52,7 +56,7 @@ export default function SidebarLeft() {
               </div>
               
               <div className="grid grid-cols-2 gap-2">
-                {/* ★ 관리자 버튼 추가됨 */}
+                {/* 관리자 버튼 */}
                 {profile?.grade === "관리자" && (
                     <Link href="/admin" className="col-span-2 py-2 bg-gray-800 text-white text-xs font-bold rounded hover:bg-black transition text-center">
                         ⚙️ 관리자 페이지
