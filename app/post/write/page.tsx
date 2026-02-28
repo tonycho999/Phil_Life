@@ -14,22 +14,29 @@ export default function WritePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  // [초기값] 문자열로 직접 지정
+  // 카테고리 초기값
   const [categoryMain, setCategoryMain] = useState("news");
   const [categorySub, setCategorySub] = useState("local");
   
-  // 기능 옵션
   const [isHtml, setIsHtml] = useState(false);
   const [loading, setLoading] = useState(false);
   
-  // 관리자 옵션
   const [isPinned, setIsPinned] = useState(false);
   const [pinnedReason, setPinnedReason] = useState("");
   const [pinnedUntil, setPinnedUntil] = useState("");
 
   const isAdmin = profile?.grade === "관리자";
 
-  // 권한 체크
+  // 1. [핵심 변경] 대분류가 바뀌면 -> 소분류 첫번째를 자동으로 선택해주는 안전 장치
+  // 복잡한 코드를 여기서 처리하므로 에러가 나지 않습니다.
+  useEffect(() => {
+    const targetMenu = MENUS.find((m) => m.id === categoryMain);
+    if (targetMenu && targetMenu.sub.length > 0) {
+        setCategorySub(targetMenu.sub.id);
+    }
+  }, [categoryMain]);
+
+  // 2. 권한 체크
   useEffect(() => {
     const checkPermission = async () => {
         if (!categorySub) return;
@@ -48,7 +55,6 @@ export default function WritePage() {
 
   const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) return alert("제목과 내용을 입력해주세요.");
-    
     setLoading(true);
 
     const postData = {
@@ -74,6 +80,7 @@ export default function WritePage() {
     setLoading(false);
   };
 
+  // 현재 선택된 대분류에 맞는 소분류 목록 찾기
   const currentMenu = MENUS.find((m) => m.id === categoryMain);
   const currentSubMenus = currentMenu ? currentMenu.sub : [];
 
@@ -83,20 +90,11 @@ export default function WritePage() {
       
       <div className="space-y-4 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <div className="grid grid-cols-2 gap-4">
-          {/* 대분류 선택 */}
+          
+          {/* 대분류 선택 (코드가 매우 단순해졌습니다) */}
           <select 
             value={categoryMain} 
-            onChange={(e) => { 
-                const mainId = e.target.value;
-                setCategoryMain(mainId); 
-                
-                const targetMenu = MENUS.find(m => m.id === mainId);
-                
-                // ★ [수정됨] targetMenu.sub.id (대괄호 0 포함)
-                if (targetMenu && targetMenu.sub.length > 0) {
-                    setCategorySub(targetMenu.sub``.id); 
-                }
-            }}
+            onChange={(e) => setCategoryMain(e.target.value)}
             className="p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none"
           >
             {MENUS.map(m => <option key={m.id} value={m.id}>{m.label}</option>)}
