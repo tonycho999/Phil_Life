@@ -35,7 +35,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
     .from("posts")
     .select("*, profiles(nickname)", { count: "exact" })
     .eq("category_main", params.category)
-    .eq("category_sub", params.subcategory) // ★ 소분류 일치
+    .eq("category_sub", params.subcategory) // ★ 소분류 일치 필수
     .neq("is_hidden", true)
     .order("is_pinned", { ascending: false }) 
     .order("created_at", { ascending: false })
@@ -83,7 +83,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
                     {post.pinned_reason || "공지"}
                   </span>
                 )}
-                {/* 여기는 이미 소분류 페이지라 굳이 [제목] 안붙여도 됨, 뱃지로 표시 */}
+                {/* 소분류 뱃지 */}
                 <span className="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold">
                   {currentSub?.label}
                 </span>
