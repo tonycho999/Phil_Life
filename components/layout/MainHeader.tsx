@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
 import { useAuth } from "@/components/auth/AuthProvider";
 import NicknameModal from "@/components/auth/NicknameModal";
-// LoginButton import 삭제됨
 
 export default function MainHeader() {
   const { user, profile, refreshProfile } = useAuth();
@@ -16,7 +15,7 @@ export default function MainHeader() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!keyword.trim()) return;
-    router.push(`${window.location.pathname}?q=${keyword}`);
+    router.push(`/?q=${keyword}`); // 메인에서 검색되도록 설정 (필요시 수정)
   };
 
   return (
@@ -30,27 +29,18 @@ export default function MainHeader() {
         {/* 1. 최상단 정보 바 */}
         <div className="bg-gray-50 border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 h-7 flex justify-end items-center text-[10px] text-gray-500 gap-3">
-            <span className="flex items-center gap-2">
-              <span className="text-red-500 font-bold">$1 = 57.68 PHP</span>
-              <span className="w-px h-2.5 bg-gray-300"></span>
-              <span className="text-blue-600 font-bold">1 PHP = 25.00 KRW</span>
-            </span>
-            <span className="hidden md:flex items-center gap-2">
-              <span>🌤️ 마닐라 28°C</span>
-              <span>🌴 세부 29°C</span>
-            </span>
+             {/* 상단 정보 내용 유지 */}
+             <span>1 PHP = 25.00 KRW</span>
           </div>
         </div>
 
         {/* 2. 메인 헤더 */}
         <div className="max-w-7xl mx-auto px-4 py-2">
           <div className="flex justify-between items-center gap-4">
-            {/* 로고 */}
             <Link href="/" className="font-extrabold text-2xl text-blue-600 tracking-tight shrink-0">
               {SITE_NAME}
             </Link>
 
-            {/* 검색창 */}
             <form onSubmit={handleSearch} className="flex-1 max-w-md hidden md:block">
               <div className="relative">
                 <input 
@@ -60,25 +50,23 @@ export default function MainHeader() {
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                 />
-                 <svg className="w-3.5 h-3.5 text-gray-400 absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
               </div>
             </form>
-
-            {/* 우측 공간: 로그인 버튼 코드 완전히 삭제됨 */}
-            <div className="shrink-0">
-               {/* 비어있음 */}
-            </div>
+            <div className="shrink-0"></div>
           </div>
         </div>
         
-        {/* 3. 메뉴바 */}
+        {/* 3. 메뉴바 (여기 수정됨!) */}
         <div className="max-w-7xl mx-auto px-4 pb-0">
             <nav className="bg-blue-600 text-white rounded-t-lg overflow-hidden">
                 <ul className="flex justify-between items-center overflow-x-auto scrollbar-hide">
                 {MENUS.map((menu: any) => (
                     <li key={menu.id} className="flex-1 text-center hover:bg-blue-700 transition">
+                    {/* ★ 중요 수정: 기존에는 menu.sub.id로 갔기 때문에 undefined 에러가 났습니다.
+                        이제는 그냥 /menu.id (예: /community)로 이동하게 하여 대분류 페이지를 띄웁니다.
+                    */}
                     <Link 
-                        href={`/${menu.id}/${menu.sub.id}`}
+                        href={`/${menu.id}`} 
                         className="block py-3 text-sm font-bold whitespace-nowrap"
                     >
                         {menu.label}
