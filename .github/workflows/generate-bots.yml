@@ -1,0 +1,41 @@
+name: Generate Bot Profiles (1000명)
+
+# 버튼을 누를 때만 실행되도록 설정 (수동 실행)
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 결과 파일을 저장소에 올릴 권한 필요
+
+    steps:
+      # 1. 내 코드 내려받기
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 파이썬 설치
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 3. 필요한 라이브러리(Faker) 설치
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install faker
+
+      # 4. 봇 생성 스크립트 실행
+      - name: Run generation script
+        run: python generate_bots.py
+
+      # 5. 생성된 json 파일을 저장소에 Commit & Push
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add bot_profiles.json
+          git commit -m "Add 1000 generated bot profiles [skip ci]" || echo "No changes to commit"
+          git push
