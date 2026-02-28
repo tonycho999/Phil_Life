@@ -11,11 +11,12 @@ import { useAuth } from "@/components/auth/AuthProvider";
 export default function SidebarLeft() {
   const pathname = usePathname();
   
-  // ★ [수정됨] split("/") 뒤에을 꼭 붙여야 합니다!
-  // 주소가 "/news/local" 일 때 -> "news"를 가져오기 위함
+  // 주소에서 대분류 ID 추출 (예: /news/local -> news)
   const currentMainId = (pathname || "").split("/");
   
-  const currentMenu = MENUS.find((m) => m.id === currentMainId);
+  // ★ [수정됨] (m: any) 추가 -> 타입 에러 방지
+  const currentMenu = MENUS.find((m: any) => m.id === currentMainId);
+  
   const supabase = createClient();
   const { user, profile, loading, refreshProfile } = useAuth();
 
@@ -93,7 +94,8 @@ export default function SidebarLeft() {
               {currentMenu.label} 메뉴
             </h3>
             <ul>
-              {currentMenu.sub.map((sub) => (
+              {/* ★ [수정됨] (sub: any) 추가 -> 타입 에러 방지 */}
+              {currentMenu.sub.map((sub: any) => (
                 <li key={sub.id}>
                   <Link 
                     href={`/${currentMenu.id}/${sub.id}`} 
