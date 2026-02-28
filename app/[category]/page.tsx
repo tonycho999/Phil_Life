@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
 import Link from "next/link";
 
-// ★ 글 목록 실시간 갱신 (캐싱 방지)
+// ★ 캐싱 방지: 글이 안 보이는 문제 해결
 export const dynamic = "force-dynamic";
 
 type PageProps = {
@@ -17,14 +17,14 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // 1. 현재 대분류 메뉴 정보 찾기 (예: 'news')
+  // 1. 현재 대분류 메뉴 정보 찾기
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
 
-  // 2. 해당 대분류에 속한 **모든** 게시글 가져오기 (소분류 구분 없음)
+  // 2. 글 목록 조회 (조건: 대분류 일치 + 숨김 아님)
   let query = supabase
     .from("posts")
     .select("*, profiles(nickname)", { count: "exact" })
-    .eq("category_main", params.category) // ★ 대분류만 일치하면 다 가져옴
+    .eq("category_main", params.category) // ★ 중요: 서브카테고리 상관없이 다 가져옴
     .neq("is_hidden", true)
     .order("is_pinned", { ascending: false })
     .order("created_at", { ascending: false })
@@ -39,15 +39,14 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
   return (
     <div className="space-y-4">
-      {/* 헤더 영역 */}
+      {/* 헤더 영역: 버튼 없음 */}
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <h2 className="text-xl font-bold text-gray-800">
           {currentMenu?.label || params.category}
         </h2>
         <p className="text-xs text-gray-500 mt-1">
-          {currentMenu?.label} 카테고리의 전체 글 목록입니다.
+          {currentMenu?.label} 전체 게시글 목록
         </p>
-        {/* ★★★ 주의: 여기에 글쓰기 버튼 코드가 아예 없어야 합니다. ★★★ */}
       </div>
 
       {/* 게시글 리스트 */}
@@ -56,15 +55,13 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
           <div className="p-10 text-center text-gray-500">
             {searchParams.q
               ? `'${searchParams.q}' 검색 결과가 없습니다.`
-              : "아직 등록된 글이 없습니다."}
+              : "등록된 게시글이 없습니다."}
           </div>
         ) : (
           posts.map((post: any) => {
-            // 소분류 이름(한글) 찾기
-            // DB에는 id(local 등)가 있고, MENUS 상수에서 label(교민뉴스 등)을 찾음
-            const subLabel = currentMenu?.sub.find(
-              (s: any) => s.id === post.category_sub
-            )?.label;
+            // ★ [소카테고리] 이름 찾기 로직
+            const subMenu = currentMenu?.sub.find((s: any) => s.id === post.category_sub);
+            const subLabel = subMenu ? subMenu.label : post.category_sub;
 
             return (
               <Link
@@ -80,13 +77,12 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
                       {post.pinned_reason || "공지"}
                     </span>
                   )}
-                  {/* 날짜 표시 */}
                   <span className="text-xs text-gray-400">
                     {new Date(post.created_at).toLocaleDateString()}
                   </span>
                 </div>
 
-                {/* ★ 제목 영역: [소카테고리] 제목 형태 */}
+                {/* ★ 제목 앞 [소카테고리] 표시 */}
                 <h3
                   className={`text-md mb-1.5 line-clamp-1 group-hover:text-blue-600 transition ${
                     post.is_pinned
@@ -94,8 +90,8 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
                       : "font-medium text-gray-800"
                   }`}
                 >
-                  <span className="text-blue-600 mr-1">
-                    [{subLabel || post.category_sub || "일반"}]
+                  <span className="text-blue-600 mr-1 font-bold text-sm">
+                    [{subLabel}]
                   </span>
                   {post.title}
                 </h3>
