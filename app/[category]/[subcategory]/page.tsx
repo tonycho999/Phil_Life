@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
-import WriteButton from "@/components/ui/WriteButton"; // 스마트 버튼 import
+import WriteButton from "@/components/ui/WriteButton";
+
+// ★ 핵심: 글 목록 실시간 갱신 (안 보이는 문제 해결)
+export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: { category: string; subcategory: string };
@@ -15,11 +18,10 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // 1. 현재 메뉴 정보 (제목 표시용)
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
   const currentSub = currentMenu?.sub.find((s: any) => s.id === params.subcategory);
 
-  // 2. ★ 핵심: 이 게시판의 '쓰기 권한 레벨' DB에서 가져오기
+  // 1. 게시판 설정(권한) 가져오기
   const { data: boardConfig } = await supabase
     .from("boards")
     .select("write_level")
@@ -27,16 +29,15 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
     .eq("category_sub", params.subcategory)
     .single();
 
-  // 설정이 없으면 기본값 1 (일반 회원 이상)
   const requiredLevel = boardConfig?.write_level ?? 1;
 
-  // 3. 게시글 목록 쿼리
+  // 2. 게시글 목록 쿼리
   let query = supabase
     .from("posts")
     .select("*, profiles(nickname)", { count: "exact" })
     .eq("category_main", params.category)
     .eq("category_sub", params.subcategory)
-    .eq("is_hidden", false)
+    .neq("is_hidden", true) // 숨김 글 제외
     .order("is_pinned", { ascending: false }) 
     .order("created_at", { ascending: false })
     .range(from, to);
@@ -57,10 +58,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
             <p className="text-xs text-gray-500 mt-1">{currentMenu?.label} &gt; {currentSub?.label}</p>
           </div>
           
-          {/* ★ 스마트 버튼 배치 
-            - requiredLevel: DB에서 가져온 쓰기 등급
-            - href: 카테고리를 쿼리 파라미터로 전달
-          */}
+          {/* ★ 여기에만 글쓰기 버튼 표시 (권한 체크 포함) ★ */}
           <WriteButton 
             requiredLevel={requiredLevel} 
             href={`/post/write?main=${params.category}&sub=${params.subcategory}`}
