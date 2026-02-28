@@ -11,9 +11,9 @@ import { useAuth } from "@/components/auth/AuthProvider";
 export default function SidebarLeft() {
   const pathname = usePathname();
   
-  // ★ [수정됨] pathname.split("/") 뒤에을 붙여야 문자열이 됩니다.
-  // 예: "/news/local" -> ["", "news", "local"] ->번째인 "news"를 가져옴
-  const currentMainId = pathname.split("/");
+  // ★ [수정됨] split("/") 뒤에을 꼭 붙여야 합니다!
+  // 주소가 "/news/local" 일 때 -> "news"를 가져오기 위함
+  const currentMainId = (pathname || "").split("/");
   
   const currentMenu = MENUS.find((m) => m.id === currentMainId);
   const supabase = createClient();
