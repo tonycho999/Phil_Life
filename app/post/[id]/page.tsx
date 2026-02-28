@@ -1,6 +1,9 @@
 import { createClient } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import CommentSection from "@/components/post/CommentSection"; // ★ 댓글 컴포넌트 추가
+
+export const dynamic = "force-dynamic"; // ★ 실시간 데이터 반영 (조회수/댓글수 등)
 
 export default async function PostDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
@@ -21,8 +24,11 @@ export default async function PostDetailPage({ params }: { params: { id: string 
   const { data: { user } } = await supabase.auth.getUser();
   let isAdmin = false;
   if (user) {
-    const { data: adminCheck } = await supabase.from("profiles").select("grade").eq("id", user.id).single();
-    isAdmin = adminCheck?.grade === "관리자";
+    // profile 테이블에 grade가 없거나 level 컬럼을 쓴다면 그에 맞게 수정 필요
+    // 여기서는 기존 코드를 존중하여 grade 체크 유지
+    const { data: adminCheck } = await supabase.from("profiles").select("grade, level").eq("id", user.id).single();
+    // grade가 '관리자' 이거나 level이 10 이상이면 관리자로 취급
+    isAdmin = adminCheck?.grade === "관리자" || (adminCheck?.level || 0) >= 10;
   }
 
   // 본문 렌더링 로직 (HTML vs Text)
@@ -100,11 +106,14 @@ export default async function PostDetailPage({ params }: { params: { id: string 
         </div>
       )}
 
+      {/* ★ 댓글 섹션 추가 */}
+      <CommentSection postId={params.id} />
+
       {/* 목록 버튼 */}
-      <div className="mt-8 text-center">
+      <div className="mt-8 text-center border-t pt-8">
         <Link 
             href={`/${post.category_main}/${post.category_sub}`}
-            className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+            className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition inline-block"
         >
             목록으로
         </Link>
