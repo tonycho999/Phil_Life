@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
 import { useAuth } from "@/components/auth/AuthProvider";
 import NicknameModal from "@/components/auth/NicknameModal";
+// LoginButton import 삭제됨
 
 export default function MainHeader() {
   const { user, profile, refreshProfile } = useAuth();
@@ -41,9 +42,10 @@ export default function MainHeader() {
           </div>
         </div>
 
-        {/* 2. 메인 헤더 (로고 + 검색창) */}
+        {/* 2. 메인 헤더 */}
         <div className="max-w-7xl mx-auto px-4 py-2">
           <div className="flex justify-between items-center gap-4">
+            {/* 로고 */}
             <Link href="/" className="font-extrabold text-2xl text-blue-600 tracking-tight shrink-0">
               {SITE_NAME}
             </Link>
@@ -62,8 +64,10 @@ export default function MainHeader() {
               </div>
             </form>
 
-            {/* 우측 로그인 버튼 삭제됨 */}
-            
+            {/* 우측 공간: 로그인 버튼 코드 완전히 삭제됨 */}
+            <div className="shrink-0">
+               {/* 비어있음 */}
+            </div>
           </div>
         </div>
         
