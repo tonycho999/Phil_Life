@@ -13,7 +13,7 @@ export default function SidebarRight() {
         <p className="text-xs text-gray-500 text-center">문의: contact@phil-life.com</p>
       </div>
 
-      {/* 인기 게시글 (가짜 데이터) */}
+      {/* 인기 게시글 */}
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <h3 className="font-bold text-gray-800 mb-3 text-sm border-b pb-2">🔥 실시간 인기글</h3>
         <ul className="space-y-3">
@@ -22,7 +22,7 @@ export default function SidebarRight() {
               <Link href="#" className="flex gap-2 group">
                 <span className="text-blue-600 font-bold">{i}</span>
                 <span className="text-gray-600 group-hover:text-blue-600 group-hover:underline line-clamp-1">
-                  필리핀 생활 꿀팁 공유합니다...
+                  인기글 제목 예시입니다...
                 </span>
               </Link>
             </li>
@@ -30,7 +30,7 @@ export default function SidebarRight() {
         </ul>
       </div>
 
-      {/* 환율 정보 (예시) */}
+      {/* 환율 정보 */}
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <h3 className="font-bold text-gray-800 mb-3 text-sm border-b pb-2">💱 오늘의 환율</h3>
         <div className="flex justify-between items-center mb-2">
