@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
@@ -16,9 +16,7 @@ export default function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!keyword.trim()) return;
-    const currentPath = window.location.pathname;
-    // 현재 경로에 검색 파라미터 추가
-    router.push(`${currentPath}?q=${keyword}`);
+    router.push(`${window.location.pathname}?q=${keyword}`);
   };
 
   return (
@@ -29,15 +27,11 @@ export default function Header() {
 
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4">
-          
-          {/* 상단: 로고, 검색, 유저정보 */}
           <div className="flex justify-between items-center h-16 gap-4">
-            {/* 로고 */}
             <Link href="/" className="font-extrabold text-2xl text-blue-600 tracking-tight shrink-0">
               {SITE_NAME}
             </Link>
 
-            {/* 검색창 (새로 추가됨) */}
             <form onSubmit={handleSearch} className="flex-1 max-w-md hidden md:block">
               <div className="relative">
                 <input 
@@ -47,11 +41,9 @@ export default function Header() {
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                 />
-                <svg className="w-4 h-4 text-gray-400 absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
               </div>
             </form>
 
-            {/* 우측 유저 정보 (로그아웃 버튼 삭제됨) */}
             <div className="flex items-center gap-3 shrink-0">
               {loading ? (
                 <div className="w-20 h-8 bg-gray-100 animate-pulse rounded"></div>
@@ -68,7 +60,7 @@ export default function Header() {
           </div>
         </div>
         
-        {/* 하단: 네비게이션 메뉴 (배경색 추가, 100% 채움) */}
+        {/* 파란색 메뉴바 */}
         <nav className="bg-blue-600 text-white">
             <div className="max-w-7xl mx-auto px-4">
                 <ul className="flex w-full justify-between items-center overflow-x-auto scrollbar-hide">
