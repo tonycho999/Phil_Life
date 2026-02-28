@@ -35,7 +35,7 @@ export default function MainHeader() {
         </div>
 
         {/* 2. 메인 헤더 */}
-        <div className="max-w-7xl mx-auto px-4 py-2">
+        <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex justify-between items-center gap-4">
             <Link href="/" className="font-extrabold text-2xl text-blue-600 tracking-tight shrink-0">
               {SITE_NAME}
@@ -46,7 +46,7 @@ export default function MainHeader() {
                 <input 
                   type="text" 
                   placeholder="검색어를 입력하세요" 
-                  className="w-full bg-gray-100 border border-gray-200 rounded-full py-2 px-4 pl-10 text-xs focus:outline-blue-500 transition"
+                  className="w-full bg-gray-100 border border-gray-200 rounded-full py-2.5 px-4 pl-10 text-xs focus:outline-blue-500 transition"
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                 />
