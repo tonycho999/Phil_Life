@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
-import SidebarLeft from "@/components/layout/SidebarLeft";
-import SidebarRight from "@/components/layout/SidebarRight";
 
 type PageProps = {
   params: { category: string; subcategory: string };
@@ -16,11 +14,10 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // (m: any) 처리로 타입 에러 방지
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
   const currentSub = currentMenu?.sub.find((s: any) => s.id === params.subcategory);
 
-  // ★ 속도 최적화: content(본문) 제외하고 가져오기
+  // 데이터 로딩 (가운데 내용만)
   let query = supabase
     .from("posts")
     .select("id, title, created_at, views, is_pinned, pinned_reason, profiles(nickname)", { count: "exact" })
@@ -39,16 +36,8 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   const totalPages = count ? Math.ceil(count / pageSize) : 1;
 
   return (
-    // ★ loading.tsx와 동일한 3단 그리드 구조 적용
-    <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-      
-      {/* 좌측 사이드바 */}
-      <div className="hidden md:block md:col-span-2">
-        <SidebarLeft />
-      </div>
-
-      {/* 중앙 메인 피드 */}
-      <main className="md:col-span-7 space-y-4">
+    <div className="space-y-4">
+        {/* 헤더 영역 */}
         <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <div>
             <h2 className="text-xl font-bold text-gray-800">{currentSub?.label || "게시판"}</h2>
@@ -62,7 +51,9 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
         {/* 게시글 리스트 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 divide-y divide-gray-100 min-h-[500px]">
           {!posts || posts.length === 0 ? (
-            <div className="p-10 text-center text-gray-500">아직 등록된 글이 없습니다.</div>
+            <div className="p-10 text-center text-gray-500">
+                {searchParams.q ? `'${searchParams.q}' 검색 결과가 없습니다.` : "아직 등록된 글이 없습니다."}
+            </div>
           ) : (
             posts.map((post: any) => (
               <Link 
@@ -76,6 +67,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
                         {post.pinned_reason || "공지"}
                       </span>
                   )}
+                  {/* 모바일 등 좁은 화면을 위해 카테고리 태그 표시 */}
                   <span className="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold">
                     {currentSub?.label}
                   </span>
@@ -104,7 +96,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <Link
               key={p}
-              href={`/${params.category}/${params.subcategory}?page=${p}`}
+              href={`/${params.category}/${params.subcategory}?page=${p}${searchParams.q ? `&q=${searchParams.q}` : ''}`}
               className={`px-3 py-1 rounded border text-sm ${
                 p === page ? "bg-blue-600 text-white border-blue-600 font-bold" : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
               }`}
@@ -113,13 +105,6 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
             </Link>
           ))}
         </div>
-      </main>
-
-      {/* 우측 사이드바 */}
-      <div className="hidden md:block md:col-span-3">
-        <SidebarRight />
-      </div>
-
     </div>
   );
 }
