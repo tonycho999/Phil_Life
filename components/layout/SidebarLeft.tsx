@@ -48,6 +48,9 @@ export default function SidebarLeft() {
               <Link href="/admin" className="block w-full py-2 bg-gray-800 text-white text-xs rounded hover:bg-gray-700 transition">
                 ⚙️ 관리자 페이지
               </Link>
+              <Link  href="/admin/hidden" className="flex items-center gap-2 p-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                  <Eye size={20} /> <span className="font-bold">숨김 글 관리</span>
+              </Link>
               <div className="grid grid-cols-2 gap-2">
                 <Link href="/my-posts" className="block w-full py-2 bg-blue-50 text-blue-600 text-xs rounded hover:bg-blue-100 transition font-bold">
                   내 글 보기
