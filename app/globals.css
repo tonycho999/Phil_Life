@@ -21,3 +21,25 @@
     animation-play-state: paused;
   }
 }
+
+/* ... 위쪽 기존 내용은 건드리지 마세요 ... */
+
+@layer utilities {
+  @keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  
+  .animate-marquee {
+    /* 수정된 부분: inline-block 대신 flex를 써야 가로로 정렬됩니다 */
+    display: flex !important; 
+    align-items: center;
+    white-space: nowrap;
+    width: max-content; /* 내용물만큼 길어지게 설정 */
+    animation: marquee 40s linear infinite;
+  }
+  
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+}
