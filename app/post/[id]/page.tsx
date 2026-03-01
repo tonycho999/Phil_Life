@@ -1,49 +1,52 @@
 import { createClient } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import CommentSection from "@/components/post/CommentSection"; // 댓글 컴포넌트
-import { Edit, Eye } from "lucide-react"; // 아이콘
+import CommentSection from "@/components/post/CommentSection";
+import { Edit, Eye, Trash2, ShieldAlert } from "lucide-react"; // 아이콘 import 확인
 
-export const dynamic = "force-dynamic"; // 실시간 데이터 반영
+export const dynamic = "force-dynamic";
 
 export default async function PostDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
   
-  // 1. 조회수 증가 (RPC 함수 호출)
-  // RPC 함수가 없다면 이 줄은 에러가 날 수 있으니, 에러 시 무시되도록 try-catch 하거나 
-  // supabase.rpc가 실패해도 페이지 로딩은 되도록 해야 합니다.
-  // 여기서는 일단 호출합니다.
-  await supabase.rpc('increment_views', { row_id: params.id }).catch(() => {}); 
+  // ★ 수정된 부분: 조회수 증가가 실패해도 페이지는 뜨도록 안전장치 추가
+  try {
+    await supabase.rpc('increment_views', { row_id: params.id });
+  } catch (e) {
+    console.error("조회수 증가 실패 (함수 없음 등):", e);
+  }
 
-  // 2. 게시글 정보 + 작성자 정보 가져오기
-  const { data: post } = await supabase
+  // 게시글 정보 가져오기
+  const { data: post, error } = await supabase
     .from("posts")
-    .select("*, profiles(nickname, grade, level)")
+    .select("*, profiles(nickname, grade, level)") // profiles에 grade, level이 있어야 함
     .eq("id", params.id)
     .single();
 
-  if (!post) return notFound();
+  if (error || !post) {
+    console.error("게시글 로딩 에러:", error);
+    return notFound();
+  }
 
-  // 3. 현재 로그인한 유저 확인 (권한 체크용)
+  // 현재 로그인한 유저 확인
   const { data: { user } } = await supabase.auth.getUser();
   
   // 관리자 여부 체크
   let isAdmin = false;
   if (user) {
-    const { data: currentUserProfile } = await supabase
+    const { data: profile } = await supabase
       .from("profiles")
       .select("grade, level")
       .eq("id", user.id)
       .single();
     
-    // grade가 '관리자' 이거나 level이 10 이상이면 관리자
-    isAdmin = currentUserProfile?.grade === "관리자" || (currentUserProfile?.level || 0) >= 10;
+    isAdmin = profile?.grade === "관리자" || (profile?.level || 0) >= 10;
   }
 
-  // 작성자 본인 여부 체크
+  // 작성자 본인 확인
   const isAuthor = user?.id === post.author_id;
 
-  // 본문 렌더링 로직 (HTML vs Text)
+  // 본문 렌더링
   const renderContent = () => {
     if (post.format === 'html') {
       return (
@@ -60,7 +63,6 @@ export default async function PostDetailPage({ params }: { params: { id: string 
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* 헤더 영역 */}
       <div className="mb-6 border-b pb-4">
-        {/* 카테고리 / 공지 배지 */}
         <div className="flex items-center gap-2 mb-2">
             <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">
                 {post.category_sub}
@@ -72,13 +74,12 @@ export default async function PostDetailPage({ params }: { params: { id: string 
             )}
         </div>
 
-        {/* 제목 및 수정 버튼 */}
         <div className="flex justify-between items-start gap-4">
             <h1 className="text-2xl font-bold text-gray-900 mb-3 leading-tight flex-1">
                 {post.title}
             </h1>
             
-            {/* ★ 작성자에게만 보이는 수정 버튼 */}
+            {/* 수정 버튼 (작성자만) */}
             {isAuthor && (
                 <Link 
                     href={`/post/edit/${post.id}`} 
@@ -89,7 +90,6 @@ export default async function PostDetailPage({ params }: { params: { id: string 
             )}
         </div>
 
-        {/* 작성자 / 날짜 / 조회수 */}
         <div className="flex justify-between items-center text-sm text-gray-500 mt-1">
             <div className="flex items-center gap-3">
                 <span className="font-bold text-gray-800">{post.profiles?.nickname || "알 수 없음"}</span>
@@ -101,19 +101,19 @@ export default async function PostDetailPage({ params }: { params: { id: string 
         </div>
       </div>
 
-      {/* 본문 내용 */}
+      {/* 본문 */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 min-h-[300px] mb-8">
         {renderContent()}
       </div>
 
-      {/* 관리자 컨트롤 패널 (숨김 / 삭제) */}
+      {/* 관리자 컨트롤 패널 */}
       {isAdmin && (
         <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200 flex flex-wrap gap-4 items-center justify-between">
           <span className="text-xs font-bold text-gray-500 flex items-center gap-2">
-            🛡️ 관리자 메뉴
+            <ShieldAlert size={14} /> 관리자 메뉴
           </span>
           <div className="flex gap-2">
-            {/* 숨김 처리 버튼 */}
+            {/* 숨김 처리 */}
             <form action={async () => {
                 "use server";
                 const sb = createClient();
@@ -124,24 +124,24 @@ export default async function PostDetailPage({ params }: { params: { id: string 
                 </button>
             </form>
 
-            {/* 영구 삭제 버튼 */}
+            {/* 영구 삭제 */}
             <form action={async () => {
                 "use server";
                 const sb = createClient();
                 await sb.from("posts").delete().eq("id", post.id);
             }}>
-                <button className="px-3 py-1.5 bg-red-100 text-red-600 border border-red-200 rounded text-xs font-bold hover:bg-red-600 hover:text-white transition">
-                    영구 삭제
+                <button className="px-3 py-1.5 bg-red-100 text-red-600 border border-red-200 rounded text-xs font-bold hover:bg-red-600 hover:text-white transition flex items-center gap-1">
+                    <Trash2 size={12} /> 영구 삭제
                 </button>
             </form>
           </div>
         </div>
       )}
 
-      {/* ★ 댓글 섹션 */}
+      {/* 댓글 섹션 */}
       <CommentSection postId={params.id} />
 
-      {/* 목록으로 돌아가기 버튼 */}
+      {/* 목록 버튼 */}
       <div className="mt-10 text-center border-t pt-8">
         <Link 
             href={`/${post.category_main}/${post.category_sub}`}
