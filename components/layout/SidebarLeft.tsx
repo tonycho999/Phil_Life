@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { createClient } from "@/lib/supabase";
-import { MENUS } from "@/lib/constants"; // ★ 이미 있는 메뉴 데이터 사용
+import { MENUS } from "@/lib/constants"; 
 import { 
   User, ChevronRight, LayoutGrid, 
   Newspaper, MapPin, MessageSquare, Building2, ShoppingBag, Plane, Store 
@@ -79,10 +79,10 @@ export default function SidebarLeft() {
 
   // 3. 내비게이션 렌더링 (constants.ts의 MENUS 활용)
   const renderNavigation = () => {
-    // URL 분석 (예: /news/local -> news)
+    // URL 분석 (예: /news/local -> ["", "news", "local"])
     const currentPath = pathname.split("/");
 
-    // (A) 현재 대분류 찾기
+    // (A) 현재 대분류 찾기 (currentPath이 대분류 ID)
     const activeMenu = MENUS.find((m: any) => m.id === currentPath);
     
     // (B) 서브 메뉴가 있는 경우 (상세 페이지 진입 시)
@@ -124,29 +124,8 @@ export default function SidebarLeft() {
         );
     }
 
-    // (C) 홈 화면이거나 서브 메뉴가 없는 경우 (전체 바로가기)
-    return (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-            <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
-                <LayoutGrid size={16} className="text-gray-500"/> <h3 className="font-bold text-gray-700 text-sm">바로가기</h3>
-            </div>
-            <nav className="flex flex-col p-2">
-                {MENUS.map((menu: any) => {
-                    const Icon = ICONS[menu.id] || LayoutGrid;
-                    return (
-                        <Link 
-                            key={menu.id} 
-                            href={`/${menu.id}`} 
-                            className="flex items-center gap-3 p-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition font-medium text-sm"
-                        >
-                            <Icon size={18} className="text-gray-400"/> 
-                            {menu.label}
-                        </Link>
-                    );
-                })}
-            </nav>
-        </div>
-    );
+    // (C) 홈 화면이거나 서브 메뉴가 없는 경우 -> 아무것도 표시하지 않음
+    return null;
   };
 
   return (
