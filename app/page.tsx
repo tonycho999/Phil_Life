@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase";
 import SidebarLeft from "@/components/layout/SidebarLeft";
 import SidebarRight from "@/components/layout/SidebarRight";
-import NicknameSetup from "@/components/auth/NicknameSetup"; // ★ 방금 만든 컴포넌트 임포트
 import Link from "next/link";
 import { ChevronRight, Eye } from "lucide-react";
 
@@ -60,25 +59,10 @@ function HomeBoardWidget({ title, posts, link, color = "blue" }: any) {
 export default async function Home() {
   const supabase = createClient();
 
-  // 1. 유저 정보 조회 (서버 사이드)
-  const { data: { user } } = await supabase.auth.getUser();
+  // ★ 수정됨: 여기서 닉네임 체크하던 로직(NicknameSetup)을 삭제했습니다.
+  // 이제 app/layout.tsx에 있는 NicknameGuard가 알아서 처리하므로 여기는 데이터만 불러오면 됩니다.
 
-  // 2. 로그인 상태라면, 프로필(닉네임) 확인
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("nickname")
-      .eq("id", user.id)
-      .single();
-
-    // ★ 핵심 수정: 닉네임이 없으면 메인 화면을 그리지 않고, 설정 화면만 리턴해버림 (Early Return)
-    if (!profile?.nickname) {
-      return <NicknameSetup userId={user.id} />;
-    }
-  }
-
-  // --- 닉네임이 있을 때만 아래 메인 화면이 실행됩니다 ---
-
+  // 각 섹션별 데이터 병렬 조회
   const [news, community, info, qna] = await Promise.all([
     supabase.from("posts").select("*, profiles(nickname)").eq("category_main", "news").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
     supabase.from("posts").select("*, profiles(nickname)").eq("category_main", "community").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
