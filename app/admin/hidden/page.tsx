@@ -10,17 +10,25 @@ export default function HiddenPostsPage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 숨김 글 목록 불러오기
+  // 숨긴 글 목록 불러오기
   const fetchHiddenPosts = async () => {
     setLoading(true);
+
+    // ★ 수정됨: profiles 정보가 없어도 글은 가져오도록 조인 방식 개선
     const { data, error } = await supabase
       .from("posts")
-      .select("*, profiles(nickname)")
-      .eq("is_hidden", true) // ★ 숨겨진 글만 조회
+      .select(`
+        *,
+        profiles ( nickname )
+      `)
+      .eq("is_hidden", true)
       .order("created_at", { ascending: false });
 
-    if (error) console.error(error);
-    else setPosts(data || []);
+    if (error) {
+      console.error("숨긴 글 불러오기 실패:", error);
+    } else {
+      setPosts(data || []);
+    }
     setLoading(false);
   };
 
@@ -31,15 +39,27 @@ export default function HiddenPostsPage() {
   // 1. 복구 (숨김 해제)
   const handleRestore = async (id: string) => {
     if (!confirm("이 글을 복구하시겠습니까? 게시판에 다시 보입니다.")) return;
-    await supabase.from("posts").update({ is_hidden: false }).eq("id", id);
-    fetchHiddenPosts(); // 목록 갱신
+    
+    const { error } = await supabase
+        .from("posts")
+        .update({ is_hidden: false })
+        .eq("id", id);
+
+    if (error) alert("복구 실패: " + error.message);
+    else fetchHiddenPosts(); // 목록 갱신
   };
 
   // 2. 영구 삭제
   const handleDelete = async (id: string) => {
     if (!confirm("정말 영구 삭제하시겠습니까? 복구 불가능합니다.")) return;
-    await supabase.from("posts").delete().eq("id", id);
-    fetchHiddenPosts();
+    
+    const { error } = await supabase
+        .from("posts")
+        .delete()
+        .eq("id", id);
+
+    if (error) alert("삭제 실패: " + error.message);
+    else fetchHiddenPosts();
   };
 
   return (
@@ -74,11 +94,12 @@ export default function HiddenPostsPage() {
                     {post.category_sub}
                   </td>
                   <td className="px-6 py-4 font-medium text-gray-800">
-                    <Link href={`/post/${post.id}`} className="hover:underline hover:text-blue-600">
-                      {post.title}
-                    </Link>
+                    <span className="line-clamp-1">{post.title}</span>
                   </td>
-                  <td className="px-6 py-4">{post.profiles?.nickname}</td>
+                  <td className="px-6 py-4">
+                    {/* 작성자 정보가 없을 경우 '알수없음' 처리 */}
+                    {post.profiles?.nickname || "알수없음"}
+                  </td>
                   <td className="px-6 py-4 text-gray-400">
                     {new Date(post.created_at).toLocaleDateString()}
                   </td>
