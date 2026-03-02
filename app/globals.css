@@ -43,3 +43,27 @@
     animation-play-state: paused;
   }
 }
+
+/* ... 위쪽 기존 내용은 건드리지 마세요 ... */
+
+@layer utilities {
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-33.333%); } /* ★ 핵심: 전체 길이의 1/3만 이동하고 리셋 */
+  }
+  
+  .animate-marquee {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    white-space: nowrap;
+    width: max-content; 
+    animation: marquee 60s linear infinite; /* 속도를 60초로 천천히 부드럽게 */
+    will-change: transform; /* 브라우저에게 미리 알려줘서 버벅임 방지 */
+  }
+  
+  /* 마우스 올리면 멈춤 */
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+}
