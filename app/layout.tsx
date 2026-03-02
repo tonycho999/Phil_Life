@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "@/components/auth/AuthProvider";
-// ★ 중요: 이름을 MainHeader로 바꿨으므로 여기서도 MainHeader를 불러옵니다.
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import MainHeader from "@/components/layout/MainHeader";
+import NicknameGuard from "@/components/auth/NicknameGuard"; // ★ 새로 만든 감시병 컴포넌트
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Phil Life - 필리핀 생활 정보 커뮤니티",
-  description: "필리핀 교민을 위한 뉴스, 정보, 커뮤니티, 부동산, 구인구직 플랫폼",
+  title: "Phil Life - 필리핀 한인 커뮤니티",
+  description: "필리핀 교민들을 위한 정보 공유 및 커뮤니티",
 };
 
 export default function RootLayout({
@@ -21,11 +21,11 @@ export default function RootLayout({
     <html lang="ko">
       <body className={inter.className}>
         <AuthProvider>
-          <div className="min-h-screen bg-gray-50">
-            {/* ★ 중요: 여기서 MainHeader 컴포넌트를 사용합니다. */}
-            <MainHeader />
-            {children}
-          </div>
+          {/* ★ 닉네임 감시병 배치 (헤더, 사이드바 상관없이 항상 작동) */}
+          <NicknameGuard />
+          
+          <MainHeader />
+          {children}
         </AuthProvider>
       </body>
     </html>
