@@ -50,7 +50,7 @@ export default function NicknameModal({ userId, onComplete }: Props) {
   };
 
   return (
-    // ★ 핵심 수정: z-를 추가하여 화면의 모든 요소(배너 포함)보다 위에 뜨게 설정
+    // ★ 핵심 수정: z-로 설정하여 가장 최상위에 표시되도록 강제함
     <div className="fixed inset-0 z- flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full animate-in fade-in zoom-in duration-200">
         
