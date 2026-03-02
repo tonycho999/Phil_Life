@@ -6,32 +6,21 @@ import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
 import { useAuth } from "@/components/auth/AuthProvider";
 import NicknameModal from "@/components/auth/NicknameModal";
-import { Search, Sun, Cloud, CloudRain, CloudLightning, Snowflake, DollarSign, Coins, RefreshCcw } from "lucide-react";
+import { Search, Sun, Cloud, CloudRain, CloudLightning, Snowflake, DollarSign, Coins, RefreshCcw, Loader2 } from "lucide-react";
 
 const WEATHER_API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY || "";
 
-// ★ API 검색용 도시 이름 (API가 인식하는 영문명)
 const CITY_QUERIES = [
   "Manila", "Cebu", "Angeles", "Davao", "Boracay", 
   "Baguio", "Iloilo", "Tagbilaran", "Legazpi", "Santa Rosa", 
   "Cavite City", "Subic", "Vigan"
 ];
 
-// ★ 화면 표시용 한글 이름 매핑
 const CITY_LABELS: { [key: string]: string } = {
-  "Manila": "마닐라",
-  "Cebu": "세부",
-  "Angeles": "앙헬레스/클락",
-  "Davao": "다바오",
-  "Boracay": "보라카이",
-  "Baguio": "바기오",
-  "Iloilo": "일로일로",
-  "Tagbilaran": "보홀",       // 보홀의 주도(Tagbilaran) 날씨를 보홀로 표시
-  "Legazpi": "레가스피",
-  "Santa Rosa": "라구나",     // 라구나의 주요도시(Santa Rosa) 날씨를 라구나로 표시
-  "Cavite City": "카비테",
-  "Subic": "수빅",
-  "Vigan": "비간"
+  "Manila": "마닐라", "Cebu": "세부", "Angeles": "앙헬레스", "Davao": "다바오",
+  "Boracay": "보라카이", "Baguio": "바기오", "Iloilo": "일로일로",
+  "Tagbilaran": "보홀", "Legazpi": "레가스피", "Santa Rosa": "라구나",
+  "Cavite City": "카비테", "Subic": "수빅", "Vigan": "비간"
 };
 
 export default function MainHeader() {
@@ -42,9 +31,6 @@ export default function MainHeader() {
   const [exchange, setExchange] = useState({ usd: 0, php: 0, loading: true });
   const [weatherList, setWeatherList] = useState<any[]>([]);
   const [weatherLoading, setWeatherLoading] = useState(true);
-
-  // 도시가 5개 이상이면 자동으로 스크롤
-  const shouldScroll = weatherList.length >= 5;
 
   const getWeatherIcon = (main: string) => {
     switch (main) {
@@ -76,21 +62,21 @@ export default function MainHeader() {
       }
     };
 
-    // 2. 날씨 정보
+    // 2. 날씨 정보 (최적화)
     const fetchWeather = async () => {
       if (!WEATHER_API_KEY) {
         setWeatherLoading(false);
         return;
       }
       try {
+        // Promise.all로 13개 도시 동시 요청 (가장 빠른 방법)
         const promises = CITY_QUERIES.map(async (queryCity) => {
-          // 필리핀 코드(PH)와 섭씨(metric) 설정
           const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${queryCity},PH&appid=${WEATHER_API_KEY}&units=metric`);
           if (!res.ok) return null;
           const data = await res.json();
           
           return {
-            city: CITY_LABELS[queryCity] || queryCity, // 한글 이름으로 변환
+            city: CITY_LABELS[queryCity] || queryCity,
             temp: Math.round(data.main.temp),
             main: data.weather.main
           };
@@ -100,6 +86,7 @@ export default function MainHeader() {
         setWeatherList(results.filter(item => item !== null));
         setWeatherLoading(false);
       } catch (e) {
+        console.error("날씨 로딩 실패", e);
         setWeatherLoading(false);
       }
     };
@@ -129,7 +116,7 @@ export default function MainHeader() {
             {/* 좌측: 환율 (고정) */}
             <div className="w-[30%] md:w-[25%] lg:w-[20%] h-full bg-blue-50/50 flex items-center justify-center px-2 border-r border-gray-200 shrink-0 z-10">
                {exchange.loading ? (
-                 <span className="text-gray-400 flex items-center gap-1"><RefreshCcw size={10} className="animate-spin"/> 로딩중..</span>
+                 <span className="text-gray-400 flex items-center gap-1"><RefreshCcw size={10} className="animate-spin"/> 로딩..</span>
                ) : (
                  <div className="flex flex-col md:flex-row items-center gap-1 md:gap-3 font-bold text-slate-700 whitespace-nowrap">
                     <span className="flex items-center gap-1 text-blue-700">
@@ -143,33 +130,27 @@ export default function MainHeader() {
                )}
             </div>
 
-            {/* 우측: 날씨 (도시가 많으므로 흐르는 애니메이션 적용) */}
+            {/* 우측: 날씨 (3세트 복제 - 무한 루프) */}
             <div className="flex-1 h-full flex items-center overflow-hidden bg-white relative">
                {weatherLoading ? (
-                 <div className="pl-4 text-gray-400">날씨 로딩 중...</div>
+                 <div className="flex items-center gap-2 px-4 text-gray-400">
+                    <Loader2 size={12} className="animate-spin" /> 날씨 정보를 가져오는 중...
+                 </div>
                ) : (
-                 <div className={shouldScroll ? "animate-marquee gap-8 px-4" : "flex items-center gap-6 px-4 w-full justify-end"}>
-                    
-                    {/* 1. 기본 목록 */}
-                    {weatherList.map((w, i) => (
+                 // ★ 핵심: weatherList를 3번 반복해서 렌더링 (Set 1, Set 2, Set 3)
+                 // CSS 애니메이션이 전체 길이의 1/3만큼 이동하고 처음으로 돌아가기 때문에 
+                 // 시각적으로 끊김이 전혀 발생하지 않습니다.
+                 <div className="animate-marquee gap-8 px-4">
+                    {[...weatherList, ...weatherList, ...weatherList].map((w, i) => (
                       <div key={i} className="flex items-center gap-2 shrink-0 text-gray-600 font-medium">
                          <span className="font-bold text-gray-800">📍{w.city}</span>
                          <span className="flex items-center gap-1">{getWeatherIcon(w.main)} {w.temp}°</span>
+                         {/* 각 세트 사이에 구분선 추가 (마지막 아이템 제외) */}
+                         {(i + 1) % weatherList.length === 0 && i !== (weatherList.length * 3 - 1) && (
+                            <span className="text-gray-300 mx-4">|</span>
+                         )}
                       </div>
                     ))}
-
-                    {/* 2. 스크롤 모드일 때만 목록 복제 (끊김 방지) */}
-                    {shouldScroll && (
-                      <>
-                        <span className="text-gray-300 mx-4">|</span>
-                        {weatherList.map((w, i) => (
-                          <div key={`dup-${i}`} className="flex items-center gap-2 shrink-0 text-gray-600 font-medium">
-                             <span className="font-bold text-gray-800">📍{w.city}</span>
-                             <span className="flex items-center gap-1">{getWeatherIcon(w.main)} {w.temp}°</span>
-                          </div>
-                        ))}
-                      </>
-                    )}
                  </div>
                )}
             </div>
