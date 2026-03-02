@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
-import { useRouter } from "next/navigation"; // 라우터 추가
+import { useRouter } from "next/navigation";
 
 export default function NicknameModal({ userId, onComplete }: { userId: string, onComplete: () => void }) {
   const [nickname, setNickname] = useState("");
@@ -26,12 +26,12 @@ export default function NicknameModal({ userId, onComplete }: { userId: string, 
     setError("");
 
     try {
-      // 2. 중복 검사 (★ 중요 수정: maybeSingle 사용)
+      // 2. 중복 검사
       const { data: existing, error: checkError } = await supabase
         .from("profiles")
         .select("id")
         .eq("nickname", nickname.trim())
-        .maybeSingle(); // 데이터가 없으면 null 반환 (에러 안 남)
+        .maybeSingle();
 
       if (checkError) throw checkError;
 
@@ -41,7 +41,7 @@ export default function NicknameModal({ userId, onComplete }: { userId: string, 
         return;
       }
 
-      // 3. 저장 (내 정보 업데이트)
+      // 3. 저장
       const { error: updateError } = await supabase
         .from("profiles")
         .update({ nickname: nickname.trim() })
@@ -50,9 +50,9 @@ export default function NicknameModal({ userId, onComplete }: { userId: string, 
       if (updateError) throw updateError;
 
       // 4. 성공 처리
-      await onComplete(); // 부모 컴포넌트(Guard)에 알림
-      router.refresh();   // 데이터 새로고침
-      window.location.reload(); // 확실하게 페이지 리로드해서 에러 방지
+      await onComplete(); 
+      router.refresh();   
+      window.location.reload(); 
 
     } catch (err: any) {
       console.error(err);
@@ -62,7 +62,6 @@ export default function NicknameModal({ userId, onComplete }: { userId: string, 
     }
   };
 
-  // 엔터키 입력 시 처리
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
         handleSubmit();
@@ -70,9 +69,10 @@ export default function NicknameModal({ userId, onComplete }: { userId: string, 
   };
 
   return (
-    // 배경 (어둡게 처리 & 클릭 막기)
-    <div className="fixed inset-0 z- flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      {/* 팝업 박스 */}
+    // ★ 수정됨: bg-black/70 -> bg-black/40 (배경이 은은하게 비치도록 변경)
+    <div className="fixed inset-0 z- flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+      
+      {/* 팝업 박스 디자인 */}
       <div className="bg-white p-8 rounded-2xl shadow-2xl w-[90%] max-w-sm border border-gray-100 animate-in fade-in zoom-in duration-300">
         <div className="text-center mb-6">
           <div className="mx-auto w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-4">
