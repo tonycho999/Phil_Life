@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { createPortal } from "react-dom"; // ★ 핵심: Portal 기능을 위해 import
+import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 
 interface Props {
@@ -12,17 +11,7 @@ interface Props {
 export default function NicknameModal({ userId, onComplete }: Props) {
   const [nickname, setNickname] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mounted, setMounted] = useState(false); // ★ 클라이언트 렌더링 확인용
   const supabase = createClient();
-
-  useEffect(() => {
-    setMounted(true);
-    // 모달이 떠있을 때 뒤쪽 화면 스크롤 막기
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, []);
 
   const handleSubmit = async () => {
     if (!nickname.trim() || nickname.length < 2) {
@@ -55,24 +44,22 @@ export default function NicknameModal({ userId, onComplete }: Props) {
       alert("오류가 발생했습니다: " + error.message);
     } else {
       alert("환영합니다! 닉네임이 설정되었습니다.");
-      onComplete(); // 상위 컴포넌트에 알림
+      onComplete(); 
     }
     setLoading(false);
   };
 
-  // 서버 사이드 렌더링 중에는 아무것도 그리지 않음 (에러 방지)
-  if (!mounted) return null;
-
-  // ★ 핵심 해결: createPortal을 사용하여 모달을 body 태그로 직접 전송
-  // 이렇게 하면 부모 요소(헤더, 배너 등)의 z-index 영향을 받지 않고 무조건 맨 위에 뜹니다.
-  return createPortal(
-    <div className="fixed inset-0 z- flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full animate-in fade-in zoom-in duration-200">
-        
-        <div className="text-center mb-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-2">닉네임 설정</h2>
-          <p className="text-sm text-gray-500 break-keep">
-            커뮤니티 활동을 위해<br/>멋진 닉네임을 정해주세요.
+  return (
+    // ★ 핵심 수정: fixed로 화면 전체를 꽉 채우고(bg-white), 우선순위를 최상(z-)으로 높임
+    // 이렇게 하면 뒤에 있는 사이트 내용이 아예 안 보입니다.
+    <div className="fixed top-0 left-0 w-full h-full bg-white z- flex items-center justify-center p-4">
+      
+      <div className="max-w-sm w-full">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-black text-blue-600 mb-4">Phil Life</h1>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">닉네임 설정</h2>
+          <p className="text-gray-500">
+            서비스 이용을 위해<br/>사용하실 닉네임을 입력해주세요.
           </p>
         </div>
 
@@ -82,21 +69,21 @@ export default function NicknameModal({ userId, onComplete }: Props) {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             placeholder="한글/영문 2~10자"
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-center focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+            className="w-full border-b-2 border-gray-300 px-4 py-4 text-center text-xl focus:outline-none focus:border-blue-600 transition placeholder:text-gray-300"
             maxLength={10}
+            autoFocus
           />
 
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition disabled:bg-gray-400"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-lg transition disabled:bg-gray-400 mt-6"
           >
             {loading ? "저장 중..." : "시작하기"}
           </button>
         </div>
-
       </div>
-    </div>,
-    document.body // 이 부분이 모달을 body 바로 아래로 옮겨줍니다.
+
+    </div>
   );
 }
