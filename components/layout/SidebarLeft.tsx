@@ -8,7 +8,7 @@ import { MENUS } from "@/lib/constants";
 import { 
   User, ChevronRight, LayoutGrid, 
   Newspaper, MapPin, MessageSquare, Building2, ShoppingBag, Plane, Store,
-  ShieldAlert, Settings, EyeOff
+  Settings, EyeOff
 } from "lucide-react";
 
 // 아이콘 매핑
@@ -86,32 +86,34 @@ export default function SidebarLeft() {
             </div>
         )}
 
-        <button className="w-full border border-gray-200 text-gray-600 py-2 rounded-lg text-xs font-bold hover:bg-gray-50 hover:text-blue-600 transition">마이페이지</button>
+        {/* ★ 수정됨: 이미 존재하는 /my-posts 경로로 연결하고 이름 변경 */}
+        <Link 
+            href="/my-posts" 
+            className="block w-full border border-gray-200 text-gray-600 py-2 rounded-lg text-xs font-bold hover:bg-gray-50 hover:text-blue-600 transition text-center"
+        >
+            내 글 보기
+        </Link>
       </div>
     );
   };
 
   // 3. 내비게이션 렌더링
   const renderNavigation = () => {
-    if (pathname === "/") return null; // 홈에서는 안 보임
+    if (pathname === "/") return null;
 
-    // ★ 수정된 로직: 현재 URL이 메뉴 ID로 시작하는지 확인 (예: /news, /news/local 모두 매칭)
     const activeMenu = MENUS.find((m: any) => 
         pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
     );
     
-    // 해당 대분류가 있고, 서브메뉴가 존재하는 경우 렌더링
     if (activeMenu && activeMenu.sub && activeMenu.sub.length > 0) {
         const Icon = ICONS[activeMenu.id] || LayoutGrid;
         
         return (
             <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-                {/* 헤더 */}
                 <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
                     <Icon size={16} className="text-blue-600"/> 
                     <h3 className="font-bold text-gray-700 text-sm">{activeMenu.label}</h3>
                 </div>
-                {/* 서브 메뉴 리스트 */}
                 <nav className="flex flex-col p-2">
                     {activeMenu.sub.map((subItem: any) => (
                         <Link 
@@ -127,7 +129,6 @@ export default function SidebarLeft() {
                             <ChevronRight size={14} className="opacity-30"/>
                         </Link>
                     ))}
-                    {/* 전체보기 링크 */}
                     <Link 
                          href={`/${activeMenu.id}`}
                          className={`flex items-center justify-between p-3 text-xs mt-1 border-t border-gray-50 ${
@@ -143,7 +144,6 @@ export default function SidebarLeft() {
         );
     }
 
-    // 그 외의 경우 (홈 등) 아무것도 표시 안 함
     return null;
   };
 
