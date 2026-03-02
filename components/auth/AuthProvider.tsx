@@ -2,55 +2,66 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
 
-// 1. Context 생성
-const AuthContext = createContext({
-  user: null,
-  profile: null,
-  loading: true,
-  refreshProfile: async () => {},
-});
+interface Profile {
+  id: string;
+  nickname: string | null;
+  grade: string;
+  level: number;
+}
 
-// 2. 훅 내보내기 (Named Export)
-export const useAuth = () => useContext(AuthContext);
+interface AuthContextType {
+  user: User | null;
+  profile: Profile | null;
+  loading: boolean;
+  refreshProfile: () => Promise<void>;
+  signOut: () => Promise<void>;
+}
 
-// 3. ★ 핵심: Provider를 "default export"로 내보내기
-export default function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  
-  // Supabase 클라이언트 생성
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// ★ 중요: export default가 아니라 export function 이어야 합니다.
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const supabase = createClient();
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const refreshProfile = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-      setProfile(data);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+
+      if (user) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+        
+        setProfile(data || null); 
+      } else {
+        setProfile(null);
+      }
+    } catch (error) {
+      console.error("프로필 로딩 에러:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      if (user) {
-        const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-        setProfile(data);
-      }
-      setLoading(false);
-    };
-    init();
+    refreshProfile();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        refreshProfile();
-      } else {
-        setProfile(null);
-      }
-      setLoading(false);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+             refreshProfile();
+        } else if (event === 'SIGNED_OUT') {
+             setUser(null);
+             setProfile(null);
+             setLoading(false);
+        }
     });
 
     return () => {
@@ -58,9 +69,25 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     };
   }, []);
 
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setProfile(null);
+    window.location.href = "/";
+  };
+
   return (
-    <AuthContext.Provider value={{ user, profile, loading, refreshProfile }}>
+    <AuthContext.Provider value={{ user, profile, loading, refreshProfile, signOut }}>
       {children}
     </AuthContext.Provider>
   );
 }
+
+// ★ 중요: useAuth도 export로 내보내야 합니다.
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
