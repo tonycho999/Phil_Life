@@ -7,10 +7,11 @@ import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants"; 
 import { 
   User, ChevronRight, LayoutGrid, 
-  Newspaper, MapPin, MessageSquare, Building2, ShoppingBag, Plane, Store 
+  Newspaper, MapPin, MessageSquare, Building2, ShoppingBag, Plane, Store,
+  ShieldAlert, Settings, EyeOff
 } from "lucide-react";
 
-// 아이콘 매핑 (constants.ts의 id와 일치시킴)
+// 아이콘 매핑
 const ICONS: { [key: string]: any } = {
   news: Newspaper,
   info: MapPin,
@@ -18,7 +19,7 @@ const ICONS: { [key: string]: any } = {
   estate: Building2,
   market: ShoppingBag,
   travel: Plane,
-  biz: Store, // 교민업체 (id: biz)
+  biz: Store,
 };
 
 export default function SidebarLeft() {
@@ -37,7 +38,7 @@ export default function SidebarLeft() {
     });
   };
 
-  // 2. 프로필 영역 (항상 고정)
+  // 2. 프로필 영역
   const renderProfile = () => {
     if (loading) return <div className="h-[200px] bg-gray-50 animate-pulse rounded-xl border border-gray-100 mb-6"></div>;
     
@@ -59,6 +60,8 @@ export default function SidebarLeft() {
     }
 
     // 로그인 완료
+    const isAdmin = profile?.grade === "관리자" || (profile?.level || 0) >= 10;
+
     return (
       <div className="bg-white border border-gray-200 p-5 rounded-xl shadow-sm text-center mb-6">
         <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-3 overflow-hidden flex items-center justify-center border border-gray-100">
@@ -69,41 +72,53 @@ export default function SidebarLeft() {
            <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded border border-blue-100 font-bold">{profile?.grade || "새싹"}</span>
            <span className="text-xs text-gray-400 font-mono">Lv.{profile?.level || 1}</span>
         </div>
-        {(profile?.grade === "관리자" || (profile?.level || 0) >= 10) && (
-            <Link href="/admin/grades" className="block w-full bg-gray-800 text-white py-2 rounded-lg text-xs font-bold hover:bg-gray-700 transition mb-2">관리자 페이지</Link>
+        
+        {/* 관리자 메뉴 영역 */}
+        {isAdmin && (
+            <div className="bg-gray-50 rounded-lg p-2 mb-3 border border-gray-100 text-left space-y-1">
+                <p className="text-[10px] text-gray-400 font-bold px-1 mb-1">ADMIN MENU</p>
+                <Link href="/admin/grades" className="flex items-center gap-2 w-full text-gray-700 hover:bg-white hover:text-blue-600 py-1.5 px-2 rounded-md text-xs font-bold transition">
+                    <Settings size={14} /> 관리자 페이지
+                </Link>
+                <Link href="/admin/hidden-posts" className="flex items-center gap-2 w-full text-gray-700 hover:bg-white hover:text-red-600 py-1.5 px-2 rounded-md text-xs font-bold transition">
+                    <EyeOff size={14} /> 숨긴 글 관리
+                </Link>
+            </div>
         )}
+
         <button className="w-full border border-gray-200 text-gray-600 py-2 rounded-lg text-xs font-bold hover:bg-gray-50 hover:text-blue-600 transition">마이페이지</button>
       </div>
     );
   };
 
-  // 3. 내비게이션 렌더링 (constants.ts의 MENUS 활용)
+  // 3. 내비게이션 렌더링
   const renderNavigation = () => {
-    // URL 분석 (예: /news/local -> ["", "news", "local"])
-    const currentPath = pathname.split("/");
+    if (pathname === "/") return null; // 홈에서는 안 보임
 
-    // (A) 현재 대분류 찾기 (currentPath이 대분류 ID)
-    const activeMenu = MENUS.find((m: any) => m.id === currentPath);
+    // ★ 수정된 로직: 현재 URL이 메뉴 ID로 시작하는지 확인 (예: /news, /news/local 모두 매칭)
+    const activeMenu = MENUS.find((m: any) => 
+        pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
+    );
     
-    // (B) 서브 메뉴가 있는 경우 (상세 페이지 진입 시)
+    // 해당 대분류가 있고, 서브메뉴가 존재하는 경우 렌더링
     if (activeMenu && activeMenu.sub && activeMenu.sub.length > 0) {
         const Icon = ICONS[activeMenu.id] || LayoutGrid;
         
         return (
             <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-                {/* 헤더: 대분류 제목 */}
+                {/* 헤더 */}
                 <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
                     <Icon size={16} className="text-blue-600"/> 
                     <h3 className="font-bold text-gray-700 text-sm">{activeMenu.label}</h3>
                 </div>
-                {/* 리스트: 소분류 메뉴들 */}
+                {/* 서브 메뉴 리스트 */}
                 <nav className="flex flex-col p-2">
                     {activeMenu.sub.map((subItem: any) => (
                         <Link 
                             key={subItem.id} 
                             href={`/${activeMenu.id}/${subItem.id}`} 
                             className={`flex items-center justify-between p-3 rounded-lg transition font-medium text-sm ${
-                                pathname.includes(subItem.id) 
+                                pathname.includes(`/${subItem.id}`) 
                                 ? "bg-blue-50 text-blue-600 font-bold" 
                                 : "text-gray-600 hover:bg-gray-50 hover:text-blue-600"
                             }`}
@@ -112,10 +127,14 @@ export default function SidebarLeft() {
                             <ChevronRight size={14} className="opacity-30"/>
                         </Link>
                     ))}
-                    {/* 전체보기 */}
+                    {/* 전체보기 링크 */}
                     <Link 
                          href={`/${activeMenu.id}`}
-                         className="flex items-center justify-between p-3 text-gray-400 hover:text-gray-600 text-xs mt-1 border-t border-gray-50"
+                         className={`flex items-center justify-between p-3 text-xs mt-1 border-t border-gray-50 ${
+                            pathname === `/${activeMenu.id}` 
+                            ? "text-blue-600 font-bold bg-blue-50/50" 
+                            : "text-gray-400 hover:text-gray-600"
+                         }`}
                     >
                         전체 글 보기
                     </Link>
@@ -124,7 +143,7 @@ export default function SidebarLeft() {
         );
     }
 
-    // (C) 홈 화면이거나 서브 메뉴가 없는 경우 -> 아무것도 표시하지 않음
+    // 그 외의 경우 (홈 등) 아무것도 표시 안 함
     return null;
   };
 
