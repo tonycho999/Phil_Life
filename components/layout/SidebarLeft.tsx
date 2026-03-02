@@ -80,7 +80,7 @@ export default function SidebarLeft() {
                 <Link href="/admin/grades" className="flex items-center gap-2 w-full text-gray-700 hover:bg-white hover:text-blue-600 py-1.5 px-2 rounded-md text-xs font-bold transition">
                     <Settings size={14} /> 관리자 페이지
                 </Link>
-                <Link href="/admin/hidden-posts" className="flex items-center gap-2 w-full text-gray-700 hover:bg-white hover:text-red-600 py-1.5 px-2 rounded-md text-xs font-bold transition">
+                <Link href="/admin/hidden" className="flex items-center gap-2 w-full text-gray-700 hover:bg-white hover:text-red-600 py-1.5 px-2 rounded-md text-xs font-bold transition">
                     <EyeOff size={14} /> 숨긴 글 관리
                 </Link>
             </div>
