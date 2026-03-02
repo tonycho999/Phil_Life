@@ -1,8 +1,9 @@
 import { createClient } from "@/lib/supabase";
 import SidebarLeft from "@/components/layout/SidebarLeft";
 import SidebarRight from "@/components/layout/SidebarRight";
+import NicknameSetup from "@/components/auth/NicknameSetup"; // ★ 방금 만든 컴포넌트 임포트
 import Link from "next/link";
-import { ChevronRight, Eye } from "lucide-react"; // ★ 여기에 Eye가 빠져서 에러가 났던 것입니다.
+import { ChevronRight, Eye } from "lucide-react";
 
 // 홈 화면용 미니 게시판 위젯
 function HomeBoardWidget({ title, posts, link, color = "blue" }: any) {
@@ -35,7 +36,6 @@ function HomeBoardWidget({ title, posts, link, color = "blue" }: any) {
                  <p className="text-sm text-gray-700 group-hover:text-blue-600 line-clamp-1 font-medium flex-1 pr-2">
                     {post.title}
                  </p>
-                 {/* 24시간 내 새글 N 표시 */}
                  {new Date().getTime() - new Date(post.created_at).getTime() < 86400000 && (
                     <span className="w-1.5 h-1.5 bg-red-500 rounded-full mt-1.5 shrink-0"></span>
                  )}
@@ -45,7 +45,6 @@ function HomeBoardWidget({ title, posts, link, color = "blue" }: any) {
                     <span>{post.profiles?.nickname || '익명'}</span>
                     <span>{new Date(post.created_at).toLocaleDateString()}</span>
                  </div>
-                 {/* 조회수 표시 (Eye 아이콘 사용) */}
                  <div className="flex items-center gap-1">
                     <Eye size={10} /> {post.views || 0}
                  </div>
@@ -61,7 +60,25 @@ function HomeBoardWidget({ title, posts, link, color = "blue" }: any) {
 export default async function Home() {
   const supabase = createClient();
 
-  // 각 섹션별 데이터 병렬 조회
+  // 1. 유저 정보 조회 (서버 사이드)
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // 2. 로그인 상태라면, 프로필(닉네임) 확인
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("nickname")
+      .eq("id", user.id)
+      .single();
+
+    // ★ 핵심 수정: 닉네임이 없으면 메인 화면을 그리지 않고, 설정 화면만 리턴해버림 (Early Return)
+    if (!profile?.nickname) {
+      return <NicknameSetup userId={user.id} />;
+    }
+  }
+
+  // --- 닉네임이 있을 때만 아래 메인 화면이 실행됩니다 ---
+
   const [news, community, info, qna] = await Promise.all([
     supabase.from("posts").select("*, profiles(nickname)").eq("category_main", "news").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
     supabase.from("posts").select("*, profiles(nickname)").eq("category_main", "community").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
@@ -93,7 +110,6 @@ export default async function Home() {
                 </Link>
             </div>
           </div>
-          {/* 장식용 원 */}
           <div className="absolute -right-10 -bottom-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
         </div>
 
