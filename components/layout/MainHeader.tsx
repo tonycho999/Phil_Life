@@ -140,7 +140,7 @@ export default function MainHeader() {
                  // ★ 핵심: weatherList를 3번 반복해서 렌더링 (Set 1, Set 2, Set 3)
                  // CSS 애니메이션이 전체 길이의 1/3만큼 이동하고 처음으로 돌아가기 때문에 
                  // 시각적으로 끊김이 전혀 발생하지 않습니다.
-                 <div className="animate-marquee gap-8 px-4">
+                 <div className="animate-marquee flex items-center gap-8 px-4">
                     {[...weatherList, ...weatherList, ...weatherList].map((w, i) => (
                       <div key={i} className="flex items-center gap-2 shrink-0 text-gray-600 font-medium">
                          <span className="font-bold text-gray-800">📍{w.city}</span>
