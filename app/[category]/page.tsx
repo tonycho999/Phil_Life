@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
 import Link from "next/link";
+import { Suspense } from "react";
 
 // ★ 글 썼을 때 바로 보이게 하는 설정 (캐싱 방지)
 export const dynamic = "force-dynamic";
@@ -10,17 +11,17 @@ type PageProps = {
   searchParams: { page?: string; q?: string };
 };
 
-export default async function CategoryPage({ params, searchParams }: PageProps) {
+// ─────────────────────────────────────────────────────────
+// 1. [데이터 패칭 전용 컴포넌트] (이 부분만 서버에서 기다립니다)
+// ─────────────────────────────────────────────────────────
+async function PostList({ params, searchParams, currentMenu }: { params: PageProps["params"]; searchParams: PageProps["searchParams"]; currentMenu: any }) {
   const supabase = createClient();
   const page = Number(searchParams.page) || 1;
   const pageSize = 15;
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // 1. 현재 대분류 메뉴 정보 찾기 (예: 'news')
-  const currentMenu = MENUS.find((m: any) => m.id === params.category);
-
-  // 2. 해당 대분류의 **모든** 게시글 가져오기 (소분류 상관없음)
+  // 해당 대분류의 **모든** 게시글 가져오기 (소분류 상관없음)
   let query = supabase
     .from("posts")
     .select("*, profiles(nickname)", { count: "exact" })
@@ -38,17 +39,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const totalPages = count ? Math.ceil(count / pageSize) : 1;
 
   return (
-    <div className="space-y-4">
-      {/* 헤더 영역: 글쓰기 버튼 없음 */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-        <h2 className="text-xl font-bold text-gray-800">
-          {currentMenu?.label || params.category}
-        </h2>
-        <p className="text-xs text-gray-500 mt-1">
-          {currentMenu?.label} 전체 게시글 목록
-        </p>
-      </div>
-
+    <>
       {/* 게시글 리스트 */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 divide-y divide-gray-100 min-h-[500px]">
         {!posts || posts.length === 0 ? (
@@ -122,6 +113,38 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
           </Link>
         ))}
       </div>
+    </>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// 2. [메인 페이지 컴포넌트] (이 부분은 클릭 즉시 화면에 렌더링됩니다)
+// ─────────────────────────────────────────────────────────
+export default function CategoryPage({ params, searchParams }: PageProps) {
+  // 1. 현재 대분류 메뉴 정보 찾기 (예: 'news')
+  const currentMenu = MENUS.find((m: any) => m.id === params.category);
+
+  return (
+    <div className="space-y-4">
+      {/* 헤더 영역: 즉시 렌더링됨 */}
+      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <h2 className="text-xl font-bold text-gray-800">
+          {currentMenu?.label || params.category}
+        </h2>
+        <p className="text-xs text-gray-500 mt-1">
+          {currentMenu?.label} 전체 게시글 목록
+        </p>
+      </div>
+
+      {/* 게시글 리스트 영역: Suspense로 감싸서 로딩 중일 때 스피너를 보여줌 */}
+      <Suspense fallback={
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 min-h-[500px] flex flex-col items-center justify-center gap-3">
+          <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-400">목록을 불러오는 중입니다...</p>
+        </div>
+      }>
+        <PostList params={params} searchParams={searchParams} currentMenu={currentMenu} />
+      </Suspense>
     </div>
   );
 }
