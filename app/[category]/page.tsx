@@ -5,6 +5,7 @@ import { Suspense } from "react";
 
 // ★ 글 썼을 때 바로 보이게 하는 설정 (캐싱 방지)
 export const dynamic = "force-dynamic";
+export const runtime = 'edge';
 
 type PageProps = {
   params: { category: string };
