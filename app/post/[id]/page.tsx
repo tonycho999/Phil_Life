@@ -5,6 +5,7 @@ import CommentSection from "@/components/post/CommentSection";
 import PostControls from "@/components/post/PostControls"; // ★ 통합 관리 컴포넌트
 import { Eye } from "lucide-react";
 
+export const runtime = 'edge';
 // ★ 실시간 데이터 반영 (조회수/댓글수 등)
 export const dynamic = "force-dynamic";
 
