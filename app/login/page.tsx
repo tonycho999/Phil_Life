@@ -42,7 +42,7 @@ export default function LoginPage() {
       if (error) {
         alert("가입 실패: " + error.message);
       } else {
-        alert("가입이 완료되었습니다! 로그인해주세요.");
+        alert("가입이 완료되었습니다. 발송된 이메일에서 인증을 완료해 주세요.");
         setIsLoginTab(true); // 가입 성공 시 로그인 탭으로 전환
       }
     } else {
