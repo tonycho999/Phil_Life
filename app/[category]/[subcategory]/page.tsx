@@ -5,6 +5,7 @@ import WriteButton from "@/components/ui/WriteButton";
 import PostList from "@/components/board/PostList"; // ★ 만든 컴포넌트 import
 
 export const dynamic = "force-dynamic";
+export const runtime = 'edge';
 
 type PageProps = {
   params: { category: string; subcategory: string };
