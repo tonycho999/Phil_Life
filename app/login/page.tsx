@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Mail, Lock, MessageCircle } from "lucide-react";
+import { Mail, Lock } from "lucide-react";
 
 export default function LoginPage() {
   const supabase = createClient();
@@ -15,8 +15,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 1. 소셜 로그인 (구글, 카카오)
-  const handleOAuthLogin = async (provider: 'google' | 'kakao') => {
+  // 1. 소셜 로그인 (구글)
+  const handleOAuthLogin = async (provider: 'google') => {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
@@ -126,14 +126,6 @@ export default function LoginPage() {
 
           {/* 소셜 로그인 버튼들 */}
           <div className="space-y-3">
-            {/* 카카오 로그인 */}
-            <button 
-              onClick={() => handleOAuthLogin('kakao')}
-              className="w-full bg-[#FEE500] text-[#000000] py-3.5 rounded-lg font-bold hover:bg-[#FDD800] transition flex items-center justify-center gap-2 shadow-sm"
-            >
-              <MessageCircle size={18} className="fill-black" />
-              카카오로 로그인
-            </button>
 
             {/* 구글 로그인 */}
             <button 
