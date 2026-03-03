@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [isLoginTab, setIsLoginTab] = useState(true); // true: 로그인 탭, false: 가입 탭
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // 추가: 비밀번호 확인용 상태
   const [loading, setLoading] = useState(false);
 
   // 1. 소셜 로그인 (구글)
@@ -37,6 +38,13 @@ export default function LoginPage() {
     setLoading(true);
 
     if (!isLoginTab) {
+      // 추가: 회원가입 시 비밀번호 일치 검증
+      if (password !== confirmPassword) {
+        alert("비밀번호가 일치하지 않습니다. 다시 확인해 주세요.");
+        setLoading(false);
+        return;
+      }
+
       // 회원가입
       const { error } = await supabase.auth.signUp({ email, password });
       if (error) {
@@ -44,6 +52,7 @@ export default function LoginPage() {
       } else {
         alert("가입이 완료되었습니다. 발송된 이메일에서 인증을 완료해 주세요.");
         setIsLoginTab(true); // 가입 성공 시 로그인 탭으로 전환
+        setConfirmPassword(""); // 추가: 가입 성공 시 확인 비밀번호 초기화
       }
     } else {
       // 로그인
@@ -108,6 +117,22 @@ export default function LoginPage() {
                 required
               />
             </div>
+            
+            {/* 추가: 회원가입 탭일 때만 보이는 비밀번호 확인 입력창 */}
+            {!isLoginTab && (
+              <div className="relative">
+                <Lock className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                <input 
+                  type="password" 
+                  placeholder="비밀번호 확인" 
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition"
+                  required
+                />
+              </div>
+            )}
+
             <button 
               type="submit" 
               disabled={loading}
