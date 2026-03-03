@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthProvider";
 
+export const runtime = 'edge';
 export default function EditPostPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
   const router = useRouter();
