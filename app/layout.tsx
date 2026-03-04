@@ -13,6 +13,8 @@ import AdBannerRight from "@/components/layout/AdBannerRight";
 import AdBannerTop from "@/components/layout/AdBannerTop";
 // ★ 추가된 부분: 모바일 롤링 배너 컴포넌트를 불러옵니다.
 import MobileAdSlider from "@/components/layout/MobileAdSlider";
+// ★ 추가된 부분: 하단 푸터 컴포넌트를 불러옵니다.
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -99,6 +101,10 @@ export default function RootLayout({
             <AdBannerRight />
 
           </div>
+
+          {/* ★ 추가됨: 사이트 하단 푸터 영역 */}
+          <Footer />
+          
         </AuthProvider>
       </body>
     </html>
