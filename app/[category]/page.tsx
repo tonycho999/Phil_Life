@@ -104,7 +104,7 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
                     </span>
                     <span className="font-medium text-gray-600">{post.profiles?.nickname || "익명"}</span>
                     <span className="text-gray-300">|</span>
-                    <span>조회 {post.views || 0}</span>
+                    <span>조회 {post.view_count || 0}</span>
                   </div>
                 </div>
               </Link>
