@@ -161,7 +161,7 @@ export default function MainHeader() {
         </div>
 
         {/* 메인 헤더 */}
-        <div className="max-w-7xl mx-auto px-4 py-6 md:py-7">
+        <div className="max-w-7xl mx-auto px-4 py-5 md:py-6">
           <div className="flex justify-between items-center gap-8">
             <Link href="/" className="shrink-0 flex items-center">
               <Image 
