@@ -4,13 +4,12 @@ import Link from "next/link";
 import CommentSection from "@/components/post/CommentSection";
 import PostControls from "@/components/post/PostControls";
 import { Eye } from "lucide-react";
-// ★ 방금 만든 투명 부품 불러오기
-import ViewUpdater from "@/components/post/ViewUpdater"; 
+// ★ 주의: components/post/PostViewCounter.tsx 파일이 실제로 만들어져 있어야 에러가 안 납니다!
+import PostViewCounter from "@/components/post/PostViewCounter";
 
 export const runtime = 'edge';
 export const dynamic = "force-dynamic";
 
-// ★ 수정됨: 0~10레벨, S등급(99), M(10레벨)을 완벽하게 구분하는 함수
 function getLevelBadgeInfo(level: any) {
   const strLevel = String(level);
   if (strLevel === "10") return { label: "M", style: "bg-gray-800 text-white border-gray-900" }; 
@@ -26,22 +25,23 @@ function getLevelBadgeInfo(level: any) {
   return { label: `Lv.${strLevel}`, style: "bg-indigo-100 text-indigo-700 border-indigo-200" };
 }
 
-export default async function PostDetailPage({ params }: { params: { id: string } }) {
+export default async function PostDetailPage({ params }: { params: any }) {
+  // ★ 수정됨: Next.js 최신 버전 에러 방지를 위해 params를 안전하게 풀어줍니다.
+  const resolvedParams = await params;
+  const postId = resolvedParams.id;
+
   const supabase = createClient();
   
-  // 1. 게시글 정보 가져오기 
-  // (조회수 올리는 작업은 이제 ViewUpdater가 대신 해줍니다!)
   const { data: post, error } = await supabase
     .from("posts")
     .select("*, profiles(nickname, grade, level)")
-    .eq("id", params.id)
+    .eq("id", postId)
     .single();
 
   if (error || !post) {
     return notFound();
   }
 
-  // 2. 본문 렌더링 로직
   const renderContent = () => {
     if (post.format === 'html') {
       return (
@@ -54,15 +54,14 @@ export default async function PostDetailPage({ params }: { params: { id: string 
     return <p className="whitespace-pre-wrap leading-relaxed text-gray-800">{post.content}</p>;
   };
 
-  const userLevel = post.profiles?.level || 1; // 작성자 레벨
+  const userLevel = post.profiles?.level ?? 1;
+  const badge = getLevelBadgeInfo(userLevel);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       
-      {/* ★ 핵심: 백그라운드에서 조회수 +1을 실행하는 투명 부품 작동! */}
-      <ViewUpdater postId={params.id} />
+      <PostViewCounter postId={postId} />
 
-      {/* 헤더 영역 */}
       <div className="mb-6 border-b pb-4">
         <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">
@@ -96,29 +95,25 @@ export default async function PostDetailPage({ params }: { params: { id: string 
         <div className="flex justify-between items-center text-sm text-gray-500 mt-3">
             <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1.5">
-                  <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${getLevelBadgeStyle(userLevel)}`}>
-                    Lv.{userLevel}
+                  <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${badge.style}`}>
+                    {badge.label}
                   </span>
                   <span className="font-bold text-gray-800">{post.profiles?.nickname || "알 수 없음"}</span>
                 </div>
                 <span suppressHydrationWarning className="text-xs text-gray-400">{new Date(post.created_at).toLocaleString()}</span>
             </div>
             <span className="flex items-center gap-1 text-xs">
-                {/* 화면에 표시할 때는 DB값에 +1을 해서 당장 올라간 것처럼 보여줍니다 */}
                 <Eye size={14} /> {(post.view_count || 0) + 1}
             </span>
         </div>
       </div>
 
-      {/* 본문 내용 */}
       <div className={`bg-white p-6 rounded-lg shadow-sm border border-gray-200 min-h-[300px] mb-8 ${post.is_hidden ? 'opacity-50 grayscale' : ''}`}>
         {renderContent()}
       </div>
 
-      {/* 댓글 섹션 */}
-      <CommentSection postId={params.id} />
+      <CommentSection postId={post.id} />
 
-      {/* 목록 버튼 */}
       <div className="mt-10 text-center border-t pt-8">
         <Link 
             href={`/${post.category_main}/${post.category_sub}`}
