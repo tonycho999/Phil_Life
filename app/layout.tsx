@@ -9,9 +9,44 @@ import SidebarRight from "@/components/layout/SidebarRight"; // ★ 추가됨
 
 const inter = Inter({ subsets: ["latin"] });
 
+// ★ 기존의 짧았던 메타데이터가 SEO 최적화 메타데이터로 완벽히 교체되었습니다.
 export const metadata: Metadata = {
-  title: "Phil Life",
-  description: "필리핀 한인 커뮤니티",
+  title: "필카페24 | 필리핀 실시간 교민·여행·비즈니스 1위 커뮤니티",
+  description: "24시간 깨어있는 필리핀 정보, 필카페24! 마닐라, 세부 실시간 뉴스, 벼룩시장, 구인구직, 비자 및 법률 상담까지. 필리핀 생활의 모든 해답을 필카페24에서 확인하세요.",
+  keywords: ["필카페24", "필리핀 커뮤니티", "필리핀 교민", "마닐라 뉴스", "필리핀 여행 정보", "필리핀 구인구직", "필리핀 부동산", "PhilCafe24"],
+  alternates: {
+    canonical: "https://www.philcafe24.com/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "필카페24 (PhilCafe24)",
+    title: "필카페24 - 필리핀 실시간 정보와 소통의 장",
+    description: "필리핀 교민생활, 여행, 비즈니스의 모든 것. 지금 필카페24에서 시작하세요.",
+    url: "https://www.philcafe24.com/",
+    images: [
+      {
+        url: "https://www.philcafe24.com/images/og-main.jpg",
+        width: 1200,
+        height: 630,
+        alt: "필카페24 대표 이미지",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "필카페24 | PhilCafe24",
+    description: "24시간 생생한 필리핀 현지 소식을 전합니다.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
