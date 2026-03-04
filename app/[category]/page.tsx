@@ -12,13 +12,20 @@ type PageProps = {
   searchParams: { page?: string; q?: string };
 };
 
-// ★ 추가됨: 레벨에 따라 뱃지 색상을 다르게 반환하는 함수
-function getLevelBadgeStyle(level: number) {
-  if (!level || level <= 5) return "bg-gray-100 text-gray-600 border-gray-200"; // 1~5: 회색 (기본)
-  if (level <= 10) return "bg-green-100 text-green-700 border-green-200";       // 6~10: 초록색
-  if (level <= 15) return "bg-blue-100 text-blue-700 border-blue-200";          // 11~15: 파란색
-  if (level <= 20) return "bg-purple-100 text-purple-700 border-purple-200";    // 16~20: 보라색
-  return "bg-red-100 text-red-700 border-red-200";                              // 21 이상: 빨간색 (최고 등급)
+// ★ 수정됨: 최신 0~10레벨, S등급(99), M(10레벨) 색상 함수 적용
+function getLevelBadgeInfo(level: any) {
+  const strLevel = String(level);
+  if (strLevel === "10") return { label: "M", style: "bg-gray-800 text-white border-gray-900" }; 
+  if (strLevel === "S" || strLevel === "99") return { label: "S", style: "bg-yellow-100 text-yellow-700 border-yellow-300" };
+  
+  if (strLevel === "0") return { label: "Lv.0", style: "bg-gray-100 text-gray-500 border-gray-200" };
+  if (strLevel === "1") return { label: "Lv.1", style: "bg-green-100 text-green-700 border-green-200" };
+  if (strLevel === "2") return { label: "Lv.2", style: "bg-blue-100 text-blue-700 border-blue-200" };
+  if (strLevel === "3") return { label: "Lv.3", style: "bg-purple-100 text-purple-700 border-purple-200" };
+  if (strLevel === "4") return { label: "Lv.4", style: "bg-teal-100 text-teal-700 border-teal-200" };
+  if (strLevel === "5") return { label: "Lv.5", style: "bg-pink-100 text-pink-700 border-pink-200" };
+  
+  return { label: `Lv.${strLevel}`, style: "bg-indigo-100 text-indigo-700 border-indigo-200" };
 }
 
 // ─────────────────────────────────────────────────────────
@@ -64,8 +71,9 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
             const subMenu = currentMenu?.sub?.find((s: any) => s.id === post.category_sub);
             const subLabel = subMenu ? subMenu.label : post.category_sub;
             
-            // 현재 작성자의 레벨
-            const userLevel = post.profiles?.level || 1;
+            // ★ 작성자 레벨 뱃지 가져오기
+            const userLevel = post.profiles?.level ?? 1;
+            const badge = getLevelBadgeInfo(userLevel);
 
             return (
               <Link
@@ -98,9 +106,9 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
 
                 <div className="flex justify-between items-center text-xs text-gray-400">
                   <div className="flex items-center gap-2">
-                    {/* ★ 수정됨: 동적 색상이 적용되는 레벨 뱃지 */}
-                    <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${getLevelBadgeStyle(userLevel)}`}>
-                      Lv.{userLevel}
+                    {/* ★ 메인 화면과 동일한 최신 뱃지 적용 */}
+                    <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${badge.style}`}>
+                      {badge.label}
                     </span>
                     <span className="font-medium text-gray-600">{post.profiles?.nickname || "익명"}</span>
                     <span className="text-gray-300">|</span>
