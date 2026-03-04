@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase";
 import Link from "next/link";
 import { ChevronRight, Eye, Zap, MessageCircle, Info, HelpCircle } from "lucide-react";
 
-// ★ 캐시 방지 (누군가 글을 쓰거나 조회수가 오르면 메인 화면에 즉시 반영)
+export const runtime = 'edge';
 export const dynamic = "force-dynamic";
 
 // ★ 추가됨: 메인 화면용 0~10레벨, S등급(99), M(10레벨) 색상 함수
