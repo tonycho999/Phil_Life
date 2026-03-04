@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation"; // ★ useRouter 추가
+import { usePathname, useRouter } from "next/navigation"; 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants"; 
 import { 
   User, ChevronRight, LayoutGrid, 
   Newspaper, MapPin, MessageSquare, Building2, ShoppingBag, Plane, Store,
-  Settings, EyeOff, LogOut // ★ LogOut 아이콘 추가
+  Settings, EyeOff, LogOut, Users, FileText, Shield // ★ 관리자 메뉴용 아이콘 3개 추가됨
 } from "lucide-react";
 
 // 아이콘 매핑
@@ -22,13 +22,29 @@ const ICONS: { [key: string]: any } = {
   biz: Store,
 };
 
+// ★ 최신 0~10레벨, S등급(99), M(10레벨) 색상 함수 추가
+function getLevelBadgeInfo(level: any) {
+  const strLevel = String(level);
+  if (strLevel === "10") return { label: "M", style: "bg-gray-800 text-white border-gray-900" }; 
+  if (strLevel === "S" || strLevel === "99") return { label: "S", style: "bg-yellow-100 text-yellow-700 border-yellow-300" };
+  
+  if (strLevel === "0") return { label: "Lv.0", style: "bg-gray-100 text-gray-500 border-gray-200" };
+  if (strLevel === "1") return { label: "Lv.1", style: "bg-green-100 text-green-700 border-green-200" };
+  if (strLevel === "2") return { label: "Lv.2", style: "bg-blue-100 text-blue-700 border-blue-200" };
+  if (strLevel === "3") return { label: "Lv.3", style: "bg-purple-100 text-purple-700 border-purple-200" };
+  if (strLevel === "4") return { label: "Lv.4", style: "bg-teal-100 text-teal-700 border-teal-200" };
+  if (strLevel === "5") return { label: "Lv.5", style: "bg-pink-100 text-pink-700 border-pink-200" };
+  
+  return { label: `Lv.${strLevel}`, style: "bg-indigo-100 text-indigo-700 border-indigo-200" };
+}
+
 export default function SidebarLeft() {
   const { user, profile, loading } = useAuth();
   const supabase = createClient();
   const pathname = usePathname();
-  const router = useRouter(); // ★ 라우터 초기화
+  const router = useRouter(); 
 
-  // ★ 로그아웃 기능 추가
+  // ★ 로그아웃 기능
   const handleLogout = async () => {
     if (!confirm("로그아웃 하시겠습니까?")) return;
     await supabase.auth.signOut();
@@ -57,6 +73,9 @@ export default function SidebarLeft() {
 
     // 로그인 완료
     const isAdmin = profile?.grade === "관리자" || (profile?.level || 0) >= 10;
+    
+    // ★ 동적 뱃지 정보 가져오기
+    const badge = getLevelBadgeInfo(profile?.level ?? 1);
 
     return (
       <div className="bg-white border border-gray-200 p-5 rounded-xl shadow-sm text-center mb-6">
@@ -65,24 +84,31 @@ export default function SidebarLeft() {
         </div>
         <h2 className="font-bold text-lg text-gray-800 mb-1">{profile?.nickname || "닉네임 없음"}</h2>
         <div className="flex justify-center items-center gap-2 mb-4">
+           {/* 등급명 + 최신 동적 뱃지 적용 */}
            <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded border border-blue-100 font-bold">{profile?.grade || "새싹"}</span>
-           <span className="text-xs text-gray-400 font-mono">Lv.{profile?.level || 1}</span>
+           <span className={`text-xs px-2 py-0.5 rounded border font-bold ${badge.style}`}>{badge.label}</span>
         </div>
         
-        {/* 관리자 메뉴 영역 */}
+        {/* ★ 확장된 관리자 메뉴 영역 */}
         {isAdmin && (
             <div className="bg-gray-50 rounded-lg p-2 mb-3 border border-gray-100 text-left space-y-1">
                 <p className="text-[10px] text-gray-400 font-bold px-1 mb-1">ADMIN MENU</p>
-                <Link href="/admin/grades" className="flex items-center gap-2 w-full text-gray-700 hover:bg-white hover:text-blue-600 py-1.5 px-2 rounded-md text-xs font-bold transition">
-                    <Settings size={14} /> 관리자 페이지
+                <Link href="/admin/boards" className="flex items-center gap-2 w-full text-gray-700 hover:bg-white hover:text-blue-600 py-1.5 px-2 rounded-md text-xs font-bold transition">
+                    <FileText size={14} /> 게시판 관리
                 </Link>
+                <Link href="/admin/users" className="flex items-center gap-2 w-full text-gray-700 hover:bg-white hover:text-blue-600 py-1.5 px-2 rounded-md text-xs font-bold transition">
+                    <Users size={14} /> 회원 관리
+                </Link>
+                <Link href="/admin/grades" className="flex items-center gap-2 w-full text-gray-700 hover:bg-white hover:text-blue-600 py-1.5 px-2 rounded-md text-xs font-bold transition">
+                    <Shield size={14} /> 등급 설정
+                </Link>
+                <div className="border-t border-gray-200 my-1"></div>
                 <Link href="/admin/hidden" className="flex items-center gap-2 w-full text-gray-700 hover:bg-white hover:text-red-600 py-1.5 px-2 rounded-md text-xs font-bold transition">
                     <EyeOff size={14} /> 숨긴 글 관리
                 </Link>
             </div>
         )}
 
-        {/* ★ 수정됨: 내 글 보기 버튼 옆에 로그아웃 버튼 배치 */}
         <div className="flex gap-2">
           <Link 
               href="/my-posts" 
