@@ -108,7 +108,8 @@ export default function MainHeader() {
         <NicknameModal userId={user.id} onComplete={refreshProfile} />
       )}
 
-      <header className="bg-white sticky top-0 z-50 shadow-md">
+      {/* ★ bg-white에서 bg-logoBg로 변경되었습니다 */}
+      <header className="bg-logoBg sticky top-0 z-50 shadow-md">
         
         {/* 상단 정보 바 */}
         <div className="bg-slate-50 border-b border-gray-200 h-10 flex items-center overflow-hidden text-xs">
@@ -166,8 +167,8 @@ export default function MainHeader() {
               <Image 
                 src="/images/logo.png" 
                 alt={SITE_NAME} 
-                width={160} 
-                height={45} 
+                width={180} 
+                height={52} 
                 priority 
                 className="object-contain hover:opacity-80 transition"/>
             </Link>
