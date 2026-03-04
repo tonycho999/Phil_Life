@@ -17,8 +17,8 @@ function WriteForm() {
   const paramSub = searchParams.get("sub");
 
   // ★ 수정됨: MENUS는 배열이므로 인덱스()로 접근해야 에러가 안 납니다.
-  const defaultMain = MENUS?.id || "";
-  const defaultSub = MENUS?.sub?.id || "";
+  const defaultMain = MENUS[0]?.id || "";
+  const defaultSub = MENUS[0]?.sub?.[0]?.id || "";
 
   const [categoryMain, setCategoryMain] = useState(paramMain || defaultMain);
   const [categorySub, setCategorySub] = useState(paramSub || defaultSub);
