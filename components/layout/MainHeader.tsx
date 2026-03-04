@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
 import { useAuth } from "@/components/auth/AuthProvider";
 import NicknameModal from "@/components/auth/NicknameModal";
-import { Search, Sun, Cloud, CloudRain, CloudLightning, Snowflake, DollarSign, Coins, RefreshCcw, Loader2 } from "lucide-react";
+// ★ 추가됨: 모바일 메뉴에 쓸 아이콘들 (Menu, X, ChevronRight)
+import { Search, Sun, Cloud, CloudRain, CloudLightning, Snowflake, DollarSign, Coins, RefreshCcw, Loader2, Menu, X, ChevronRight } from "lucide-react";
 
 const WEATHER_API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY || "";
 
@@ -32,6 +33,9 @@ export default function MainHeader() {
   const [exchange, setExchange] = useState({ usd: 0, php: 0, loading: true });
   const [weatherList, setWeatherList] = useState<any[]>([]);
   const [weatherLoading, setWeatherLoading] = useState(true);
+  
+  // ★ 추가됨: 모바일 슬라이드 메뉴 열림/닫힘 상태
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const getWeatherIcon = (main: string) => {
     switch (main) {
@@ -108,7 +112,6 @@ export default function MainHeader() {
         <NicknameModal userId={user.id} onComplete={refreshProfile} />
       )}
 
-      {/* ★ bg-white에서 bg-logoBg로 변경되었습니다 */}
       <header className="bg-logoBg sticky top-0 z-50 shadow-md">
         
         {/* 상단 정보 바 */}
@@ -139,15 +142,11 @@ export default function MainHeader() {
                     <Loader2 size={12} className="animate-spin" /> 날씨 정보를 가져오는 중...
                  </div>
                ) : (
-                 // ★ 핵심: weatherList를 3번 반복해서 렌더링 (Set 1, Set 2, Set 3)
-                 // CSS 애니메이션이 전체 길이의 1/3만큼 이동하고 처음으로 돌아가기 때문에 
-                 // 시각적으로 끊김이 전혀 발생하지 않습니다.
                  <div className="animate-marquee flex items-center gap-8 px-4">
                     {[...weatherList, ...weatherList, ...weatherList].map((w, i) => (
                       <div key={i} className="flex items-center gap-2 shrink-0 text-gray-600 font-medium">
                          <span className="font-bold text-gray-800">📍{w.city}</span>
                          <span className="flex items-center gap-1">{getWeatherIcon(w.main)} {w.temp}°</span>
-                         {/* 각 세트 사이에 구분선 추가 (마지막 아이템 제외) */}
                          {(i + 1) % weatherList.length === 0 && i !== (weatherList.length * 3 - 1) && (
                             <span className="text-gray-300 mx-4">|</span>
                          )}
@@ -185,7 +184,18 @@ export default function MainHeader() {
                  <Search className="w-5 h-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition" />
               </div>
             </form>
-            <div className="shrink-0 w-8"></div>
+            
+            {/* ★ 추가됨: 모바일용 햄버거 메뉴 버튼 */}
+            <div className="shrink-0 md:hidden flex items-center">
+              <button 
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+              >
+                <Menu size={28} />
+              </button>
+            </div>
+            {/* PC용 우측 여백 유지 */}
+            <div className="shrink-0 w-8 hidden md:block"></div>
           </div>
         </div>
         
@@ -204,6 +214,59 @@ export default function MainHeader() {
             </nav>
         </div>
       </header>
+
+      {/* ★ 추가됨: 모바일 슉! 슬라이드 드로어 메뉴 */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[999] flex md:hidden">
+          {/* 어두운 배경 (클릭 시 닫힘) */}
+          <div 
+            className="fixed inset-0 bg-black/50 transition-opacity"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          {/* 메뉴판 (오른쪽에서 등장) */}
+          <div className="relative w-[80%] max-w-[320px] bg-white h-full shadow-2xl flex flex-col ml-auto">
+            {/* 드로어 헤더 */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-blue-50/50">
+              <span className="font-bold text-lg text-blue-800">전체메뉴</span>
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 text-gray-500 hover:bg-gray-200 hover:text-gray-800 rounded-lg transition"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* 드로어 메뉴 리스트 */}
+            <div className="overflow-y-auto flex-1 p-5">
+              {MENUS.map((menu: any) => (
+                <div key={menu.id} className="mb-6">
+                  <Link 
+                    href={`/${menu.id}`} 
+                    className="flex items-center justify-between font-bold text-[17px] text-gray-800 mb-3"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {menu.label}
+                    <ChevronRight size={18} className="text-gray-400" />
+                  </Link>
+                  <ul className="space-y-2 pl-3 border-l-2 border-blue-100">
+                    {menu.sub?.map((sub: any) => (
+                      <li key={sub.id}>
+                        <Link 
+                          href={`/${menu.id}/${sub.id}`}
+                          className="block text-gray-600 py-1.5 text-sm hover:text-blue-600 hover:font-bold transition"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {sub.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
