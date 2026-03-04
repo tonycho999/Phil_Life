@@ -4,23 +4,25 @@ import Link from "next/link";
 import CommentSection from "@/components/post/CommentSection";
 import PostControls from "@/components/post/PostControls";
 import { Eye } from "lucide-react";
+// ★ 방금 만든 투명 부품 불러오기
+import ViewUpdater from "@/components/post/ViewUpdater"; 
 
 export const runtime = 'edge';
 export const dynamic = "force-dynamic";
 
-// ★ 추가됨: 레벨 뱃지 색상 함수 (목록 페이지와 동일)
 function getLevelBadgeStyle(level: number) {
-  if (!level || level <= 5) return "bg-gray-100 text-gray-600 border-gray-200"; // 1~5: 회색
-  if (level <= 10) return "bg-green-100 text-green-700 border-green-200";       // 6~10: 초록색
-  if (level <= 15) return "bg-blue-100 text-blue-700 border-blue-200";          // 11~15: 파란색
-  if (level <= 20) return "bg-purple-100 text-purple-700 border-purple-200";    // 16~20: 보라색
-  return "bg-red-100 text-red-700 border-red-200";                              // 21 이상: 빨간색
+  if (!level || level <= 5) return "bg-gray-100 text-gray-600 border-gray-200"; 
+  if (level <= 10) return "bg-green-100 text-green-700 border-green-200";       
+  if (level <= 15) return "bg-blue-100 text-blue-700 border-blue-200";          
+  if (level <= 20) return "bg-purple-100 text-purple-700 border-purple-200";    
+  return "bg-red-100 text-red-700 border-red-200";                              
 }
 
 export default async function PostDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
   
-  // 1. 게시글 정보 가져오기
+  // 1. 게시글 정보 가져오기 
+  // (조회수 올리는 작업은 이제 ViewUpdater가 대신 해줍니다!)
   const { data: post, error } = await supabase
     .from("posts")
     .select("*, profiles(nickname, grade, level)")
@@ -31,21 +33,7 @@ export default async function PostDetailPage({ params }: { params: { id: string 
     return notFound();
   }
 
-  // 2. 조회수 +1 업데이트
-  try {
-    // ★ 수정됨: params.id를 Number()로 감싸서 확실하게 숫자로 전달합니다. (타입 에러 방지)
-    const postIdNum = Number(params.id);
-    const { error: rpcError } = await supabase.rpc('increment_views', { row_id: postIdNum });
-    
-    if (rpcError) {
-      // RPC가 실패하면 우회 업데이트
-      await supabase.from("posts").update({ view_count: (post.view_count || 0) + 1 }).eq("id", postIdNum);
-    }
-  } catch (e) {
-    // 무시
-  }
-
-  // 3. 본문 렌더링 로직
+  // 2. 본문 렌더링 로직
   const renderContent = () => {
     if (post.format === 'html') {
       return (
@@ -62,6 +50,10 @@ export default async function PostDetailPage({ params }: { params: { id: string 
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+      
+      {/* ★ 핵심: 백그라운드에서 조회수 +1을 실행하는 투명 부품 작동! */}
+      <ViewUpdater postId={params.id} />
+
       {/* 헤더 영역 */}
       <div className="mb-6 border-b pb-4">
         <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -95,7 +87,6 @@ export default async function PostDetailPage({ params }: { params: { id: string 
 
         <div className="flex justify-between items-center text-sm text-gray-500 mt-3">
             <div className="flex items-center gap-3">
-                {/* ★ 수정됨: 게시글 상세 페이지 닉네임 앞에도 레벨 뱃지 추가 */}
                 <div className="flex items-center gap-1.5">
                   <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${getLevelBadgeStyle(userLevel)}`}>
                     Lv.{userLevel}
@@ -105,6 +96,7 @@ export default async function PostDetailPage({ params }: { params: { id: string 
                 <span suppressHydrationWarning className="text-xs text-gray-400">{new Date(post.created_at).toLocaleString()}</span>
             </div>
             <span className="flex items-center gap-1 text-xs">
+                {/* 화면에 표시할 때는 DB값에 +1을 해서 당장 올라간 것처럼 보여줍니다 */}
                 <Eye size={14} /> {(post.view_count || 0) + 1}
             </span>
         </div>
