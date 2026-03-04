@@ -4,8 +4,7 @@ import Link from "next/link";
 import CommentSection from "@/components/post/CommentSection";
 import PostControls from "@/components/post/PostControls";
 import { Eye } from "lucide-react";
-// ★ 주의: components/post/PostViewCounter.tsx 파일이 실제로 만들어져 있어야 에러가 안 납니다!
-import PostViewCounter from "@/components/post/PostViewCounter";
+import ViewUpdater from "@/components/post/ViewUpdater";
 
 export const runtime = 'edge';
 export const dynamic = "force-dynamic";
@@ -60,7 +59,7 @@ export default async function PostDetailPage({ params }: { params: any }) {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       
-      <PostViewCounter postId={postId} />
+      <ViewUpdater postId={postId} />
 
       <div className="mb-6 border-b pb-4">
         <div className="flex flex-wrap items-center gap-2 mb-2">
