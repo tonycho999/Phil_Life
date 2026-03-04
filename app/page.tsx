@@ -2,6 +2,25 @@ import { createClient } from "@/lib/supabase";
 import Link from "next/link";
 import { ChevronRight, Eye, Zap, MessageCircle, Info, HelpCircle } from "lucide-react";
 
+// ★ 캐시 방지 (누군가 글을 쓰거나 조회수가 오르면 메인 화면에 즉시 반영)
+export const dynamic = "force-dynamic";
+
+// ★ 추가됨: 메인 화면용 0~10레벨, S등급(99), M(10레벨) 색상 함수
+function getLevelBadgeInfo(level: any) {
+  const strLevel = String(level);
+  if (strLevel === "10") return { label: "M", style: "bg-gray-800 text-white border-gray-900" }; 
+  if (strLevel === "S" || strLevel === "99") return { label: "S", style: "bg-yellow-100 text-yellow-700 border-yellow-300" };
+  
+  if (strLevel === "0") return { label: "Lv.0", style: "bg-gray-100 text-gray-500 border-gray-200" };
+  if (strLevel === "1") return { label: "Lv.1", style: "bg-green-100 text-green-700 border-green-200" };
+  if (strLevel === "2") return { label: "Lv.2", style: "bg-blue-100 text-blue-700 border-blue-200" };
+  if (strLevel === "3") return { label: "Lv.3", style: "bg-purple-100 text-purple-700 border-purple-200" };
+  if (strLevel === "4") return { label: "Lv.4", style: "bg-teal-100 text-teal-700 border-teal-200" };
+  if (strLevel === "5") return { label: "Lv.5", style: "bg-pink-100 text-pink-700 border-pink-200" };
+  
+  return { label: `Lv.${strLevel}`, style: "bg-indigo-100 text-indigo-700 border-indigo-200" };
+}
+
 // 홈 화면용 게시판 위젯 (디자인 개선)
 function HomeBoardWidget({ title, subtitle, posts, link, color = "blue", icon: Icon }: any) {
   const colorStyles: any = {
@@ -39,29 +58,40 @@ function HomeBoardWidget({ title, subtitle, posts, link, color = "blue", icon: I
               게시글이 없습니다.
           </div>
         ) : (
-          posts.map((post: any) => (
-            <Link key={post.id} href={`/post/${post.id}`} className="block px-5 py-3 hover:bg-blue-50/30 transition group">
-              <div className="flex justify-between items-start mb-1.5 gap-3">
-                 <p className="text-sm text-gray-700 group-hover:text-blue-700 font-medium line-clamp-1 flex-1">
-                    {post.title}
-                 </p>
-                 {/* 24시간 내 새글 N 표시 */}
-                 {new Date().getTime() - new Date(post.created_at).getTime() < 86400000 && (
-                    <span className="text-[10px] font-black text-red-500 bg-red-50 px-1.5 rounded border border-red-100 shrink-0 animate-pulse">N</span>
-                 )}
-              </div>
-              <div className="flex justify-between text-[11px] text-gray-400 items-center">
-                 <div className="flex items-center gap-2">
-                    <span className="text-gray-500">{post.profiles?.nickname || '익명'}</span>
-                    <span className="w-0.5 h-2 bg-gray-200"></span>
-                    <span>{new Date(post.created_at).toLocaleDateString()}</span>
-                 </div>
-                 <div className="flex items-center gap-1 bg-gray-50 px-1.5 py-0.5 rounded text-gray-500">
-                    <Eye size={10} /> {post.views || 0}
-                 </div>
-              </div>
-            </Link>
-          ))
+          posts.map((post: any) => {
+            // ★ 작성자 레벨 뱃지 가져오기
+            const userLevel = post.profiles?.level ?? 1;
+            const badge = getLevelBadgeInfo(userLevel);
+
+            return (
+              <Link key={post.id} href={`/post/${post.id}`} className="block px-5 py-3 hover:bg-blue-50/30 transition group">
+                <div className="flex justify-between items-start mb-1.5 gap-3">
+                  <p className="text-sm text-gray-700 group-hover:text-blue-700 font-medium line-clamp-1 flex-1">
+                      {post.title}
+                  </p>
+                  {/* 24시간 내 새글 N 표시 */}
+                  {new Date().getTime() - new Date(post.created_at).getTime() < 86400000 && (
+                      <span className="text-[10px] font-black text-red-500 bg-red-50 px-1.5 rounded border border-red-100 shrink-0 animate-pulse">N</span>
+                  )}
+                </div>
+                <div className="flex justify-between text-[11px] text-gray-400 items-center">
+                  <div className="flex items-center gap-2">
+                      {/* ★ 메인 화면에도 예쁜 레벨 뱃지 적용 */}
+                      <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${badge.style}`}>
+                        {badge.label}
+                      </span>
+                      <span className="text-gray-500">{post.profiles?.nickname || '익명'}</span>
+                      <span className="w-0.5 h-2 bg-gray-200"></span>
+                      <span suppressHydrationWarning>{new Date(post.created_at).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex items-center gap-1 bg-gray-50 px-1.5 py-0.5 rounded text-gray-500">
+                      {/* ★ view_count 로 정확하게 수정 */}
+                      <Eye size={10} /> {post.view_count || 0}
+                  </div>
+                </div>
+              </Link>
+            );
+          })
         )}
       </div>
     </div>
@@ -71,12 +101,12 @@ function HomeBoardWidget({ title, subtitle, posts, link, color = "blue", icon: I
 export default async function Home() {
   const supabase = createClient();
 
-  // 각 섹션별 데이터 병렬 조회 (최신순 5개)
+  // ★ DB에서 level 값도 같이 가져오도록 수정
   const [news, community, info, qna] = await Promise.all([
-    supabase.from("posts").select("*, profiles(nickname)").eq("category_main", "news").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
-    supabase.from("posts").select("*, profiles(nickname)").eq("category_main", "community").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
-    supabase.from("posts").select("*, profiles(nickname)").eq("category_main", "info").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
-    supabase.from("posts").select("*, profiles(nickname)").eq("category_sub", "qna").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
+    supabase.from("posts").select("*, profiles(nickname, level)").eq("category_main", "news").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
+    supabase.from("posts").select("*, profiles(nickname, level)").eq("category_main", "community").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
+    supabase.from("posts").select("*, profiles(nickname, level)").eq("category_main", "info").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
+    supabase.from("posts").select("*, profiles(nickname, level)").eq("category_sub", "qna").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
   ]);
 
   return (
