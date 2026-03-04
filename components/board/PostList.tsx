@@ -88,7 +88,8 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
                   <span>|</span>
                   <span>{dateStr}</span>
                   <span>|</span>
-                  <span>조회 {post.views}</span>
+                  {/* ★ 이전 대화에서 수정한 view_count 반영 */}
+                  <span>조회 {post.view_count || 0}</span>
                 </div>
               </div>
 
@@ -98,13 +99,15 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
               </div>
 
               {/* 4. 날짜 (PC) */}
-              <div className="hidden md:block col-span-1 text-center text-sm text-gray-400">
+              {/* ★ 수정된 부분: whitespace-nowrap 추가로 줄바꿈 방지 */}
+              <div className="hidden md:block col-span-1 text-center text-sm text-gray-400 whitespace-nowrap">
                 {dateStr}
               </div>
 
               {/* 5. 조회수 (PC) */}
+              {/* ★ 이전 대화에서 수정한 view_count 반영 */}
               <div className="hidden md:block col-span-1 text-center text-sm text-gray-500 font-mono">
-                {post.views || 0}
+                {post.view_count || 0}
               </div>
 
             </Link>
