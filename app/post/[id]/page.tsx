@@ -34,7 +34,8 @@ export default async function PostDetailPage({ params }: { params: { id: string 
     const { error: rpcError } = await supabase.rpc('increment_views', { row_id: params.id });
     if (rpcError) {
       // RPC가 실패하면(아직 DB에 함수를 안 만드셨을 경우) 일반 업데이트로 우회
-      await supabase.from("posts").update({ views: (post.views || 0) + 1 }).eq("id", params.id);
+      // ★ views -> view_count 로 모두 수정됨!
+      await supabase.from("posts").update({ view_count: (post.view_count || 0) + 1 }).eq("id", params.id);
     }
   } catch (e) {
     // 무시
@@ -94,9 +95,9 @@ export default async function PostDetailPage({ params }: { params: { id: string 
                 <span className="font-bold text-gray-800">{post.profiles?.nickname || "알 수 없음"}</span>
                 <span className="text-xs text-gray-400">{new Date(post.created_at).toLocaleString()}</span>
             </div>
-            {/* ★ 수정된 부분: 화면에 보여질 때는 +1 된 숫자로 바로 보여줍니다 */}
+            {/* ★ 수정된 부분: 화면에 보여질 때는 +1 된 숫자로 바로 보여줍니다 (views -> view_count) */}
             <span className="flex items-center gap-1 text-xs">
-                <Eye size={14} /> {(post.views || 0) + 1}
+                <Eye size={14} /> {(post.view_count || 0) + 1}
             </span>
         </div>
       </div>
