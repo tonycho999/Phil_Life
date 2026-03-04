@@ -7,7 +7,11 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        logoBg: '#FEFDF5', // ★ 로고 배경색 추가
+      }
+    },
   },
   plugins: [],
 }
