@@ -5,10 +5,10 @@ export default function Footer() {
 
   return (
     <footer className="bg-white border-t border-gray-200 mt-12 py-8 text-gray-500">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
         
-        {/* 상단: 링크 메뉴 */}
-        <ul className="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-2 text-sm font-medium mb-6">
+        {/* 상단: 링크 메뉴 (가운데 정렬) */}
+        <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm font-medium mb-6">
           <li>
             <Link href="/about" className="hover:text-blue-600 transition">사이트 소개</Link>
           </li>
@@ -30,8 +30,8 @@ export default function Footer() {
           </li>
         </ul>
 
-        {/* 하단: 정보 및 카피라이트 */}
-        <div className="text-xs space-y-2 text-center md:text-left text-gray-400">
+        {/* 하단: 정보 및 카피라이트 (가운데 정렬) */}
+        <div className="text-xs space-y-2 text-center text-gray-400">
           <p>
             <span className="font-bold text-gray-500">필카페24 (PhilCafe24)</span> 
             <span className="mx-2">|</span> 
