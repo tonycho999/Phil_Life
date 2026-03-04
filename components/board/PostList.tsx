@@ -10,6 +10,15 @@ interface PostListProps {
   pageSize: number;
 }
 
+// ★ 추가됨: 레벨에 따라 뱃지 색상을 다르게 반환하는 함수
+function getLevelBadgeStyle(level: number) {
+  if (!level || level <= 5) return "bg-gray-100 text-gray-600 border-gray-200"; // 1~5: 회색 (기본)
+  if (level <= 10) return "bg-green-100 text-green-700 border-green-200";       // 6~10: 초록색
+  if (level <= 15) return "bg-blue-100 text-blue-700 border-blue-200";          // 11~15: 파란색
+  if (level <= 20) return "bg-purple-100 text-purple-700 border-purple-200";    // 16~20: 보라색
+  return "bg-red-100 text-red-700 border-red-200";                              // 21 이상: 빨간색 (최고 등급)
+}
+
 export default function PostList({ posts, showSubCategory, totalCount, currentPage, pageSize }: PostListProps) {
   if (!posts || posts.length === 0) {
     return (
@@ -35,6 +44,7 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
         // 순번 계산: 전체개수 - ((현재페이지-1) * 페이지당개수) - 인덱스
         const seqNum = totalCount - ((currentPage - 1) * pageSize) - index;
         const dateStr = new Date(post.created_at).toLocaleDateString();
+        const userLevel = post.profiles?.level || 1; // 유저 레벨 추출
 
         return (
           <div key={post.id} className="group border-b border-gray-100 hover:bg-gray-50 transition">
@@ -83,29 +93,36 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
                 </div>
                 
                 {/* 모바일용 정보 줄 (작성자/날짜/조회수) */}
-                <div className="md:hidden flex gap-2 text-xs text-gray-400 mt-1">
+                <div className="md:hidden flex gap-2 text-xs text-gray-400 mt-1 items-center">
+                  {/* ★ 수정됨: 모바일 닉네임 앞 레벨 뱃지 추가 */}
+                  <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${getLevelBadgeStyle(userLevel)}`}>
+                    Lv.{userLevel}
+                  </span>
                   <span>{post.profiles?.nickname || "익명"}</span>
                   <span>|</span>
-                  <span>{dateStr}</span>
+                  {/* ★ 수정됨: 하이드레이션 에러 방지 속성 추가 */}
+                  <span suppressHydrationWarning>{dateStr}</span>
                   <span>|</span>
-                  {/* ★ 이전 대화에서 수정한 view_count 반영 */}
                   <span>조회 {post.view_count || 0}</span>
                 </div>
               </div>
 
               {/* 3. 작성자 (PC) */}
-              <div className="hidden md:block col-span-2 text-center text-sm text-gray-600 truncate px-2">
-                {post.profiles?.nickname || "익명"}
+              {/* ★ 수정됨: PC 닉네임 앞 레벨 뱃지 추가 (수직 정렬을 위해 flex 사용) */}
+              <div className="hidden md:flex col-span-2 items-center justify-center gap-1 text-sm text-gray-600 truncate px-2">
+                <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${getLevelBadgeStyle(userLevel)}`}>
+                  Lv.{userLevel}
+                </span>
+                <span className="truncate">{post.profiles?.nickname || "익명"}</span>
               </div>
 
               {/* 4. 날짜 (PC) */}
-              {/* ★ 수정된 부분: whitespace-nowrap 추가로 줄바꿈 방지 */}
-              <div className="hidden md:block col-span-1 text-center text-sm text-gray-400 whitespace-nowrap">
+              {/* ★ 수정됨: 하이드레이션 에러 방지 속성 추가 */}
+              <div suppressHydrationWarning className="hidden md:block col-span-1 text-center text-sm text-gray-400 whitespace-nowrap">
                 {dateStr}
               </div>
 
               {/* 5. 조회수 (PC) */}
-              {/* ★ 이전 대화에서 수정한 view_count 반영 */}
               <div className="hidden md:block col-span-1 text-center text-sm text-gray-500 font-mono">
                 {post.view_count || 0}
               </div>
