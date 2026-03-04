@@ -161,7 +161,7 @@ export default function MainHeader() {
         </div>
 
         {/* 메인 헤더 */}
-        <div className="max-w-7xl mx-auto px-4 py-5 md:py-6">
+        <div className="max-w-7xl mx-auto px-4 py-4 md:py-5">
           <div className="flex justify-between items-center gap-8">
             <Link href="/" className="shrink-0 flex items-center">
               <Image 
@@ -195,7 +195,7 @@ export default function MainHeader() {
                 <ul className="flex justify-between items-center overflow-x-auto scrollbar-hide divide-x divide-blue-600">
                 {MENUS.map((menu: any) => (
                     <li key={menu.id} className="flex-1 text-center hover:bg-blue-800 transition relative group">
-                    <Link href={`/${menu.id}`} className="block py-4 text-base font-bold whitespace-nowrap">
+                    <Link href={`/${menu.id}`} className="block py-3 text-base font-bold whitespace-nowrap">
                         {menu.label}
                     </Link>
                     </li>
