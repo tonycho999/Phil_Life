@@ -9,6 +9,8 @@ import SidebarRight from "@/components/layout/SidebarRight";
 // ★ 방금 만든 2개의 광고 컴포넌트를 불러옵니다.
 import AdBannerLeft from "@/components/layout/AdBannerLeft";
 import AdBannerRight from "@/components/layout/AdBannerRight";
+// ★ 추가된 부분: 상단 배너 컴포넌트를 불러옵니다.
+import AdBannerTop from "@/components/layout/AdBannerTop";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -79,6 +81,8 @@ export default function RootLayout({
 
             {/* 세 번째 칸 (Center): 메인 컨텐츠 */}
             <main className="w-full">
+              {/* ★ 추가된 부분: 실시간 인기 게시글(children) 바로 위에 상단 배너 추가 */}
+              <AdBannerTop />
               {children}
             </main>
 
