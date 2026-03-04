@@ -2,22 +2,25 @@ import { createClient } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CommentSection from "@/components/post/CommentSection";
-import PostControls from "@/components/post/PostControls"; // ★ 통합 관리 컴포넌트
+import PostControls from "@/components/post/PostControls";
 import { Eye } from "lucide-react";
 
 export const runtime = 'edge';
-// ★ 실시간 데이터 반영 (조회수/댓글수 등)
 export const dynamic = "force-dynamic";
+
+// ★ 추가됨: 레벨 뱃지 색상 함수 (목록 페이지와 동일)
+function getLevelBadgeStyle(level: number) {
+  if (!level || level <= 5) return "bg-gray-100 text-gray-600 border-gray-200"; // 1~5: 회색
+  if (level <= 10) return "bg-green-100 text-green-700 border-green-200";       // 6~10: 초록색
+  if (level <= 15) return "bg-blue-100 text-blue-700 border-blue-200";          // 11~15: 파란색
+  if (level <= 20) return "bg-purple-100 text-purple-700 border-purple-200";    // 16~20: 보라색
+  return "bg-red-100 text-red-700 border-red-200";                              // 21 이상: 빨간색
+}
 
 export default async function PostDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
   
-  // ─────────────────────────────────────────────────────────
-  // ★ 수정된 부분: 조회수 증가 로직을 별도로 분리하지 않고 직관적으로 처리합니다.
-  // RPC 함수가 없거나 실패하더라도 아래의 데이터 로딩에 영향을 주지 않습니다.
-  // ─────────────────────────────────────────────────────────
-  
-  // 1. 게시글 정보 먼저 가져오기
+  // 1. 게시글 정보 가져오기
   const { data: post, error } = await supabase
     .from("posts")
     .select("*, profiles(nickname, grade, level)")
@@ -28,19 +31,19 @@ export default async function PostDetailPage({ params }: { params: { id: string 
     return notFound();
   }
 
-  // 2. 글을 성공적으로 불러왔다면, 조회수 +1 업데이트 실행 (에러 나도 무시)
-  // RPC(increment_views)가 세팅되어 있지 않다면 일반 update 방식을 사용하도록 백업을 마련했습니다.
+  // 2. 조회수 +1 업데이트
   try {
-    const { error: rpcError } = await supabase.rpc('increment_views', { row_id: params.id });
+    // ★ 수정됨: params.id를 Number()로 감싸서 확실하게 숫자로 전달합니다. (타입 에러 방지)
+    const postIdNum = Number(params.id);
+    const { error: rpcError } = await supabase.rpc('increment_views', { row_id: postIdNum });
+    
     if (rpcError) {
-      // RPC가 실패하면(아직 DB에 함수를 안 만드셨을 경우) 일반 업데이트로 우회
-      await supabase.from("posts").update({ view_count: (post.view_count || 0) + 1 }).eq("id", params.id);
+      // RPC가 실패하면 우회 업데이트
+      await supabase.from("posts").update({ view_count: (post.view_count || 0) + 1 }).eq("id", postIdNum);
     }
   } catch (e) {
     // 무시
   }
-
-  // ─────────────────────────────────────────────────────────
 
   // 3. 본문 렌더링 로직
   const renderContent = () => {
@@ -54,6 +57,8 @@ export default async function PostDetailPage({ params }: { params: { id: string 
     }
     return <p className="whitespace-pre-wrap leading-relaxed text-gray-800">{post.content}</p>;
   };
+
+  const userLevel = post.profiles?.level || 1; // 작성자 레벨
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -78,7 +83,6 @@ export default async function PostDetailPage({ params }: { params: { id: string 
                 {post.title}
             </h1>
             
-            {/* ★ 핵심: 작성자/관리자 권한 확인 및 버튼 표시를 전담하는 컴포넌트 */}
             <PostControls 
               postId={post.id}
               authorId={post.author_id}
@@ -91,8 +95,13 @@ export default async function PostDetailPage({ params }: { params: { id: string 
 
         <div className="flex justify-between items-center text-sm text-gray-500 mt-3">
             <div className="flex items-center gap-3">
-                <span className="font-bold text-gray-800">{post.profiles?.nickname || "알 수 없음"}</span>
-                {/* ★ 수정됨: 하이드레이션 에러 방지 속성 추가 */}
+                {/* ★ 수정됨: 게시글 상세 페이지 닉네임 앞에도 레벨 뱃지 추가 */}
+                <div className="flex items-center gap-1.5">
+                  <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${getLevelBadgeStyle(userLevel)}`}>
+                    Lv.{userLevel}
+                  </span>
+                  <span className="font-bold text-gray-800">{post.profiles?.nickname || "알 수 없음"}</span>
+                </div>
                 <span suppressHydrationWarning className="text-xs text-gray-400">{new Date(post.created_at).toLocaleString()}</span>
             </div>
             <span className="flex items-center gap-1 text-xs">
@@ -101,7 +110,7 @@ export default async function PostDetailPage({ params }: { params: { id: string 
         </div>
       </div>
 
-      {/* 본문 내용 (숨김 글일 경우 흐릿하게 표시) */}
+      {/* 본문 내용 */}
       <div className={`bg-white p-6 rounded-lg shadow-sm border border-gray-200 min-h-[300px] mb-8 ${post.is_hidden ? 'opacity-50 grayscale' : ''}`}>
         {renderContent()}
       </div>
