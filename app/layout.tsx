@@ -11,6 +11,8 @@ import AdBannerLeft from "@/components/layout/AdBannerLeft";
 import AdBannerRight from "@/components/layout/AdBannerRight";
 // ★ 추가된 부분: 상단 배너 컴포넌트를 불러옵니다.
 import AdBannerTop from "@/components/layout/AdBannerTop";
+// ★ 추가된 부분: 모바일 롤링 배너 컴포넌트를 불러옵니다.
+import MobileAdSlider from "@/components/layout/MobileAdSlider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -83,6 +85,8 @@ export default function RootLayout({
             <main className="w-full">
               {/* ★ 추가된 부분: 실시간 인기 게시글(children) 바로 위에 상단 배너 추가 */}
               <AdBannerTop />
+              {/* ★ 추가됨: 모바일에서만 보이는 3초 간격 2열 광고 슬라이더 */}
+              <MobileAdSlider />
               {children}
             </main>
 
