@@ -1,5 +1,6 @@
 import SidebarLeft from "@/components/layout/SidebarLeft";
 import SidebarRight from "@/components/layout/SidebarRight";
+export const runtime = 'edge';
 
 export default function CategoryLayout({
   children,
