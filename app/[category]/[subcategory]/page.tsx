@@ -35,7 +35,8 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
   // 2. 글 조회
   let query = supabase
     .from("posts")
-    .select("*, profiles(nickname)", { count: "exact" }) // comment_count가 있으면 자동으로 가져옴
+    // ★ 수정됨: profiles 에서 nickname 뿐만 아니라 level 도 가져옵니다.
+    .select("*, profiles(nickname, level)", { count: "exact" }) 
     .eq("category_main", params.category)
     .eq("category_sub", params.subcategory) // 소분류 일치
     .neq("is_hidden", true)
