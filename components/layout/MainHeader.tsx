@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
 import { useAuth } from "@/components/auth/AuthProvider";
 import NicknameModal from "@/components/auth/NicknameModal";
-// ★ 추가됨: 모바일 메뉴에 쓸 아이콘들 (Menu, X, ChevronRight)
 import { Search, Sun, Cloud, CloudRain, CloudLightning, Snowflake, DollarSign, Coins, RefreshCcw, Loader2, Menu, X, ChevronRight } from "lucide-react";
 
 const WEATHER_API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY || "";
@@ -34,7 +33,6 @@ export default function MainHeader() {
   const [weatherList, setWeatherList] = useState<any[]>([]);
   const [weatherLoading, setWeatherLoading] = useState(true);
   
-  // ★ 추가됨: 모바일 슬라이드 메뉴 열림/닫힘 상태
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const getWeatherIcon = (main: string) => {
@@ -49,7 +47,6 @@ export default function MainHeader() {
   };
 
   useEffect(() => {
-    // 1. 환율 정보
     const fetchRates = async () => {
       try {
         const usdRes = await fetch("https://api.frankfurter.app/latest?from=USD&to=KRW");
@@ -67,14 +64,12 @@ export default function MainHeader() {
       }
     };
 
-    // 2. 날씨 정보 (최적화)
     const fetchWeather = async () => {
       if (!WEATHER_API_KEY) {
         setWeatherLoading(false);
         return;
       }
       try {
-        // Promise.all로 13개 도시 동시 요청 (가장 빠른 방법)
         const promises = CITY_QUERIES.map(async (queryCity) => {
           const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${queryCity},PH&appid=${WEATHER_API_KEY}&units=metric`);
           if (!res.ok) return null;
@@ -117,8 +112,6 @@ export default function MainHeader() {
         {/* 상단 정보 바 */}
         <div className="bg-slate-50 border-b border-gray-200 h-10 flex items-center overflow-hidden text-xs">
           <div className="max-w-7xl mx-auto w-full flex h-full">
-            
-            {/* 좌측: 환율 (고정) */}
             <div className="w-[30%] md:w-[25%] lg:w-[20%] h-full bg-blue-50/50 flex items-center justify-center px-2 border-r border-gray-200 shrink-0 z-10">
                {exchange.loading ? (
                  <span className="text-gray-400 flex items-center gap-1"><RefreshCcw size={10} className="animate-spin"/> 로딩..</span>
@@ -135,7 +128,6 @@ export default function MainHeader() {
                )}
             </div>
 
-            {/* 우측: 날씨 (3세트 복제 - 무한 루프) */}
             <div className="flex-1 h-full flex items-center overflow-hidden bg-white relative">
                {weatherLoading ? (
                  <div className="flex items-center gap-2 px-4 text-gray-400">
@@ -155,7 +147,6 @@ export default function MainHeader() {
                  </div>
                )}
             </div>
-
           </div>
         </div>
 
@@ -185,16 +176,7 @@ export default function MainHeader() {
               </div>
             </form>
             
-            {/* ★ 추가됨: 모바일용 햄버거 메뉴 버튼 */}
-            <div className="shrink-0 md:hidden flex items-center">
-              <button 
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
-              >
-                <Menu size={28} />
-              </button>
-            </div>
-            {/* PC용 우측 여백 유지 */}
+            {/* 우측 여백 유지 (모바일용 버튼이 파란 메뉴바로 이사 갔으므로 여백만 남깁니다) */}
             <div className="shrink-0 w-8 hidden md:block"></div>
           </div>
         </div>
@@ -202,10 +184,21 @@ export default function MainHeader() {
         {/* 메뉴바 */}
         <div className="max-w-7xl mx-auto px-4 pb-0">
             <nav className="bg-blue-700 text-white rounded-t-xl overflow-hidden shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]">
-                <ul className="flex justify-between items-center overflow-x-auto scrollbar-hide divide-x divide-blue-600">
+                <ul className="flex items-center overflow-x-auto scrollbar-hide divide-x divide-blue-600">
+                
+                {/* ★ 추가됨: 모바일에서만 보이는 '전체' 메뉴 버튼 (맨 왼쪽에 고정) */}
+                <li className="shrink-0 md:hidden bg-blue-800/80 hover:bg-blue-800 transition relative group">
+                  <button 
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    className="flex items-center justify-center gap-1.5 px-5 py-3 text-base font-bold whitespace-nowrap w-full text-blue-50"
+                  >
+                    <Menu size={18} /> 전체
+                  </button>
+                </li>
+
                 {MENUS.map((menu: any) => (
-                    <li key={menu.id} className="flex-1 text-center hover:bg-blue-800 transition relative group">
-                    <Link href={`/${menu.id}`} className="block py-3 text-base font-bold whitespace-nowrap">
+                    <li key={menu.id} className="flex-1 shrink-0 text-center hover:bg-blue-800 transition relative group">
+                    <Link href={`/${menu.id}`} className="block px-4 md:px-0 py-3 text-base font-bold whitespace-nowrap">
                         {menu.label}
                     </Link>
                     </li>
@@ -215,17 +208,14 @@ export default function MainHeader() {
         </div>
       </header>
 
-      {/* ★ 추가됨: 모바일 슉! 슬라이드 드로어 메뉴 */}
+      {/* 모바일 슉! 슬라이드 드로어 메뉴 */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[999] flex md:hidden">
-          {/* 어두운 배경 (클릭 시 닫힘) */}
           <div 
             className="fixed inset-0 bg-black/50 transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          {/* 메뉴판 (오른쪽에서 등장) */}
           <div className="relative w-[80%] max-w-[320px] bg-white h-full shadow-2xl flex flex-col ml-auto">
-            {/* 드로어 헤더 */}
             <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-blue-50/50">
               <span className="font-bold text-lg text-blue-800">전체메뉴</span>
               <button 
@@ -236,7 +226,6 @@ export default function MainHeader() {
               </button>
             </div>
 
-            {/* 드로어 메뉴 리스트 */}
             <div className="overflow-y-auto flex-1 p-5">
               {MENUS.map((menu: any) => (
                 <div key={menu.id} className="mb-6">
