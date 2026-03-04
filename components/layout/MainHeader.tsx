@@ -12,14 +12,14 @@ import { Search, Sun, Cloud, CloudRain, CloudLightning, Snowflake, DollarSign, C
 const WEATHER_API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY || "";
 
 const CITY_QUERIES = [
-  "Manila", "Cebu", "Angeles", "Davao", "Boracay", 
+  "Manila", "Cebu", "Angeles", "Davao", "Malay", 
   "Baguio", "Iloilo", "Tagbilaran", "Legazpi", "Santa Rosa", 
   "Cavite City", "Subic", "Vigan"
 ];
 
 const CITY_LABELS: { [key: string]: string } = {
   "Manila": "마닐라", "Cebu": "세부", "Angeles": "앙헬레스", "Davao": "다바오",
-  "Boracay": "보라카이", "Baguio": "바기오", "Iloilo": "일로일로",
+  "Malay": "보라카이", "Baguio": "바기오", "Iloilo": "일로일로",
   "Tagbilaran": "보홀", "Legazpi": "레가스피", "Santa Rosa": "라구나",
   "Cavite City": "카비테", "Subic": "수빅", "Vigan": "비간"
 };
