@@ -12,14 +12,12 @@ export const dynamic = "force-dynamic";
 export default async function PostDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
   
-  // 1. 조회수 증가 (에러 발생 시 무시하고 페이지 로딩 계속)
-  try {
-    await supabase.rpc('increment_views', { row_id: params.id });
-  } catch (e) {
-    // console.error("조회수 증가 실패:", e); // 개발 중에만 확인
-  }
-
-  // 2. 게시글 정보 가져오기
+  // ─────────────────────────────────────────────────────────
+  // ★ 수정된 부분: 조회수 증가 로직을 별도로 분리하지 않고 직관적으로 처리합니다.
+  // RPC 함수가 없거나 실패하더라도 아래의 데이터 로딩에 영향을 주지 않습니다.
+  // ─────────────────────────────────────────────────────────
+  
+  // 1. 게시글 정보 먼저 가져오기
   const { data: post, error } = await supabase
     .from("posts")
     .select("*, profiles(nickname, grade, level)")
@@ -29,6 +27,20 @@ export default async function PostDetailPage({ params }: { params: { id: string 
   if (error || !post) {
     return notFound();
   }
+
+  // 2. 글을 성공적으로 불러왔다면, 조회수 +1 업데이트 실행 (에러 나도 무시)
+  // RPC(increment_views)가 세팅되어 있지 않다면 일반 update 방식을 사용하도록 백업을 마련했습니다.
+  try {
+    const { error: rpcError } = await supabase.rpc('increment_views', { row_id: params.id });
+    if (rpcError) {
+      // RPC가 실패하면(아직 DB에 함수를 안 만드셨을 경우) 일반 업데이트로 우회
+      await supabase.from("posts").update({ views: (post.views || 0) + 1 }).eq("id", params.id);
+    }
+  } catch (e) {
+    // 무시
+  }
+
+  // ─────────────────────────────────────────────────────────
 
   // 3. 본문 렌더링 로직
   const renderContent = () => {
@@ -82,8 +94,9 @@ export default async function PostDetailPage({ params }: { params: { id: string 
                 <span className="font-bold text-gray-800">{post.profiles?.nickname || "알 수 없음"}</span>
                 <span className="text-xs text-gray-400">{new Date(post.created_at).toLocaleString()}</span>
             </div>
+            {/* ★ 수정된 부분: 화면에 보여질 때는 +1 된 숫자로 바로 보여줍니다 */}
             <span className="flex items-center gap-1 text-xs">
-                <Eye size={14} /> {post.views}
+                <Eye size={14} /> {(post.views || 0) + 1}
             </span>
         </div>
       </div>
