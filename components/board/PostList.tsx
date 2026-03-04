@@ -10,13 +10,25 @@ interface PostListProps {
   pageSize: number;
 }
 
-// ★ 추가됨: 레벨에 따라 뱃지 색상을 다르게 반환하는 함수
-function getLevelBadgeStyle(level: number) {
-  if (!level || level <= 5) return "bg-gray-100 text-gray-600 border-gray-200"; // 1~5: 회색 (기본)
-  if (level <= 10) return "bg-green-100 text-green-700 border-green-200";       // 6~10: 초록색
-  if (level <= 15) return "bg-blue-100 text-blue-700 border-blue-200";          // 11~15: 파란색
-  if (level <= 20) return "bg-purple-100 text-purple-700 border-purple-200";    // 16~20: 보라색
-  return "bg-red-100 text-red-700 border-red-200";                              // 21 이상: 빨간색 (최고 등급)
+// ★ 수정됨: 0~10레벨, S등급(99), M(10레벨)을 완벽하게 구분하는 함수
+function getLevelBadgeInfo(level: any) {
+  const strLevel = String(level);
+  
+  // 10레벨 (관리자) -> M (블랙)
+  if (strLevel === "10") return { label: "M", style: "bg-gray-800 text-white border-gray-900" }; 
+  // S등급 (유료회원 - DB에 'S' 혹은 '99'로 저장) -> S (골드)
+  if (strLevel === "S" || strLevel === "99") return { label: "S", style: "bg-yellow-100 text-yellow-700 border-yellow-300" };
+  
+  // 일반 레벨 (0~5까지 지정, 나중을 위해 색상 분리)
+  if (strLevel === "0") return { label: "Lv.0", style: "bg-gray-100 text-gray-500 border-gray-200" };
+  if (strLevel === "1") return { label: "Lv.1", style: "bg-green-100 text-green-700 border-green-200" };
+  if (strLevel === "2") return { label: "Lv.2", style: "bg-blue-100 text-blue-700 border-blue-200" };
+  if (strLevel === "3") return { label: "Lv.3", style: "bg-purple-100 text-purple-700 border-purple-200" };
+  if (strLevel === "4") return { label: "Lv.4", style: "bg-teal-100 text-teal-700 border-teal-200" };
+  if (strLevel === "5") return { label: "Lv.5", style: "bg-pink-100 text-pink-700 border-pink-200" };
+  
+  // 그 외 나머지 레벨 (6~9)
+  return { label: `Lv.${strLevel}`, style: "bg-indigo-100 text-indigo-700 border-indigo-200" };
 }
 
 export default function PostList({ posts, showSubCategory, totalCount, currentPage, pageSize }: PostListProps) {
