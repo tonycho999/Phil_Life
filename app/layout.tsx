@@ -4,12 +4,14 @@ import "./globals.css";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import MainHeader from "@/components/layout/MainHeader";
 import NicknameGuard from "@/components/auth/NicknameGuard";
-import SidebarLeft from "@/components/layout/SidebarLeft"; // ★ 추가됨
-import SidebarRight from "@/components/layout/SidebarRight"; // ★ 추가됨
+import SidebarLeft from "@/components/layout/SidebarLeft";
+import SidebarRight from "@/components/layout/SidebarRight";
+// ★ 방금 만든 2개의 광고 컴포넌트를 불러옵니다.
+import AdBannerLeft from "@/components/layout/AdBannerLeft";
+import AdBannerRight from "@/components/layout/AdBannerRight";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// ★ 기존의 짧았던 메타데이터가 SEO 최적화 메타데이터로 완벽히 교체되었습니다.
 export const metadata: Metadata = {
   title: "필카페24 | 필리핀 실시간 교민·여행·비즈니스 1위 커뮤니티",
   description: "24시간 깨어있는 필리핀 정보, 필카페24! 마닐라, 세부 실시간 뉴스, 벼룩시장, 구인구직, 비자 및 법률 상담까지. 필리핀 생활의 모든 해답을 필카페24에서 확인하세요.",
@@ -64,20 +66,18 @@ export default function RootLayout({
           {/* 2. 메인 헤더 (상단 고정) */}
           <MainHeader />
           
-          {/* 3. 5단 Grid 레이아웃 (여백광고 - 좌 - 중앙 - 우 - 여백광고) */}
+          {/* 3. 5단 Grid 레이아웃 (좌측광고 - 좌 - 중앙 - 우 - 우측광고) */}
           <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_220px_minmax(auto,800px)_220px_1fr] gap-6 pt-6 px-4 lg:px-0 min-h-screen">
             
-            {/* 첫 번째 칸: 좌측 여백 광고 (모바일 숨김) */}
-            <div className="hidden lg:block">
-              {/* 나중에 이곳에 왼쪽 배너 광고 코드를 넣으세요 */}
-            </div>
+            {/* 첫 번째 칸: 좌측 날개 배너 */}
+            <AdBannerLeft />
 
             {/* 두 번째 칸: 좌측 사이드바 */}
             <aside className="hidden md:block">
               <SidebarLeft />
             </aside>
 
-            {/* 세 번째 칸 (Center): 메인 컨텐츠 (page.tsx 내용이 여기로 들어옵니다) */}
+            {/* 세 번째 칸 (Center): 메인 컨텐츠 */}
             <main className="w-full">
               {children}
             </main>
@@ -87,10 +87,8 @@ export default function RootLayout({
               <SidebarRight />
             </aside>
 
-            {/* 다섯 번째 칸: 우측 여백 광고 (모바일 숨김) */}
-            <div className="hidden lg:block">
-              {/* 나중에 이곳에 오른쪽 배너 광고 코드를 넣으세요 */}
-            </div>
+            {/* 다섯 번째 칸: 우측 날개 배너 */}
+            <AdBannerRight />
 
           </div>
         </AuthProvider>
