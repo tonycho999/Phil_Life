@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -161,8 +162,14 @@ export default function MainHeader() {
         {/* 메인 헤더 */}
         <div className="max-w-7xl mx-auto px-4 py-6 md:py-7">
           <div className="flex justify-between items-center gap-8">
-            <Link href="/" className="font-black text-3xl md:text-4xl text-blue-700 tracking-tighter shrink-0 hover:text-blue-800 transition">
-              {SITE_NAME}
+            <Link href="/" className="shrink-0 flex items-center">
+              <Image 
+                src="/images/logo.png" 
+                alt={SITE_NAME} 
+                width={160} 
+                height={45} 
+                priority 
+                className="object-contain hover:opacity-80 transition"/>
             </Link>
 
             <form onSubmit={handleSearch} className="flex-1 max-w-xl hidden md:block">
