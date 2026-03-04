@@ -1,18 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
-import { createClient } from "@/lib/supabase";
+import { useEffect, useRef } from "react";
+// ★ 방금 만든 서버 액션을 불러옵니다.
+import { incrementView } from "@/app/actions/postActions";
 
 export default function ViewUpdater({ postId }: { postId: string }) {
-  useEffect(() => {
-    const updateViewCount = async () => {
-      const supabase = createClient();
-      // 아까 만들어두신 마법의 함수를 화면이 켜질 때 백그라운드에서 실행합니다!
-      await supabase.rpc('increment_views', { row_id: Number(postId) });
-    };
+  // 개발 모드에서 2번씩 실행되는 것을 막아주는 안전장치입니다.
+  const hasFetched = useRef(false);
 
-    updateViewCount();
+  useEffect(() => {
+    if (!hasFetched.current) {
+      // 서버 액션 호출! (클라이언트에서 서버로 안전하게 명령 전달)
+      incrementView(postId);
+      hasFetched.current = true;
+    }
   }, [postId]);
 
-  return null; // 화면에는 아무것도 나타나지 않습니다.
+  return null;
 }
