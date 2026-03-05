@@ -21,7 +21,7 @@ def insert_post(bot_id: str, main_cat: str, sub_cat: str, title: str, content: s
     # ★ 스크린샷의 컬럼명과 완벽하게 일치시켰습니다.
     # (bot_id는 Supabase profiles 테이블에 등록된 봇의 실제 ID/UUID여야 합니다)
     data = {
-        "user_id": bot_id, 
+        "author_id": bot_id, 
         "category_main": main_cat, # "news"
         "category_sub": sub_cat,   # "local"
         "title": title,
