@@ -2,6 +2,7 @@ import os
 import re
 import json
 import requests
+import difflib
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
@@ -59,18 +60,11 @@ def get_bot_uuid(nickname):
     except:
         return None
 
-# ★ 핵심: 제목 유사도 검사 함수 (핵심 단어가 50% 이상 겹치면 중복 처리)
+# ★ 중복 기준 35%로 대폭 하향! 조금만 겹쳐도 차단
 def is_similar(new_title, existing_titles):
-    new_words = set(new_title.replace(",", "").replace("'", "").replace('"', "").split())
     for title in existing_titles:
-        existing_words = set(title.replace(",", "").replace("'", "").replace('"', "").split())
-        if not new_words or not existing_words: continue
-        
-        overlap = len(new_words.intersection(existing_words))
-        shortest = min(len(new_words), len(existing_words))
-        
-        # 짧은 제목 기준으로 단어의 절반(50%) 이상이 겹치거나, 아예 똑같으면 중복!
-        if shortest >= 3 and (overlap / shortest) >= 0.5: 
+        similarity = difflib.SequenceMatcher(None, new_title, title).ratio()
+        if similarity > 0.35: 
             return True
         if new_title in title or title in new_title:
             return True
@@ -81,13 +75,12 @@ def run_newsbot_kr():
     bot_uuid = get_bot_uuid("필한뉴스")
     if not bot_uuid: return
 
-    # ★ DB에서 필한뉴스가 최근에 쓴 기사 제목 50개를 가져와서 기억해둡니다.
     recent_titles = []
     try:
         res = supabase.table("posts").select("title").eq("author_id", bot_uuid).order("created_at", desc=True).limit(50).execute()
         recent_titles = [item['title'] for item in res.data]
     except Exception as e:
-        print(f"⚠️ 기존 제목 불러오기 에러: {e}")
+        pass
 
     url = "https://openapi.naver.com/v1/search/news.json"
     headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
@@ -106,9 +99,8 @@ def run_newsbot_kr():
             if now - pub_date <= timedelta(hours=12):
                 title = clean_html(item['title'])
                 
-                # ★ 중복 필터 작동!
                 if is_similar(title, recent_titles):
-                    print(f"🔄 [중복 스킵] 이미 비슷한 기사가 있습니다: {title}")
+                    print(f"🔄 [중복 스킵] 비슷한 기사 차단: {title}")
                     continue
 
                 link = item['link']
@@ -116,7 +108,7 @@ def run_newsbot_kr():
                 
                 text_only = full_text.replace("<br>", "").replace(" ", "")
                 if not full_text or len(text_only) < 150: 
-                    print(f"⏩ [스킵] 내용이 너무 짧은 기사입니다: {title}")
+                    print(f"⏩ [스킵] 내용 부족: {title}")
                     continue 
                 
                 content = f"<div class='news-body' style='line-height: 1.8; color: #374151;'>{full_text}</div><br><br><p><a href='{link}' target='_blank' style='color: #2563eb; font-weight: bold;'>📰 언론사 원문 보기</a></p>"
@@ -124,12 +116,11 @@ def run_newsbot_kr():
                 insert_post(bot_uuid, "news", "local", title, content)
                 print(f"✅ 기사 등록 완료: {title}")
                 
-                # ★ 방금 쓴 기사도 목록에 추가해서, 이번 턴에서 중복되는 것을 막습니다.
                 recent_titles.append(title) 
                 inserted_count += 1
                     
         if inserted_count == 0:
-            print("⚠️ 12시간 내 새롭고 쓸만한 한국 뉴스가 없습니다.")
+            print("⚠️ 12시간 내 통과된 한국 뉴스가 없습니다.")
         else:
             print(f"🎉 총 {inserted_count}개의 한국 뉴스를 수집했습니다.")
     else:
