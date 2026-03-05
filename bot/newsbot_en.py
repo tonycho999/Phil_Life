@@ -60,8 +60,18 @@ def run_newsbot_en():
     except Exception as e:
         pass
 
-    url = f"https://gnews.io/api/v4/search?q=Philippines&lang=en&max=20&sortby=publishedAt&apikey={GNEWS_API_KEY}"
-    response = requests.get(url)
+# ★ 교민 필수 정보만 필터링: 필리핀 + (사건사고 OR 범죄 OR 법 OR 비자 OR 외국인 OR 지진 OR 태풍 OR 비상사태 OR 이민국)
+    search_query = "Philippines AND (accident OR crime OR law OR visa OR foreign OR earthquake OR typhoon OR emergency OR immigration OR policy)"
+    
+    url = "https://gnews.io/api/v4/search"
+    params = {
+        "q": search_query,
+        "lang": "en",
+        "max": 20,
+        "sortby": "publishedAt",
+        "apikey": GNEWS_API_KEY
+    }
+    response = requests.get(url, params=params)
 
     if response.status_code == 200:
         data = response.json()
