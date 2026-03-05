@@ -6,9 +6,14 @@ from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 from db import insert_post
 from ai_selector import translate_to_korean
+from supabase import create_client
 
 load_dotenv()
 GNEWS_API_KEY = os.getenv("GNEWS_API_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def scrape_article_en(url):
     try:
@@ -32,12 +37,35 @@ def get_bot_uuid(nickname):
     except:
         return None
 
+# ★ 핵심: 제목 유사도 검사 함수
+def is_similar(new_title, existing_titles):
+    new_words = set(new_title.replace(",", "").replace("'", "").replace('"', "").split())
+    for title in existing_titles:
+        existing_words = set(title.replace(",", "").replace("'", "").replace('"', "").split())
+        if not new_words or not existing_words: continue
+        
+        overlap = len(new_words.intersection(existing_words))
+        shortest = min(len(new_words), len(existing_words))
+        
+        if shortest >= 3 and (overlap / shortest) >= 0.5: 
+            return True
+        if new_title in title or title in new_title:
+            return True
+    return False
+
 def run_newsbot_en():
-    print("\n🤖 [필뉴스] 12시간 내 해외 뉴스 수집 및 AI 전체 번역을 시작합니다...")
+    print("\n🤖 [필뉴스] 12시간 내 해외 뉴스 수집을 시작합니다...")
     bot_uuid = get_bot_uuid("필뉴스")
     if not bot_uuid: return
 
-    # ★ 넉넉하게 20개까지 뒤져보도록 max=20 으로 변경
+    # ★ DB에서 필뉴스가 최근에 쓴 한국어 기사 제목 50개를 가져옵니다.
+    recent_titles = []
+    try:
+        res = supabase.table("posts").select("title").eq("author_id", bot_uuid).order("created_at", desc=True).limit(50).execute()
+        recent_titles = [item['title'] for item in res.data]
+    except Exception as e:
+        pass
+
     url = f"https://gnews.io/api/v4/search?q=Philippines&lang=en&max=20&sortby=publishedAt&apikey={GNEWS_API_KEY}"
     response = requests.get(url)
 
@@ -50,7 +78,6 @@ def run_newsbot_en():
             pub_str = article['publishedAt'].replace('Z', '+00:00')
             pub_date = datetime.fromisoformat(pub_str)
             
-            # ★ 24시간 -> 12시간 이내로 변경!
             if now - pub_date <= timedelta(hours=12):
                 eng_title = article['title']
                 link = article['url']
@@ -60,13 +87,17 @@ def run_newsbot_en():
                 if not full_eng_text:
                     full_eng_text = article['description']
                     
-                # ★ 필터링: 영문 본문 길이가 너무 짧으면(약 250자 미만) 사진만 있는 기사로 간주하고 패스!
                 if not full_eng_text or len(full_eng_text.replace(" ", "")) < 250:
-                    print(f"⏩ [스킵] 내용이 너무 짧은 영문 기사입니다: {eng_title}")
+                    print(f"⏩ [스킵] 너무 짧은 영문 기사입니다: {eng_title}")
                     continue
 
-                print(f"🧠 [{eng_title}] 기사 번역 중...")
+                # ★ 똑똑한 로직: 제목만 먼저 번역해서 DB와 비교합니다.
                 kor_title = translate_to_korean(eng_title)
+                if is_similar(kor_title, recent_titles):
+                    print(f"🔄 [중복 스킵] 이미 번역된 비슷한 기사가 있습니다: {kor_title}")
+                    continue # 중복이면 본문 번역 안 하고 넘어감!
+
+                print(f"🧠 [{kor_title}] 본문 전문 번역 중...")
                 kor_content = translate_to_korean(full_eng_text)
                 
                 content = ""
@@ -77,13 +108,13 @@ def run_newsbot_en():
                 content += f"<div class='news-body' style='line-height: 1.8; color: #374151;'>{formatted_content}</div><br><br><p><a href='{link}' target='_blank' style='color: #2563eb; font-weight: bold;'>📰 원문 보기 (English)</a></p>"
 
                 insert_post(bot_uuid, "news", "local", kor_title, content)
-                print(f"✅ 영문 기사 번역 및 등록 완료!")
-                inserted_count += 1
+                print(f"✅ 기사 등록 완료!")
                 
-                # (기존에 있던 3개 제한 코드는 완전히 삭제했습니다!)
+                recent_titles.append(kor_title) # 목록에 추가
+                inserted_count += 1
                     
         if inserted_count == 0:
-            print("⚠️ 12시간 내 쓸만한 해외 뉴스가 없습니다.")
+            print("⚠️ 12시간 내 새롭고 쓸만한 해외 뉴스가 없습니다.")
         else:
             print(f"🎉 총 {inserted_count}개의 해외 뉴스를 번역하여 수집했습니다.")
     else:
