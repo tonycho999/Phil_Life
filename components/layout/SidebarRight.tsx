@@ -26,6 +26,16 @@ export default async function SidebarRight() {
   return (
     <aside className="space-y-6">
       
+      {/* 배너 이미지 추가 (새 창으로 열기, 경로 수정됨) */}
+      <a 
+        href="https://tonycho.pages.dev/" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="block rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:opacity-90 transition-opacity"
+      >
+        <img src="/images/tony_banner.png" alt="광고 배너" className="w-full h-auto" />
+      </a>
+
       {/* 1️⃣ 최신글 리스트 */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2 text-sm">
