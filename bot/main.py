@@ -1,33 +1,44 @@
-import sys
 import os
+import json
+from supabase import create_client
+from dotenv import load_dotenv
 
-# 현재 폴더(bot)를 경로에 추가해서 분리된 부품 파일들을 잘 불러오게 함
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv()
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# 우리가 만든 실전용 뉴스 봇 파일들을 불러옵니다.
-from newsbot_kr import run_newsbot_kr
-from newsbot_en import run_newsbot_en
-
-def main():
-    print("🚀 [실전] 필카페24 뉴스 자동화 봇 통합 스크립트 시작!")
-    print("==================================================")
+def sync_operator_ids():
+    print("🛠️ DB에 있는 진짜 운영자 신분증(ID)을 찾아 JSON에 동기화합니다...\n")
+    filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bot_profiles.json")
     
-    # 1. 한국 뉴스 봇(네이버) 출동 -> 본문 긁어서 DB에 꽂기
-    try:
-        run_newsbot_kr()
-    except Exception as e:
-        print(f"❌ 필한뉴스 에러: {e}")
-
-    print("--------------------------------------------------")
-    
-    # 2. 해외 뉴스 봇(Gnews + AI 번역) 출동 -> 번역해서 DB에 꽂기
-    try:
-        run_newsbot_en()
-    except Exception as e:
-        print(f"❌ 필뉴스 에러: {e}")
+    with open(filepath, "r", encoding="utf-8") as f:
+        profiles = json.load(f)
         
-    print("==================================================")
-    print("🎉 모든 뉴스 봇의 DB 작성 작업이 완료되었습니다!")
+    operator_names = ["필한뉴스", "필뉴스", "필정보", "필여행"]
+    
+    # 1. DB에서 운영자 닉네임으로 진짜 ID 검색
+    response = supabase.table("profiles").select("id, nickname").in_("nickname", operator_names).execute()
+    db_operators = response.data
+    
+    if not db_operators:
+        print("❌ DB에서 운영자 봇을 찾지 못했습니다.")
+        return
+
+    # 2. 찾은 진짜 ID를 JSON 파일에 업데이트
+    update_count = 0
+    for db_op in db_operators:
+        for p in profiles:
+            if p.get("nickname") == db_op["nickname"]:
+                p["id"] = db_op["id"]
+                print(f"✅ [{p['nickname']}] 진짜 신분증 장착 완료: {db_op['id']}")
+                update_count += 1
+                break
+                
+    if update_count > 0:
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(profiles, f, ensure_ascii=False, indent=2)
+        print("\n🎉 동기화 완료! 이제 다시 뉴스 총사령관 코드로 바꾸시면 됩니다!")
 
 if __name__ == "__main__":
-    main()
+    sync_operator_ids()
