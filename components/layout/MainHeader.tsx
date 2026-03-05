@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
 import { useAuth } from "@/components/auth/AuthProvider";
 import NicknameModal from "@/components/auth/NicknameModal";
-import { Search, Sun, Cloud, CloudRain, CloudLightning, Snowflake, DollarSign, Coins, RefreshCcw, Loader2, Menu, X, ChevronRight } from "lucide-react";
+// ★ User, LogIn 아이콘이 추가되었습니다.
+import { Search, Sun, Cloud, CloudRain, CloudLightning, Snowflake, DollarSign, Coins, RefreshCcw, Loader2, Menu, X, ChevronRight, User, LogIn } from "lucide-react";
 
 const WEATHER_API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY || "";
 
@@ -151,8 +152,8 @@ export default function MainHeader() {
         </div>
 
         {/* 메인 헤더 */}
-        <div className="max-w-7xl mx-auto px-4 py-4 md:py-5">
-          <div className="flex justify-between items-center gap-8">
+        <div className="max-w-7xl mx-auto px-4 py-3 md:py-5">
+          <div className="flex justify-between items-center gap-4 md:gap-8">
             <Link href="/" className="shrink-0 flex items-center">
               <Image 
                 src="/images/logo.png" 
@@ -160,7 +161,7 @@ export default function MainHeader() {
                 width={180} 
                 height={52} 
                 priority 
-                className="object-contain hover:opacity-80 transition"/>
+                className="object-contain hover:opacity-80 transition w-32 md:w-[180px]"/>
             </Link>
 
             <form onSubmit={handleSearch} className="flex-1 max-w-xl hidden md:block">
@@ -176,29 +177,47 @@ export default function MainHeader() {
               </div>
             </form>
             
-            {/* 우측 여백 유지 (모바일용 버튼이 파란 메뉴바로 이사 갔으므로 여백만 남깁니다) */}
-            <div className="shrink-0 w-8 hidden md:block"></div>
+            {/* ★ 수정 1, 2, 3: 우측 상단 퀵 메뉴 (모바일/PC 공용 로그인 및 프로필, 햄버거 메뉴) */}
+            <div className="flex items-center gap-3 shrink-0">
+              {user ? (
+                <Link href="/profile" className="flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600 transition">
+                  {profile?.avatar_url ? (
+                    <img src={profile.avatar_url} alt="avatar" className="w-8 h-8 rounded-full object-cover border border-gray-200" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                      <User size={18} />
+                    </div>
+                  )}
+                  {/* 모바일에서는 아바타 이미지만 보이고, PC에서는 닉네임까지 표시 */}
+                  <span className="hidden md:block">{profile?.nickname || '회원'}님</span>
+                </Link>
+              ) : (
+                <Link href="/login" className="flex items-center gap-1.5 text-sm font-bold text-gray-600 hover:text-blue-600 transition md:px-3 md:py-1.5 md:border border-gray-300 rounded-full hover:border-blue-600">
+                  <LogIn size={20} className="md:w-4 md:h-4" />
+                  <span className="hidden md:block">로그인</span>
+                </Link>
+              )}
+
+              {/* 모바일 햄버거 메뉴 버튼 (전체 카테고리) */}
+              <button 
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="md:hidden p-1 text-gray-600 hover:text-blue-600 transition ml-1"
+              >
+                <Menu size={26} />
+              </button>
+            </div>
+
           </div>
         </div>
         
         {/* 메뉴바 */}
-        <div className="max-w-7xl mx-auto px-4 pb-0">
-            <nav className="bg-blue-700 text-white rounded-t-xl overflow-hidden shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]">
+        <div className="max-w-7xl mx-auto px-0 md:px-4 pb-0">
+            <nav className="bg-blue-700 text-white md:rounded-t-xl overflow-hidden shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]">
                 <ul className="flex items-center overflow-x-auto scrollbar-hide divide-x divide-blue-600">
-                
-                {/* ★ 추가됨: 모바일에서만 보이는 '전체' 메뉴 버튼 (맨 왼쪽에 고정) */}
-                <li className="shrink-0 md:hidden bg-blue-800/80 hover:bg-blue-800 transition relative group">
-                  <button 
-                    onClick={() => setIsMobileMenuOpen(true)}
-                    className="flex items-center justify-center gap-1.5 px-5 py-3 text-base font-bold whitespace-nowrap w-full text-blue-50"
-                  >
-                    <Menu size={18} /> 전체
-                  </button>
-                </li>
-
+                {/* ★ 기존에 있던 모바일 전용 '전체' <li> 버튼은 우측 상단 햄버거로 이동했으므로 삭제했습니다! */}
                 {MENUS.map((menu: any) => (
                     <li key={menu.id} className="flex-1 shrink-0 text-center hover:bg-blue-800 transition relative group">
-                    <Link href={`/${menu.id}`} className="block px-4 md:px-0 py-3 text-base font-bold whitespace-nowrap">
+                    <Link href={`/${menu.id}`} className="block px-4 py-3 text-sm md:text-base font-bold whitespace-nowrap">
                         {menu.label}
                     </Link>
                     </li>
@@ -216,8 +235,27 @@ export default function MainHeader() {
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <div className="relative w-[80%] max-w-[320px] bg-white h-full shadow-2xl flex flex-col ml-auto">
+            {/* ★ 드로어 상단에도 내 프로필 영역을 추가해 앱처럼 만들었습니다! */}
             <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-blue-50/50">
-              <span className="font-bold text-lg text-blue-800">전체메뉴</span>
+              {user ? (
+                <Link href="/profile" className="flex items-center gap-3" onClick={() => setIsMobileMenuOpen(false)}>
+                  {profile?.avatar_url ? (
+                    <img src={profile.avatar_url} alt="avatar" className="w-10 h-10 rounded-full object-cover border border-gray-200" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                      <User size={20} />
+                    </div>
+                  )}
+                  <div className="flex flex-col">
+                    <span className="font-bold text-gray-800 text-sm">{profile?.nickname || '회원'}님</span>
+                    <span className="text-xs text-blue-600 font-medium">마이페이지 관리 〉</span>
+                  </div>
+                </Link>
+              ) : (
+                <Link href="/login" className="font-bold text-base text-blue-800 flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
+                  <LogIn size={18} /> 로그인 해주세요
+                </Link>
+              )}
               <button 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-2 text-gray-500 hover:bg-gray-200 hover:text-gray-800 rounded-lg transition"
