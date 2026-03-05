@@ -12,7 +12,6 @@ export default function AdminPage() {
   const router = useRouter();
   
   const [boards, setBoards] = useState<any[]>([]);
-  // ★ 추가됨: DB에서 가져온 등급 정책(Grade Policies)을 저장할 상태
   const [grades, setGrades] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,12 +22,12 @@ export default function AdminPage() {
         alert("관리자만 접근 가능합니다.");
         router.push("/");
       } else {
-        fetchData(); // ★ 게시판 목록과 등급 목록을 동시에 부르도록 함수 변경
+        fetchData();
       }
     }
   }, [user, profile, authLoading, router]);
 
-  // ★ 게시판 & 등급 목록 불러오기 (Promise.all로 속도 최적화)
+  // 게시판 & 등급 목록 불러오기 (Promise.all로 속도 최적화)
   const fetchData = async () => {
     setLoading(true);
     
@@ -79,7 +78,7 @@ export default function AdminPage() {
             category_main: menu.id,
             category_sub: sub.id,
             name: sub.label,
-            read_level: 0,      // 읽기 (누구나)
+            read_level: 1,      // 초기값을 1로 변경
             write_level: 1,     // 글쓰기 (회원)
             comment_level: 1    // 댓글 (회원)
           });
@@ -143,8 +142,7 @@ export default function AdminPage() {
                         value={board.read_level}
                         onChange={(e) => handleUpdate(board.id, "read_level", e.target.value)}
                       >
-                        <option value="0">0 (손님)</option>
-                        {/* ★ DB에서 동적으로 가져온 등급들 */}
+                        {/* ★ DB에서 동적으로 가져온 등급들만 출력 (손님 삭제) */}
                         {grades.map(g => (
                           <option key={`read-${g.level}`} value={g.level}>{g.level} ({g.name})</option>
                         ))}
@@ -158,8 +156,7 @@ export default function AdminPage() {
                         value={board.write_level}
                         onChange={(e) => handleUpdate(board.id, "write_level", e.target.value)}
                       >
-                        <option value="0">0 (손님)</option>
-                        {/* ★ DB에서 동적으로 가져온 등급들 */}
+                        {/* ★ DB에서 동적으로 가져온 등급들만 출력 (손님 삭제) */}
                         {grades.map(g => (
                           <option key={`write-${g.level}`} value={g.level}>{g.level} ({g.name})</option>
                         ))}
@@ -173,8 +170,7 @@ export default function AdminPage() {
                         value={board.comment_level ?? 1}
                         onChange={(e) => handleUpdate(board.id, "comment_level", e.target.value)}
                       >
-                        <option value="0">0 (손님)</option>
-                        {/* ★ DB에서 동적으로 가져온 등급들 */}
+                        {/* ★ DB에서 동적으로 가져온 등급들만 출력 (손님 삭제) */}
                         {grades.map(g => (
                           <option key={`comment-${g.level}`} value={g.level}>{g.level} ({g.name})</option>
                         ))}
