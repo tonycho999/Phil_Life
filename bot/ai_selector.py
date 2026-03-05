@@ -1,4 +1,5 @@
 import os
+import re # ★ 정규표현식 모듈 추가 (물리적 절단용)
 from groq import Groq
 from dotenv import load_dotenv
 
@@ -49,7 +50,8 @@ def get_dynamic_model(client: Groq) -> str:
         print(f"⚠️ 모델 선택 중 에러 발생: {e}. 기본 모델을 사용합니다.")
         return "llama-3.1-8b-instant"
 
-def generate_text(prompt: str, temperature: float = 0.5) -> str:
+# ★ system_prompt 매개변수 추가: AI에게 아주 강력한 '시스템적 족쇄'를 채우기 위함
+def generate_text(prompt: str, temperature: float = 0.5, system_prompt: str = "") -> str:
     """프롬프트를 받아 Groq AI로 텍스트를 생성하는 공통 함수"""
     if not valid_groq_keys:
         return "❌ [오류] Groq API 키가 설정되지 않았습니다."
@@ -58,12 +60,18 @@ def generate_text(prompt: str, temperature: float = 0.5) -> str:
         try:
             client = Groq(api_key=key)
             
-            # ★ 동적으로 가장 안전한 모델을 가져옵니다.
+            # 동적으로 가장 안전한 모델을 가져옵니다.
             selected_model = get_dynamic_model(client)
             print(f"🧠 [AI 모델] {selected_model} (키: {i+1}번 사용 중)")
             
+            # 메시지 구성 (시스템 프롬프트가 있으면 맨 앞에 추가)
+            messages = []
+            if system_prompt:
+                messages.append({"role": "system", "content": system_prompt})
+            messages.append({"role": "user", "content": prompt})
+            
             chat_completion = client.chat.completions.create(
-                messages=[{"role": "user", "content": prompt}],
+                messages=messages,
                 model=selected_model,
                 temperature=temperature,
             )
@@ -79,12 +87,26 @@ def translate_to_korean(eng_text: str) -> str:
     if not eng_text: 
         return ""
     
-    prompt = f"""
-    You are a professional translator for a Korean community in the Philippines.
-    Translate the following English news text into natural, professional Korean.
-    Just provide the translated text, no extra comments or quotation marks.
+    # ★ 족쇄 1: 가장 강력한 시스템 지시문 (오직 번역만 해라!)
+    system_prompt = "You are a professional news translator. Your ONLY job is to translate the given English text into natural, professional Korean. Output ONLY the translated Korean text. Do NOT add any conversational filler, explanations, or notes."
+    user_prompt = f"Translate this:\n\n{eng_text}"
     
-    Text to translate:
-    {eng_text}
-    """
-    return generate_text(prompt, temperature=0.3)
+    # ★ 족쇄 2: 온도를 0.1로 대폭 낮춰서 창의적인 헛소리 차단
+    content = generate_text(user_prompt, temperature=0.1, system_prompt=system_prompt)
+    
+    # 에러가 반환된 경우 처리
+    if content.startswith("❌"):
+        return content
+        
+    # ★ 족쇄 3: 물리적 수술! <think> ... </think> 태그와 그 안의 내용물 통째로 삭제
+    content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL).strip()
+    
+    # ★ 족쇄 4: 혹시라도 남은 쓸데없는 인사말/도입부 첫 문장 날려버리기
+    content = re.sub(r'^(Here is the translation|Okay|First|번역:|Translated text:|번역결과:).*?\n', '', content, flags=re.IGNORECASE).strip()
+    
+    # ★ 족쇄 5: 무한 반복 버그 감지 (똑같은 글자가 10번 이상 반복되면 차라리 원문 출력)
+    if re.search(r'(.)\1{10,}', content):
+        print("⚠️ 무한 반복 버그 감지! 원문으로 대체합니다.")
+        return "(AI 번역 오류로 원문을 표시합니다)\n\n" + eng_text
+        
+    return content
