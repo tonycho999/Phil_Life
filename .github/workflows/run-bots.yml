@@ -1,14 +1,10 @@
 name: 🤖 뉴스 봇 자동 실행기
 
 on:
-  workflow_dispatch: # 수동 실행 버튼 활성화
-  # 테스트 중이므로 아래 스케줄 자동 실행은 임시로 꺼둡니다!
+  workflow_dispatch: # 수동 실행 버튼
+  # 테스트 중이므로 스케줄은 임시로 꺼둡니다!
   # schedule:
   #   - cron: '0 0,9 * * *'
-
-# ★ 깃허브 서버가 json 파일을 덮어쓰고 저장할 수 있도록 권한 부여
-permissions:
-  contents: write
 
 jobs:
   run-news-bots:
@@ -39,11 +35,3 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
           python bot/main.py
-
-      # ★ 파이썬이 만든 json 파일을 깃허브 저장소에 영구적으로 자동 커밋(저장)
-      - name: 💾 변경된 파일(JSON) 깃허브에 자동 저장
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add bot/*.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 봇 프로필 및 상태 자동 업데이트" && git push)
