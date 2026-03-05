@@ -177,10 +177,10 @@ export default function MainHeader() {
               </div>
             </form>
             
-            {/* ★ 수정 1, 2, 3: 우측 상단 퀵 메뉴 (모바일/PC 공용 로그인 및 프로필, 햄버거 메뉴) */}
+            {/* ★ 수정된 우측 상단 퀵 메뉴: PC에서는 숨기고(md:hidden), 쓸데없는 코드 제거! */}
             <div className="flex items-center gap-3 shrink-0">
               {user ? (
-                <Link href="/profile" className="flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600 transition">
+                <Link href="/profile" className="md:hidden flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600 transition">
                   {profile?.avatar_url ? (
                     <img src={profile.avatar_url} alt="avatar" className="w-8 h-8 rounded-full object-cover border border-gray-200" />
                   ) : (
@@ -188,13 +188,10 @@ export default function MainHeader() {
                       <User size={18} />
                     </div>
                   )}
-                  {/* 모바일에서는 아바타 이미지만 보이고, PC에서는 닉네임까지 표시 */}
-                  <span className="hidden md:block">{profile?.nickname || '회원'}님</span>
                 </Link>
               ) : (
-                <Link href="/login" className="flex items-center gap-1.5 text-sm font-bold text-gray-600 hover:text-blue-600 transition md:px-3 md:py-1.5 md:border border-gray-300 rounded-full hover:border-blue-600">
-                  <LogIn size={20} className="md:w-4 md:h-4" />
-                  <span className="hidden md:block">로그인</span>
+                <Link href="/login" className="md:hidden flex items-center gap-1.5 text-sm font-bold text-gray-600 hover:text-blue-600 transition">
+                  <LogIn size={24} />
                 </Link>
               )}
 
@@ -214,7 +211,6 @@ export default function MainHeader() {
         <div className="max-w-7xl mx-auto px-0 md:px-4 pb-0">
             <nav className="bg-blue-700 text-white md:rounded-t-xl overflow-hidden shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]">
                 <ul className="flex items-center overflow-x-auto scrollbar-hide divide-x divide-blue-600">
-                {/* ★ 기존에 있던 모바일 전용 '전체' <li> 버튼은 우측 상단 햄버거로 이동했으므로 삭제했습니다! */}
                 {MENUS.map((menu: any) => (
                     <li key={menu.id} className="flex-1 shrink-0 text-center hover:bg-blue-800 transition relative group">
                     <Link href={`/${menu.id}`} className="block px-4 py-3 text-sm md:text-base font-bold whitespace-nowrap">
@@ -235,7 +231,6 @@ export default function MainHeader() {
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <div className="relative w-[80%] max-w-[320px] bg-white h-full shadow-2xl flex flex-col ml-auto">
-            {/* ★ 드로어 상단에도 내 프로필 영역을 추가해 앱처럼 만들었습니다! */}
             <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-blue-50/50">
               {user ? (
                 <Link href="/profile" className="flex items-center gap-3" onClick={() => setIsMobileMenuOpen(false)}>
