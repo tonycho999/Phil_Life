@@ -4,7 +4,6 @@ import os
 # 현재 폴더(bot)를 경로에 추가해서 분리된 부품 파일들을 잘 불러오게 함
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# 우리가 만든 실전용 뉴스 봇 파일들을 불러옵니다.
 from newsbot_kr import run_newsbot_kr
 from newsbot_en import run_newsbot_en
 
@@ -12,7 +11,7 @@ def main():
     print("🚀 [실전] 필카페24 뉴스 자동화 봇 통합 스크립트 시작!")
     print("==================================================")
     
-    # 1. 한국 뉴스 봇(네이버) 출동 -> 본문 긁어서 DB에 꽂기
+    # 1. 한국 뉴스 봇(네이버) 출동
     try:
         run_newsbot_kr()
     except Exception as e:
@@ -20,7 +19,7 @@ def main():
 
     print("--------------------------------------------------")
     
-    # 2. 해외 뉴스 봇(Gnews + AI 번역) 출동 -> 번역해서 DB에 꽂기
+    # 2. 해외 뉴스 봇(Gnews + AI 번역) 출동
     try:
         run_newsbot_en()
     except Exception as e:
