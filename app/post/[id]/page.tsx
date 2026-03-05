@@ -99,7 +99,15 @@ export default async function PostDetailPage({ params }: { params: any }) {
                   </span>
                   <span className="font-bold text-gray-800">{post.profiles?.nickname || "알 수 없음"}</span>
                 </div>
-                <span suppressHydrationWarning className="text-xs text-gray-400">{new Date(post.created_at).toLocaleString()}</span>
+                <span suppressHydrationWarning className="text-xs text-gray-400">
+                  {new Date(post.created_at).toLocaleString('ko-KR', {
+                    timeZone: 'Asia/Manila', // ★ 핵심: 필리핀 시간(UTC+8)으로 강제 변환
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}</span>
             </div>
             <span className="flex items-center gap-1 text-xs">
                 <Eye size={14} /> {(post.view_count || 0) + 1}
