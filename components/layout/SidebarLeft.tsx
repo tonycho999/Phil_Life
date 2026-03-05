@@ -128,14 +128,19 @@ export default function SidebarLeft() {
     );
   };
 
-  // 3. 내비게이션 렌더링 (기존 코드 완벽 유지)
+  // 3. 내비게이션 렌더링 (기존 코드 완벽 유지 + 게시글 방어 로직 추가)
   const renderNavigation = () => {
     if (pathname === "/") return null;
 
-    const activeMenu = MENUS.find((m: any) => 
+    let activeMenu = MENUS.find((m: any) => 
         pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
     );
     
+    // ★ 게시글(/post/)을 보고 있을 때 왼쪽 메뉴가 사라지지 않도록 방어하는 로직
+    if (!activeMenu && pathname.startsWith("/post/")) {
+        activeMenu = MENUS[0]; // 기본 메뉴(첫 번째 탭) 강제 유지
+    }
+
     if (activeMenu && activeMenu.sub && activeMenu.sub.length > 0) {
         const Icon = ICONS[activeMenu.id] || LayoutGrid;
         
