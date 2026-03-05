@@ -1,7 +1,7 @@
 [
   {
     "id": "90056d39-621e-4bbd-b311-ee3251e80ff7",
-    "nickname": "필한뉴스252",
+    "nickname": "필한뉴스",
     "role": "운영자",
     "level": 9,
     "post_p": 1,
@@ -9,7 +9,7 @@
   },
   {
     "id": "df68bb29-e0d8-4d82-b864-d5dc5174508d",
-    "nickname": "필뉴스746",
+    "nickname": "필뉴스",
     "role": "운영자",
     "level": 9,
     "post_p": 1,
@@ -17,7 +17,7 @@
   },
   {
     "id": "3c3d88fd-3716-42f9-876f-2fe0f3d5f9a8",
-    "nickname": "필여행680",
+    "nickname": "필여행",
     "role": "운영자",
     "level": 9,
     "post_p": 1,
@@ -25,7 +25,7 @@
   },
   {
     "id": "f2c61ca7-bdac-4434-a3c7-58e4ed5cc4c9",
-    "nickname": "필정보346",
+    "nickname": "필정보",
     "role": "운영자",
     "level": 9,
     "post_p": 1.0,
