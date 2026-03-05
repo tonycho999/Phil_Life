@@ -24,16 +24,19 @@ def clean_html(raw_html):
 
 def scrape_article(url):
     try:
-        headers = {'User-Agent': 'Mozilla/5.0'}
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
         res = requests.get(url, headers=headers, timeout=10)
         res.encoding = 'utf-8'
         soup = BeautifulSoup(res.text, 'html.parser')
         
-        content_area = soup.select_one('#dic_area, #newsct_article, #articeBody')
+        # ★ 네이버 일반 뉴스, 연예, 스포츠 등 본문 영역 ID를 꼼꼼하게 전부 타겟팅
+        content_area = soup.select_one('#dic_area, #newsct_article, #artc_body, #newsEndContents, [itemprop="articleBody"]')
+        
         if content_area:
             raw_text = content_area.get_text(separator='\n', strip=True)
         else:
-            raw_text = "\n".join([p.get_text(strip=True) for p in soup.find_all('p')])
+            # ★ 핵심 수정: 진짜 본문 상자를 못 찾으면, 엉뚱한 거 긁지 말고 깔끔하게 포기!
+            return ""
 
         lines = raw_text.split('\n')
         blacklist = ['구독되었습니다', 'Copyright', '무단 전재', '재배포 금지', '이동 통신망을 이용하여', '기자의 다른 기사', '섹션 정보', '만나보세요']
@@ -108,7 +111,7 @@ def run_newsbot_kr():
                 
                 text_only = full_text.replace("<br>", "").replace(" ", "")
                 if not full_text or len(text_only) < 150: 
-                    print(f"⏩ [스킵] 내용 부족: {title}")
+                    print(f"⏩ [스킵] 내용 부족(또는 파싱 불가): {title}")
                     continue 
                 
                 content = f"<div class='news-body' style='line-height: 1.8; color: #374151;'>{full_text}</div><br><br><p><a href='{link}' target='_blank' style='color: #2563eb; font-weight: bold;'>📰 언론사 원문 보기</a></p>"
