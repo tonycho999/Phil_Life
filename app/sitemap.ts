@@ -7,7 +7,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.philcafe24.com'; // ★ 대표님의 실제 도메인
+  const baseUrl = 'https://www.phcafe24.com'; // ★ 대표님의 실제 도메인
 
   // 1. 고정된 기본 페이지들 (메인, 뉴스, 정보 등)
   const routes = ['', '/news', '/info', '/community'].map((route) => ({
