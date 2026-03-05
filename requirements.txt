@@ -1,1 +1,6 @@
 faker
+requests
+supabase
+groq
+python-dotenv
+beautifulsoup4
