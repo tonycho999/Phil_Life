@@ -10,70 +10,69 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
-def get_dynamic_gemini_model() -> str:
+def get_flash_model_list() -> list:
     """
-    [비용 최적화 & 안정성 우선 모델 자동 선택 로직]
-    'lite'나 'exp(실험)' 같은 불안정한 모델을 피하고, 
-    가장 안정적이고 가성비 좋은 정규 'flash' 모델을 선택합니다.
+    [최신 Flash 모델 자동 추출 및 정렬 로직]
+    사용 가능한 모델 목록을 불러와서 최신 버전(이름 역순)부터 시도하도록 리스트를 만듭니다.
     """
     try:
         models = genai.list_models()
-        available_flash_models = []
+        flash_models = []
         
         for m in models:
-            # 텍스트 생성(generateContent)을 지원하는 모델 중에서
             if 'generateContent' in m.supported_generation_methods:
                 name = m.name.lower()
-                # 'pro', 'lite', 'exp' 등 에러를 뿜거나 비싼 모델 싹 다 제외!
+                # 'pro', 'lite', 'exp', 'vision' 등 불안정/고가 모델 제외
                 if 'gemini' in name and 'flash' in name:
-                    if 'pro' not in name and 'lite' not in name and 'exp' not in name:
-                        available_flash_models.append(m.name)
+                    if all(bad not in name for bad in ['pro', 'lite', 'exp', 'vision']):
+                        flash_models.append(m.name)
         
-        if available_flash_models:
-            # 필터링된 가장 안정적인 정규 Flash 모델을 우선적으로 선택합니다.
-            # (만약 2.0-flash나 1.5-flash가 있다면 그것을 씁니다)
-            for model_name in available_flash_models:
-                if '1.5-flash' in model_name or '2.0-flash' in model_name:
-                    return model_name
-            return available_flash_models[0]
+        if flash_models:
+            # 이름을 역순 정렬하여 최신 버전(예: 3.5 -> 3.0 -> 2.5)이 맨 앞에 오도록 함
+            flash_models.sort(reverse=True)
+            return flash_models
             
-        print("⚠️ Flash 모델을 찾지 못했습니다. 기본 모델로 폴백합니다.")
-        return "models/gemini-1.5-flash"
+        # ★ 만약 아무것도 안 잡히면 최후의 보루: 2.5 Flash
+        return ["models/gemini-2.5-flash"]
         
     except Exception as e:
-        print(f"⚠️ 모델 검색 중 에러 발생: {e}. 기본 모델을 사용합니다.")
-        return "models/gemini-1.5-flash"
+        print(f"⚠️ 모델 목록 검색 실패: {e}")
+        return ["models/gemini-2.5-flash"]
 
 def generate_text(prompt: str, temperature: float = 0.5, system_prompt: str = "") -> str:
-    """Gemini AI로 텍스트를 생성하는 공통 함수"""
+    """Gemini AI로 텍스트를 생성하는 공통 함수 (에러 시 자동 릴레이 시도 포함)"""
     if not GEMINI_API_KEY:
         return "❌ [오류] GEMINI_API_KEY가 설정되지 않았습니다."
 
-    selected_model_name = get_dynamic_gemini_model()
-    print(f"🧠 [AI 모델] {selected_model_name} 사용 중 (가성비+안정성 최적화)")
+    available_models = get_flash_model_list()
 
-    try:
-        # Gemini 1.5 이상부터 지원하는 system_instruction 기능으로 강력한 족쇄 채우기
-        model = genai.GenerativeModel(
-            model_name=selected_model_name,
-            system_instruction=system_prompt if system_prompt else None,
-            generation_config=genai.types.GenerationConfig(
-                temperature=temperature,
+    # ★ 핵심: 최신 버전부터 순서대로 번역을 맡겨보고, 404 에러 등으로 튕기면 다음 버전으로 자동 넘어감!
+    for model_name in available_models:
+        print(f"🧠 [AI 모델 시도] {model_name} (최신 Flash 최적화)")
+        try:
+            model = genai.GenerativeModel(
+                model_name=model_name,
+                system_instruction=system_prompt if system_prompt else None,
+                generation_config=genai.types.GenerationConfig(
+                    temperature=temperature,
+                )
             )
-        )
-        
-        response = model.generate_content(prompt)
-        return response.text.strip()
-        
-    except Exception as e:
-        print(f"⚠️ [Gemini 에러 발생]: {e}")
-        return f"❌ [AI 통신 실패] 사유: {e}"
+            
+            response = model.generate_content(prompt)
+            return response.text.strip()
+            
+        except Exception as e:
+            # 구글이 메뉴판엔 올려두고 막상 안 빌려주면(404 등) 쿨하게 다음 모델로 패스!
+            print(f"⚠️ [{model_name} 거부됨]: 다음 버전으로 재시도합니다. (사유: {e})")
+            continue
+            
+    return "❌ [AI 통신 최종 실패] 사용 가능한 모든 Flash 모델이 응답을 거부했습니다."
 
 # ==========================================
 # ★ 다중인격 번역 로직 (편집장 vs 전문 번역가)
 # ==========================================
 def translate_to_korean(eng_text: str, is_title: bool = False) -> str:
-    """영어 뉴스를 전문적인 한국어로 번역합니다. (is_title=True 이면 헤드라인 압축 모드)"""
+    """영어 뉴스를 전문적인 한국어로 번역합니다."""
     if not eng_text: 
         return ""
     
@@ -88,14 +87,12 @@ Your task is to translate the given English text into a catchy, punchy, and natu
         
     user_prompt = f"Translate this:\n\n{eng_text}"
     
-    # Gemini는 똑똑해서 온도를 0.4 / 0.1 정도로 살짝만 주어도 말을 아주 잘 듣습니다.
     temperature = 0.4 if is_title else 0.1
     content = generate_text(user_prompt, temperature=temperature, system_prompt=system_prompt)
     
     if content.startswith("❌"):
         return content
         
-    # 만에 하나 들어올 수 있는 불필요한 태그나 문구 필터링 (보험용)
     content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL).strip()
     content = re.sub(r'^(Here is|번역:|Translated|제목:|Headline:|\*\*).*?\n', '', content, flags=re.IGNORECASE).strip()
     
