@@ -107,14 +107,15 @@ def run_newsbot_en():
                             print(f"⏩ [스킵] 내용 부족: {eng_title}")
                             continue
 
-                        kor_title = translate_to_korean(eng_title)
+                        # ★ 핵심 수정: AI에게 "이건 제목이니까 편집장처럼 압축해!" 라고 신호 보내기
+                        kor_title = translate_to_korean(eng_title, is_title=True)
                         
                         # 테마가 달라도 같은 사건을 다룰 수 있으므로 중복 필터가 확실히 걸러줍니다.
                         if is_similar(kor_title, recent_titles):
                             print(f"🔄 [중복 스킵] 비슷한 기사 차단: {kor_title}")
                             continue
 
-                        print(f"🧠 [{kor_title}] 번역 중...")
+                        print(f"🧠 [{kor_title}] 본문 번역 중...")
                         kor_content = translate_to_korean(full_eng_text)
                         
                         content = ""
