@@ -12,6 +12,8 @@ export default function AdminPage() {
   const router = useRouter();
   
   const [boards, setBoards] = useState<any[]>([]);
+  // ★ 추가됨: DB에서 가져온 등급 정책(Grade Policies)을 저장할 상태
+  const [grades, setGrades] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // 관리자 권한 체크 (level 10 이상)
@@ -21,20 +23,23 @@ export default function AdminPage() {
         alert("관리자만 접근 가능합니다.");
         router.push("/");
       } else {
-        fetchBoards();
+        fetchData(); // ★ 게시판 목록과 등급 목록을 동시에 부르도록 함수 변경
       }
     }
   }, [user, profile, authLoading, router]);
 
-  // 게시판 목록 불러오기
-  const fetchBoards = async () => {
+  // ★ 게시판 & 등급 목록 불러오기 (Promise.all로 속도 최적화)
+  const fetchData = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("boards")
-      .select("*")
-      .order("category_main");
     
-    if (data) setBoards(data);
+    const [boardsRes, gradesRes] = await Promise.all([
+      supabase.from("boards").select("*").order("category_main"),
+      supabase.from("grade_policies").select("*").order("level", { ascending: true })
+    ]);
+    
+    if (boardsRes.data) setBoards(boardsRes.data);
+    if (gradesRes.data) setGrades(gradesRes.data);
+    
     setLoading(false);
   };
 
@@ -52,7 +57,7 @@ export default function AdminPage() {
 
     if (error) {
       alert("저장 실패: " + error.message);
-      fetchBoards(); // 실패 시 되돌리기
+      fetchData(); // 실패 시 되돌리기
     }
   };
 
@@ -76,12 +81,12 @@ export default function AdminPage() {
             name: sub.label,
             read_level: 0,      // 읽기 (누구나)
             write_level: 1,     // 글쓰기 (회원)
-            comment_level: 1    // 댓글 (회원) - 추가됨
+            comment_level: 1    // 댓글 (회원)
           });
         }
       }
     }
-    await fetchBoards();
+    await fetchData();
     alert("동기화 완료");
   };
 
@@ -107,7 +112,7 @@ export default function AdminPage() {
               <th className="px-4 py-3">게시판 이름</th>
               <th className="px-4 py-3 text-center">읽기 등급</th>
               <th className="px-4 py-3 text-center">글쓰기 등급</th>
-              <th className="px-4 py-3 text-center">댓글 등급</th> {/* 추가됨 */}
+              <th className="px-4 py-3 text-center">댓글 등급</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -139,9 +144,10 @@ export default function AdminPage() {
                         onChange={(e) => handleUpdate(board.id, "read_level", e.target.value)}
                       >
                         <option value="0">0 (손님)</option>
-                        <option value="1">1 (일반)</option>
-                        <option value="5">5 (우수)</option>
-                        <option value="10">10 (관리자)</option>
+                        {/* ★ DB에서 동적으로 가져온 등급들 */}
+                        {grades.map(g => (
+                          <option key={`read-${g.level}`} value={g.level}>{g.level} ({g.name})</option>
+                        ))}
                       </select>
                     </td>
 
@@ -152,24 +158,26 @@ export default function AdminPage() {
                         value={board.write_level}
                         onChange={(e) => handleUpdate(board.id, "write_level", e.target.value)}
                       >
-                         <option value="0">0 (손님)</option>
-                        <option value="1">1 (일반)</option>
-                        <option value="5">5 (우수)</option>
-                        <option value="10">10 (관리자)</option>
+                        <option value="0">0 (손님)</option>
+                        {/* ★ DB에서 동적으로 가져온 등급들 */}
+                        {grades.map(g => (
+                          <option key={`write-${g.level}`} value={g.level}>{g.level} ({g.name})</option>
+                        ))}
                       </select>
                     </td>
 
-                    {/* ★ 댓글 쓰기 권한 (추가됨) */}
+                    {/* 댓글 쓰기 권한 */}
                     <td className="px-4 py-4 text-center">
                       <select
                         className="border border-gray-300 rounded px-2 py-1 focus:outline-blue-500"
-                        value={board.comment_level ?? 1} // 기본값 1
+                        value={board.comment_level ?? 1}
                         onChange={(e) => handleUpdate(board.id, "comment_level", e.target.value)}
                       >
-                         <option value="0">0 (손님)</option>
-                        <option value="1">1 (일반)</option>
-                        <option value="5">5 (우수)</option>
-                        <option value="10">10 (관리자)</option>
+                        <option value="0">0 (손님)</option>
+                        {/* ★ DB에서 동적으로 가져온 등급들 */}
+                        {grades.map(g => (
+                          <option key={`comment-${g.level}`} value={g.level}>{g.level} ({g.name})</option>
+                        ))}
                       </select>
                     </td>
 
