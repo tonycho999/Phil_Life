@@ -12,10 +12,9 @@ if GEMINI_API_KEY:
 
 def get_dynamic_gemini_model() -> str:
     """
-    [비용 최적화 모델 자동 선택 로직]
-    1. 구글 서버에서 현재 사용 가능한 모든 모델 목록을 가져옴
-    2. 무겁고 비싼 'pro' 모델은 무조건 제외
-    3. 빠르고 저렴한 'flash' 모델만 필터링 (flash-8b 같은 초저가 모델이 있다면 최우선)
+    [비용 최적화 & 안정성 우선 모델 자동 선택 로직]
+    'lite'나 'exp(실험)' 같은 불안정한 모델을 피하고, 
+    가장 안정적이고 가성비 좋은 정규 'flash' 모델을 선택합니다.
     """
     try:
         models = genai.list_models()
@@ -25,16 +24,17 @@ def get_dynamic_gemini_model() -> str:
             # 텍스트 생성(generateContent)을 지원하는 모델 중에서
             if 'generateContent' in m.supported_generation_methods:
                 name = m.name.lower()
-                # 'gemini'와 'flash'가 포함되어 있고, 'pro'는 없는 모델만 쏙쏙 뽑아냅니다.
-                if 'gemini' in name and 'flash' in name and 'pro' not in name:
-                    available_flash_models.append(m.name)
+                # 'pro', 'lite', 'exp' 등 에러를 뿜거나 비싼 모델 싹 다 제외!
+                if 'gemini' in name and 'flash' in name:
+                    if 'pro' not in name and 'lite' not in name and 'exp' not in name:
+                        available_flash_models.append(m.name)
         
         if available_flash_models:
-            # Flash 중에서도 '8b'나 'lite' 같은 초경량/초저가 모델이 있으면 가장 먼저 선택!
+            # 필터링된 가장 안정적인 정규 Flash 모델을 우선적으로 선택합니다.
+            # (만약 2.0-flash나 1.5-flash가 있다면 그것을 씁니다)
             for model_name in available_flash_models:
-                if '8b' in model_name or 'lite' in model_name:
+                if '1.5-flash' in model_name or '2.0-flash' in model_name:
                     return model_name
-            # 없으면 검색된 첫 번째 Flash 모델 사용
             return available_flash_models[0]
             
         print("⚠️ Flash 모델을 찾지 못했습니다. 기본 모델로 폴백합니다.")
@@ -50,7 +50,7 @@ def generate_text(prompt: str, temperature: float = 0.5, system_prompt: str = ""
         return "❌ [오류] GEMINI_API_KEY가 설정되지 않았습니다."
 
     selected_model_name = get_dynamic_gemini_model()
-    print(f"🧠 [AI 모델] {selected_model_name} 사용 중 (가성비 Flash 최적화)")
+    print(f"🧠 [AI 모델] {selected_model_name} 사용 중 (가성비+안정성 최적화)")
 
     try:
         # Gemini 1.5 이상부터 지원하는 system_instruction 기능으로 강력한 족쇄 채우기
