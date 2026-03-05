@@ -82,17 +82,29 @@ def generate_text(prompt: str, temperature: float = 0.5, system_prompt: str = ""
             
     return "❌ [Groq 최종 실패] 모든 API 키 한도 초과 또는 에러"
 
-def translate_to_korean(eng_text: str) -> str:
-    """영어 뉴스를 전문적인 한국어로 번역합니다."""
+# ==========================================
+# ★ 여기부터 수정됨: 다중인격 번역 (편집장 vs 번역가)
+# ==========================================
+def translate_to_korean(eng_text: str, is_title: bool = False) -> str:
+    """영어 뉴스를 전문적인 한국어로 번역합니다. (is_title=True 이면 헤드라인 압축 모드)"""
     if not eng_text: 
         return ""
     
-    # ★ 족쇄 1: 가장 강력한 시스템 지시문 (오직 번역만 해라!)
-    system_prompt = "You are a professional news translator. Your ONLY job is to translate the given English text into natural, professional Korean. Output ONLY the translated Korean text. Do NOT add any conversational filler, explanations, or notes."
+    # ★ 핵심: 제목 번역일 때와 본문 번역일 때 AI의 페르소나(역할)를 완벽하게 분리!
+    if is_title:
+        system_prompt = """You are a veteran news editor with 20 years of experience at a top Korean news agency. 
+Your task is to translate the given English text into a catchy, punchy, and natural Korean news headline.
+- MUST be concise (around 30-40 characters).
+- MUST sound like a real Korean news headline (e.g., ending with nouns like '추방', '검거', '논란', '합의').
+- Output ONLY the translated headline text. No quotes, no explanations, no <think> tags."""
+    else:
+        system_prompt = "You are a professional news translator. Your ONLY job is to translate the given English text into natural, professional Korean. Output ONLY the translated Korean text. Do NOT add any conversational filler, explanations, or notes."
+        
     user_prompt = f"Translate this:\n\n{eng_text}"
     
-    # ★ 족쇄 2: 온도를 0.1로 대폭 낮춰서 창의적인 헛소리 차단
-    content = generate_text(user_prompt, temperature=0.1, system_prompt=system_prompt)
+    # 제목은 0.3(자연스러운 의역 허용), 본문은 0.1(엄격한 직역)로 뇌 온도를 조절합니다.
+    temperature = 0.3 if is_title else 0.1
+    content = generate_text(user_prompt, temperature=temperature, system_prompt=system_prompt)
     
     # 에러가 반환된 경우 처리
     if content.startswith("❌"):
@@ -102,7 +114,11 @@ def translate_to_korean(eng_text: str) -> str:
     content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL).strip()
     
     # ★ 족쇄 4: 혹시라도 남은 쓸데없는 인사말/도입부 첫 문장 날려버리기
-    content = re.sub(r'^(Here is the translation|Okay|First|번역:|Translated text:|번역결과:).*?\n', '', content, flags=re.IGNORECASE).strip()
+    content = re.sub(r'^(Here is|번역:|Translated|제목:|Headline:).*?\n', '', content, flags=re.IGNORECASE).strip()
+    
+    # 제목일 경우 쓸데없이 붙은 양끝 따옴표 제거
+    if is_title:
+        content = content.strip('"\'-`')
     
     # ★ 족쇄 5: 무한 반복 버그 감지 (똑같은 글자가 10번 이상 반복되면 차라리 원문 출력)
     if re.search(r'(.)\1{10,}', content):
