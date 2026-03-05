@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import difflib
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
@@ -37,17 +38,11 @@ def get_bot_uuid(nickname):
     except:
         return None
 
-# ★ 핵심: 제목 유사도 검사 함수
+# ★ 중복 기준 35%로 대폭 하향! 조금만 겹쳐도 차단
 def is_similar(new_title, existing_titles):
-    new_words = set(new_title.replace(",", "").replace("'", "").replace('"', "").split())
     for title in existing_titles:
-        existing_words = set(title.replace(",", "").replace("'", "").replace('"', "").split())
-        if not new_words or not existing_words: continue
-        
-        overlap = len(new_words.intersection(existing_words))
-        shortest = min(len(new_words), len(existing_words))
-        
-        if shortest >= 3 and (overlap / shortest) >= 0.5: 
+        similarity = difflib.SequenceMatcher(None, new_title, title).ratio()
+        if similarity > 0.35: 
             return True
         if new_title in title or title in new_title:
             return True
@@ -58,7 +53,6 @@ def run_newsbot_en():
     bot_uuid = get_bot_uuid("필뉴스")
     if not bot_uuid: return
 
-    # ★ DB에서 필뉴스가 최근에 쓴 한국어 기사 제목 50개를 가져옵니다.
     recent_titles = []
     try:
         res = supabase.table("posts").select("title").eq("author_id", bot_uuid).order("created_at", desc=True).limit(50).execute()
@@ -84,20 +78,22 @@ def run_newsbot_en():
                 image_url = article.get('image')
                 
                 full_eng_text = scrape_article_en(link)
+                # 본문을 못 가져오면 요약본(Description)을 '단신 속보'처럼 사용
                 if not full_eng_text:
-                    full_eng_text = article['description']
+                    full_eng_text = article.get('description', '')
                     
-                if not full_eng_text or len(full_eng_text.replace(" ", "")) < 250:
-                    print(f"⏩ [스킵] 너무 짧은 영문 기사입니다: {eng_title}")
+                # 100자 미만 깡통 기사 컷
+                if not full_eng_text or len(full_eng_text.replace(" ", "")) < 100:
+                    print(f"⏩ [스킵] 내용 부족: {eng_title}")
                     continue
 
-                # ★ 똑똑한 로직: 제목만 먼저 번역해서 DB와 비교합니다.
                 kor_title = translate_to_korean(eng_title)
+                
                 if is_similar(kor_title, recent_titles):
-                    print(f"🔄 [중복 스킵] 이미 번역된 비슷한 기사가 있습니다: {kor_title}")
-                    continue # 중복이면 본문 번역 안 하고 넘어감!
+                    print(f"🔄 [중복 스킵] 비슷한 기사 차단: {kor_title}")
+                    continue
 
-                print(f"🧠 [{kor_title}] 본문 전문 번역 중...")
+                print(f"🧠 [{kor_title}] 본문 전문(또는 단신 요약) 번역 중...")
                 kor_content = translate_to_korean(full_eng_text)
                 
                 content = ""
@@ -110,11 +106,11 @@ def run_newsbot_en():
                 insert_post(bot_uuid, "news", "local", kor_title, content)
                 print(f"✅ 기사 등록 완료!")
                 
-                recent_titles.append(kor_title) # 목록에 추가
+                recent_titles.append(kor_title)
                 inserted_count += 1
                     
         if inserted_count == 0:
-            print("⚠️ 12시간 내 새롭고 쓸만한 해외 뉴스가 없습니다.")
+            print("⚠️ 12시간 내 통과된 해외 뉴스가 없습니다.")
         else:
             print(f"🎉 총 {inserted_count}개의 해외 뉴스를 번역하여 수집했습니다.")
     else:
