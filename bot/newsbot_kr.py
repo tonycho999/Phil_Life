@@ -74,7 +74,7 @@ def is_similar(new_title, existing_titles):
     return False
 
 def run_newsbot_kr():
-    print("\n🤖 [필한뉴스] 네이버 최신 뉴스 검색을 시작합니다...")
+    print("\n🤖 [필한뉴스] 네이버 최신 뉴스 검색을 시작합니다... (정치/선거 기사 차단 모드)")
     bot_uuid = get_bot_uuid("필한뉴스")
     if not bot_uuid: return
 
@@ -87,7 +87,10 @@ def run_newsbot_kr():
 
     url = "https://openapi.naver.com/v1/search/news.json"
     headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
-    params = {"query": "필리핀", "display": 20, "sort": "date"} 
+    
+    # ★ 1차 방어: 네이버 검색어에 강력한 마이너스(-) 키워드 추가 (정치, 선거 등 원천 차단)
+    search_query = "필리핀 -정치 -선거 -대통령 -국회 -여당 -야당 -민주당 -국민의힘 -총선 -공천"
+    params = {"query": search_query, "display": 20, "sort": "date"} 
 
     response = requests.get(url, headers=headers, params=params)
 
@@ -96,11 +99,19 @@ def run_newsbot_kr():
         now = datetime.now(timezone.utc)
         inserted_count = 0 
         
+        # ★ 2차 방어: 파이썬 단에서 혹시라도 뚫고 들어온 정치 단어(제목+본문) 컷트용 블랙리스트
+        politics_blacklist = ['정치', '선거', '대통령', '국회', '여당', '야당', '더불어민주당', '국민의힘', '총선', '공천', '마르코스', '두테르테', '의원', '출마', '당대표']
+        
         for item in data['items']:
             pub_date = parsedate_to_datetime(item['pubDate']) 
             
             if now - pub_date <= timedelta(hours=12):
                 title = clean_html(item['title'])
+                
+                # ★ 2차 방어 실행: 제목에 정치 단어가 있으면 즉시 버림
+                if any(bad_word in title for bad_word in politics_blacklist):
+                    print(f"🛑 [정치 스킵] 제목 필터링: {title}")
+                    continue
                 
                 if is_similar(title, recent_titles):
                     print(f"🔄 [중복 스킵] 비슷한 기사 차단: {title}")
@@ -108,6 +119,11 @@ def run_newsbot_kr():
 
                 link = item['link']
                 full_text = scrape_article(link)
+                
+                # ★ 2차 방어 실행: 본문 스크래핑 후에도 내용에 정치 단어가 있으면 즉시 버림
+                if any(bad_word in full_text for bad_word in politics_blacklist):
+                    print(f"🛑 [정치 스킵] 본문 필터링: {title}")
+                    continue
                 
                 text_only = full_text.replace("<br>", "").replace(" ", "")
                 if not full_text or len(text_only) < 150: 
@@ -123,7 +139,7 @@ def run_newsbot_kr():
                 inserted_count += 1
                     
         if inserted_count == 0:
-            print("⚠️ 12시간 내 통과된 한국 뉴스가 없습니다.")
+            print("⚠️ 12시간 내 통과된 한국 뉴스가 없습니다. (모두 필터링됨)")
         else:
             print(f"🎉 총 {inserted_count}개의 한국 뉴스를 수집했습니다.")
     else:
