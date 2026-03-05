@@ -8,7 +8,6 @@ from db import insert_post
 from ai_selector import translate_to_korean
 
 load_dotenv()
-
 GNEWS_API_KEY = os.getenv("GNEWS_API_KEY")
 
 def scrape_article_en(url):
@@ -19,10 +18,9 @@ def scrape_article_en(url):
         paragraphs = soup.find_all('p')
         article_text = "\n\n".join([p.get_text(strip=True) for p in paragraphs if len(p.get_text(strip=True)) > 30])
         return article_text[:4000] 
-    except Exception as e:
+    except:
         return ""
 
-# ★ 추가됨: json 파일에서 닉네임으로 진짜 UUID를 찾아오는 똑똑한 함수
 def get_bot_uuid(nickname):
     filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bot_profiles.json")
     try:
@@ -31,46 +29,43 @@ def get_bot_uuid(nickname):
             for p in profiles:
                 if p.get("nickname") == nickname:
                     return p.get("id")
-    except Exception as e:
-        print(f"⚠️ 프로필 읽기 오류: {e}")
-    return None
+    except:
+        return None
 
 def run_newsbot_en():
-    print("\n🤖 [필뉴스] 24시간 내 해외 뉴스 수집 및 AI 전체 번역을 시작합니다...")
-    
-    # ★ 여기서 가짜 ID 대신 진짜 UUID를 가져옵니다!
+    print("\n🤖 [필뉴스] 12시간 내 해외 뉴스 수집 및 AI 전체 번역을 시작합니다...")
     bot_uuid = get_bot_uuid("필뉴스")
-    if not bot_uuid:
-        print("❌ '필뉴스'의 진짜 UUID를 찾지 못했습니다. bot_profiles.json을 확인해주세요.")
-        return
+    if not bot_uuid: return
 
-    if not GNEWS_API_KEY:
-        print("❌ Gnews API 키가 없습니다.")
-        return
-
-    url = f"https://gnews.io/api/v4/search?q=Philippines&lang=en&max=10&sortby=publishedAt&apikey={GNEWS_API_KEY}"
+    # ★ 넉넉하게 20개까지 뒤져보도록 max=20 으로 변경
+    url = f"https://gnews.io/api/v4/search?q=Philippines&lang=en&max=20&sortby=publishedAt&apikey={GNEWS_API_KEY}"
     response = requests.get(url)
 
     if response.status_code == 200:
         data = response.json()
         now = datetime.now(timezone.utc)
+        inserted_count = 0 
         
         for article in data.get('articles', []):
             pub_str = article['publishedAt'].replace('Z', '+00:00')
             pub_date = datetime.fromisoformat(pub_str)
             
-            if now - pub_date <= timedelta(hours=24):
+            # ★ 24시간 -> 12시간 이내로 변경!
+            if now - pub_date <= timedelta(hours=12):
                 eng_title = article['title']
                 link = article['url']
                 image_url = article.get('image')
                 
-                print(f"📥 24시간 내 기사 발견! 영문 본문을 가져옵니다: {eng_title}")
                 full_eng_text = scrape_article_en(link)
-                
                 if not full_eng_text:
                     full_eng_text = article['description']
                     
-                print("🧠 Groq AI를 켜고 기사 전체를 전문 번역 중입니다. (수 초 소요)...")
+                # ★ 필터링: 영문 본문 길이가 너무 짧으면(약 250자 미만) 사진만 있는 기사로 간주하고 패스!
+                if not full_eng_text or len(full_eng_text.replace(" ", "")) < 250:
+                    print(f"⏩ [스킵] 내용이 너무 짧은 영문 기사입니다: {eng_title}")
+                    continue
+
+                print(f"🧠 [{eng_title}] 기사 번역 중...")
                 kor_title = translate_to_korean(eng_title)
                 kor_content = translate_to_korean(full_eng_text)
                 
@@ -81,19 +76,18 @@ def run_newsbot_en():
                 formatted_content = kor_content.replace('\n', '<br>')
                 content += f"<div class='news-body' style='line-height: 1.8; color: #374151;'>{formatted_content}</div><br><br><p><a href='{link}' target='_blank' style='color: #2563eb; font-weight: bold;'>📰 원문 보기 (English)</a></p>"
 
-                # ★ 가져온 진짜 bot_uuid를 사용합니다!
-                insert_post(
-                    bot_id=bot_uuid, 
-                    main_cat="news", 
-                    sub_cat="local", 
-                    title=kor_title,
-                    content=content
-                )
-                return 
+                insert_post(bot_uuid, "news", "local", kor_title, content)
+                print(f"✅ 영문 기사 번역 및 등록 완료!")
+                inserted_count += 1
                 
-        print("⚠️ 지난 24시간 이내에 작성된 필리핀 관련 해외 뉴스가 없습니다.")
+                # (기존에 있던 3개 제한 코드는 완전히 삭제했습니다!)
+                    
+        if inserted_count == 0:
+            print("⚠️ 12시간 내 쓸만한 해외 뉴스가 없습니다.")
+        else:
+            print(f"🎉 총 {inserted_count}개의 해외 뉴스를 번역하여 수집했습니다.")
     else:
-        print(f"❌ [Gnews API 에러] {response.status_code}: {response.text}")
+        print(f"❌ API 에러: {response.status_code}")
 
 if __name__ == "__main__":
     run_newsbot_en()
