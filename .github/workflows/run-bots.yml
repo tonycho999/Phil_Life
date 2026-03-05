@@ -1,9 +1,10 @@
 name: 🤖 뉴스 봇 자동 실행기
 
 on:
-  workflow_dispatch:
-#  schedule:
-#    - cron: '0 0,9 * * *'
+  workflow_dispatch: # 수동 실행 버튼 활성화
+  # 테스트 중이므로 아래 스케줄 자동 실행은 임시로 꺼둡니다!
+  # schedule:
+  #   - cron: '0 0,9 * * *'
 
 # ★ 깃허브 서버가 json 파일을 덮어쓰고 저장할 수 있도록 권한 부여
 permissions:
