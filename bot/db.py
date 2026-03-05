@@ -6,7 +6,7 @@ load_dotenv()
 
 # Supabase 연결 설정
 SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")  # 반드시 service_role 키를 사용해야 권한 무시하고 글 작성이 가능합니다.
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 def get_db() -> Client:
     """Supabase 클라이언트를 반환합니다."""
@@ -15,21 +15,21 @@ def get_db() -> Client:
     return create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def insert_post(bot_id: str, main_cat: str, sub_cat: str, title: str, content: str):
-    """게시글을 DB에 삽입하는 공통 함수"""
+    """스크린샷의 DB 테이블 구조에 맞게 게시글을 DB에 삽입합니다."""
     db = get_db()
     
-    # 봇 프로필은 별도의 테이블이나 로직으로 관리 중이라고 가정하고,
-    # 글 작성자(author_id)에 봇의 ID를 넣습니다.
+    # ★ 스크린샷의 컬럼명과 완벽하게 일치시켰습니다.
+    # (bot_id는 Supabase profiles 테이블에 등록된 봇의 실제 ID/UUID여야 합니다)
     data = {
         "author_id": bot_id, 
-        "category_main": main_cat,
-        "category_sub": sub_cat,
+        "category_main": main_cat, # "news"
+        "category_sub": sub_cat,   # "local"
         "title": title,
         "content": content,
         "view_count": 0,
-        "comment_count": 0,
         "is_hidden": False,
-        "is_pinned": False
+        "is_pinned": False,
+        "format": "html" # 웹 에디터 형식에 맞게 html로 저장
     }
     
     try:
