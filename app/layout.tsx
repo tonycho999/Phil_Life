@@ -21,6 +21,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "필카페24 | 필리핀 실시간 교민·여행·비즈니스 1위 커뮤니티",
   description: "24시간 깨어있는 필리핀 정보, 필카페24! 마닐라, 세부 실시간 뉴스, 벼룩시장, 구인구직, 비자 및 법률 상담까지. 필리핀 생활의 모든 해답을 필카페24에서 확인하세요.",
+  icons: {
+    icon: "/images/favicon.png", // ★ 여기에 public 폴더에 넣은 파일 경로를 적어줍니다.
+  },
   keywords: ["필카페24", "필리핀 커뮤니티", "필리핀 교민", "마닐라 뉴스", "필리핀 여행 정보", "필리핀 구인구직", "필리핀 부동산", "PhilCafe24"],
   alternates: {
     canonical: "https://www.philcafe24.com/",
