@@ -1,9 +1,13 @@
 name: 🤖 뉴스 봇 자동 실행기
 
 on:
-  workflow_dispatch: # 수동 실행 버튼
+  workflow_dispatch:
 #  schedule:
-#    - cron: '0 0,9 * * *' # 매일 한국시간 오전 9시, 오후 6시 실행
+#    - cron: '0 0,9 * * *'
+
+# ★ 깃허브 서버가 json 파일을 덮어쓰고 저장할 수 있도록 권한 부여
+permissions:
+  contents: write
 
 jobs:
   run-news-bots:
@@ -18,13 +22,12 @@ jobs:
         with:
           python-version: '3.11'
 
-      # ★ 바로 이 부분이 추가되었습니다! (서버에 bs4 등 부품 설치)
       - name: 📦 필요 라이브러리 설치
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: 🚀 실전 봇 스크립트 실행
+      - name: 🚀 봇 스크립트 실행
         env:
           NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
@@ -35,3 +38,11 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
           python bot/main.py
+
+      # ★ 파이썬이 만든 json 파일을 깃허브 저장소에 영구적으로 자동 커밋(저장)
+      - name: 💾 변경된 파일(JSON) 깃허브에 자동 저장
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add bot/*.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 봇 프로필 및 상태 자동 업데이트" && git push)
