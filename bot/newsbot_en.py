@@ -49,7 +49,7 @@ def is_similar(new_title, existing_titles):
     return False
 
 def run_newsbot_en():
-    print("\n🤖 [필뉴스] 12시간 내 해외 뉴스 수집을 시작합니다...")
+    print("\n🤖 [필뉴스] 12시간 내 교민 맞춤형 해외 뉴스 수집을 시작합니다...")
     bot_uuid = get_bot_uuid("필뉴스")
     if not bot_uuid: return
 
@@ -60,14 +60,14 @@ def run_newsbot_en():
     except Exception as e:
         pass
 
-# ★ 교민 필수 정보만 필터링: 필리핀 + (사건사고 OR 범죄 OR 법 OR 비자 OR 외국인 OR 지진 OR 태풍 OR 비상사태 OR 이민국)
-    search_query = "Philippines AND (accident OR crime OR law OR visa OR foreign OR earthquake OR typhoon OR emergency OR immigration OR policy)"
+    # ★ 핵심 수정: 교민들이 클릭할 수밖에 없는 핵심 키워드 12개 광역 그물망 세팅!
+    search_query = "Philippines AND (Korea OR Korean OR foreigner OR visa OR immigration OR airport OR flight OR crime OR accident OR typhoon OR earthquake OR emergency)"
     
     url = "https://gnews.io/api/v4/search"
     params = {
         "q": search_query,
         "lang": "en",
-        "max": 20,
+        "max": 10, # Gnews 무료 API 안정성을 위해 10개 유지
         "sortby": "publishedAt",
         "apikey": GNEWS_API_KEY
     }
@@ -120,9 +120,9 @@ def run_newsbot_en():
                 inserted_count += 1
                     
         if inserted_count == 0:
-            print("⚠️ 12시간 내 통과된 해외 뉴스가 없습니다.")
+            print("⚠️ 12시간 내 통과된 맞춤형 해외 뉴스가 없습니다.")
         else:
-            print(f"🎉 총 {inserted_count}개의 해외 뉴스를 번역하여 수집했습니다.")
+            print(f"🎉 총 {inserted_count}개의 맞춤형 해외 뉴스를 번역하여 수집했습니다.")
     else:
         print(f"❌ API 에러: {response.status_code}")
 
