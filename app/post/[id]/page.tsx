@@ -117,6 +117,13 @@ export default async function PostDetailPage({ params }: { params: any }) {
       
       <ViewUpdater postId={postId} />
 
+      {/* ★ 추가됨: 메인 화면 등 외부에서 접속해도 사이드바가 올바른 게시판을 펼치도록 힌트(스크립트) 주입 */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `sessionStorage.setItem('lastVisitedMenu', '${post.category_main}');`
+        }}
+      />
+
       <div className="mb-6 border-b pb-4">
         <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">
