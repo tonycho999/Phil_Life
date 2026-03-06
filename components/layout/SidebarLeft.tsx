@@ -1,5 +1,7 @@
 "use client";
 
+// ★ 수정됨: 실시간 알림을 위한 React 훅 추가
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation"; 
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -8,7 +10,7 @@ import { MENUS } from "@/lib/constants";
 import { 
   User, ChevronRight, LayoutGrid, 
   Newspaper, MapPin, MessageSquare, Building2, ShoppingBag, Plane, Store,
-  Settings, EyeOff, LogOut, Users, FileText, Shield // ★ 관리자 메뉴용 아이콘 3개 추가됨
+  Settings, EyeOff, LogOut, Users, FileText, Shield, Mail // ★ 추가됨: Mail 아이콘
 } from "lucide-react";
 
 // 아이콘 매핑
@@ -43,6 +45,54 @@ export default function SidebarLeft() {
   const supabase = createClient();
   const pathname = usePathname();
   const router = useRouter(); 
+
+  // ★ 추가됨: 안 읽은 쪽지 개수 상태 관리
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // ★ 추가됨: 실시간 쪽지 알림 및 사운드 재생 로직
+  useEffect(() => {
+    if (!user) return;
+
+    // 1. 처음 로딩 시 안 읽은 쪽지 개수 가져오기
+    const fetchUnreadCount = async () => {
+      const { count } = await supabase
+        .from("messages")
+        .select("*", { count: "exact", head: true })
+        .eq("receiver_id", user.id)
+        .eq("is_read", false);
+      if (count) setUnreadCount(count);
+    };
+
+    fetchUnreadCount();
+
+    // 2. 실시간으로 새 쪽지가 오는지 감시
+    const channel = supabase
+      .channel("realtime-messages")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `receiver_id=eq.${user.id}`,
+        },
+        (payload) => {
+          setUnreadCount((prev) => prev + 1);
+          // 알림음 재생 (※ public 폴더 안에 alert.mp3 파일이 있어야 소리가 납니다!)
+          try {
+            const audio = new Audio('/alert.mp3');
+            audio.play();
+          } catch (error) {
+            console.error("오디오 재생 실패:", error);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, supabase]);
 
   // ★ 로그아웃 기능
   const handleLogout = async () => {
@@ -110,9 +160,18 @@ export default function SidebarLeft() {
         )}
 
         <div className="flex gap-2">
+          {/* ★ 수정됨: 쪽지함 버튼 추가 및 안 읽은 개수 뱃지 표시 */}
+          <Link href="/messages" className="relative flex-1 flex items-center justify-center gap-1 border border-blue-200 bg-blue-50 text-blue-700 py-2 rounded-lg text-xs font-bold hover:bg-blue-100 transition text-center">
+             <Mail size={14} /> 쪽지
+             {unreadCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm animate-pulse">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+             )}
+          </Link>
           <Link 
               href="/my-posts" 
-              className="flex-1 border border-gray-200 text-gray-600 py-2 rounded-lg text-xs font-bold hover:bg-gray-50 hover:text-blue-600 transition text-center"
+              className="flex-1 flex items-center justify-center border border-gray-200 text-gray-600 py-2 rounded-lg text-xs font-bold hover:bg-gray-50 hover:text-blue-600 transition text-center"
           >
               내 글 보기
           </Link>
@@ -136,21 +195,18 @@ export default function SidebarLeft() {
         pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
     );
     
-// ★ 게시글 방어 로직 (sessionStorage를 활용해 마지막 카테고리 기억하기)
+    // ★ 게시글 방어 로직 (sessionStorage를 활용해 마지막 카테고리 기억하기)
     if (activeMenu && !pathname.startsWith("/post/")) {
-        // 목록 페이지에 있을 때 현재 카테고리를 브라우저에 임시 저장
         if (typeof window !== "undefined") {
             sessionStorage.setItem("lastVisitedMenu", activeMenu.id);
         }
     }
 
     if (!activeMenu && pathname.startsWith("/post/")) {
-        // 게시글로 들어왔을 때, 저장해둔 카테고리를 꺼내서 메뉴를 유지
         let savedMenuId = null;
         if (typeof window !== "undefined") {
             savedMenuId = sessionStorage.getItem("lastVisitedMenu");
         }
-        // 저장된 메뉴가 없으면 기본값(MENUS[0]) 띄우기
         activeMenu = MENUS.find((m: any) => m.id === savedMenuId) || MENUS[0];
     }
 
