@@ -33,7 +33,7 @@ export default async function SidebarRight() {
         rel="noopener noreferrer" 
         className="block rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:opacity-90 transition-opacity"
       >
-        <img src="/images/tony_banner.png" alt="광고 배너" className="w-full h-auto" />
+        <img src="/images/tony_link.png" alt="광고 배너" className="w-full h-auto" />
       </a>
 
       {/* 1️⃣ 최신글 리스트 */}
