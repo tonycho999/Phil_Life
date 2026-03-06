@@ -173,7 +173,10 @@ export default function MainHeader() {
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                 />
-                 <Search className="w-5 h-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition" />
+                {/* ★ 추가됨: Search 아이콘을 button으로 감싸서 마우스 클릭 시에도 제출되게 수정 */}
+                <button type="submit" className="absolute left-4 top-3.5 outline-none">
+                  <Search className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition hover:text-blue-600" />
+                </button>
               </div>
             </form>
             
