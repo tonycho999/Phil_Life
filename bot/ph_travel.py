@@ -157,7 +157,7 @@ def get_prompt_for_target(task):
 
 def process_tasks():
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    json_path = os.path.join(base_dir, 'ph_info_tasks.json')
+    json_path = os.path.join(base_dir, 'ph_travel_tasks.json')
     
     try:
         with open(json_path, 'r', encoding='utf-8') as f:
