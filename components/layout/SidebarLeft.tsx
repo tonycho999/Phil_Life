@@ -136,9 +136,22 @@ export default function SidebarLeft() {
         pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
     );
     
-    // ★ 게시글(/post/)을 보고 있을 때 왼쪽 메뉴가 사라지지 않도록 방어하는 로직
+// ★ 게시글 방어 로직 (sessionStorage를 활용해 마지막 카테고리 기억하기)
+    if (activeMenu && !pathname.startsWith("/post/")) {
+        // 목록 페이지에 있을 때 현재 카테고리를 브라우저에 임시 저장
+        if (typeof window !== "undefined") {
+            sessionStorage.setItem("lastVisitedMenu", activeMenu.id);
+        }
+    }
+
     if (!activeMenu && pathname.startsWith("/post/")) {
-        activeMenu = MENUS[0]; // 기본 메뉴(첫 번째 탭) 강제 유지
+        // 게시글로 들어왔을 때, 저장해둔 카테고리를 꺼내서 메뉴를 유지
+        let savedMenuId = null;
+        if (typeof window !== "undefined") {
+            savedMenuId = sessionStorage.getItem("lastVisitedMenu");
+        }
+        // 저장된 메뉴가 없으면 기본값(MENUS[0]) 띄우기
+        activeMenu = MENUS.find((m: any) => m.id === savedMenuId) || MENUS[0];
     }
 
     if (activeMenu && activeMenu.sub && activeMenu.sub.length > 0) {
