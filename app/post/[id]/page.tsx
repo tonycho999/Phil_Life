@@ -59,7 +59,7 @@ export default async function PostDetailPage({ params }: { params: any }) {
 
   const requiredReadLevel = boardInfo?.read_level || 1;
 
-  // 권한 미달 시 렌더링 중단 및 뒤로가기 링크 제공
+  // 권한 미달 시 렌더링 중단 및 뒤로가기 버튼 제공
   if (myLevel < requiredReadLevel) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-32 text-center">
@@ -74,9 +74,9 @@ export default async function PostDetailPage({ params }: { params: any }) {
               로그인하러 가기
             </Link>
           ) : (
-            <Link href={`/${post.category_main}/${post.category_sub}`} className="bg-gray-800 text-white px-8 py-3 rounded-lg font-bold hover:bg-gray-700 transition inline-block">
-              목록으로 돌아가기
-            </Link>
+            <button onClick={() => history.back()} className="bg-gray-800 text-white px-8 py-3 rounded-lg font-bold hover:bg-gray-700 transition inline-block">
+              이전 페이지로
+            </button>
           )}
         </div>
       </div>
