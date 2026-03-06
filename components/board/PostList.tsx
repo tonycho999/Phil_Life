@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+// ★ 추가됨: 우리가 만든 닉네임 클릭 팝업 메뉴 불러오기
+import AuthorActionMenu from "@/components/post/AuthorActionMenu";
 
 interface PostListProps {
   posts: any[];
@@ -55,19 +57,25 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
         const badge = getLevelBadgeInfo(userLevel);
 
         return (
+          // ★ 수정됨: 전체를 감싸던 Link를 div로 변경하여 닉네임 클릭 충돌을 방지합니다.
           <div key={post.id} className="group border-b border-gray-100 hover:bg-gray-50 transition">
-            <Link href={`/post/${post.id}`} className="grid grid-cols-12 gap-2 py-3 items-center">
+            <div className="grid grid-cols-12 gap-2 py-3 items-center">
               
+              {/* 번호 영역 (클릭 시 이동) */}
               <div className="hidden md:block col-span-1 text-center text-gray-500 text-sm font-mono">
-                {post.is_pinned ? (
-                  <span className="font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded text-xs">공지</span>
-                ) : (
-                  seqNum
-                )}
+                <Link href={`/post/${post.id}`} className="block w-full h-full">
+                  {post.is_pinned ? (
+                    <span className="font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded text-xs">공지</span>
+                  ) : (
+                    seqNum
+                  )}
+                </Link>
               </div>
 
+              {/* 제목 & 모바일 작성자 영역 */}
               <div className="col-span-12 md:col-span-7 px-4 md:px-0">
-                <div className="flex items-center gap-1.5 truncate">
+                {/* 제목 (클릭 시 이동) */}
+                <Link href={`/post/${post.id}`} className="flex items-center gap-1.5 truncate">
                   {post.is_pinned && (
                     <span className="md:hidden bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded mr-1 font-bold">공지</span>
                   )}
@@ -87,14 +95,11 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
                   {new Date().getTime() - new Date(post.created_at).getTime() < 86400000 && (
                      <span className="w-4 h-4 bg-red-500 text-white text-[9px] flex items-center justify-center rounded-full font-bold ml-0.5">N</span>
                   )}
-                </div>
+                </Link>
                 
-                <div className="md:hidden flex gap-2 text-xs text-gray-400 mt-1 items-center">
-                  {/* 모바일 뱃지 적용 */}
-                  <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${badge.style}`}>
-                    {badge.label}
-                  </span>
-                  <span>{post.profiles?.nickname || "익명"}</span>
+                {/* 모바일 닉네임 영역 (팝업 적용) */}
+                <div className="md:hidden flex gap-2 text-xs text-gray-400 mt-1 items-center relative z-10">
+                  <AuthorActionMenu authorId={post.author_id} nickname={post.profiles?.nickname} badge={badge} />
                   <span>|</span>
                   <span suppressHydrationWarning>{dateStr}</span>
                   <span>|</span>
@@ -102,23 +107,26 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
                 </div>
               </div>
 
-              <div className="hidden md:flex col-span-2 items-center justify-center gap-1 text-sm text-gray-600 truncate px-2">
-                {/* PC 뱃지 적용 */}
-                <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${badge.style}`}>
-                  {badge.label}
-                </span>
-                <span className="truncate">{post.profiles?.nickname || "익명"}</span>
+              {/* PC 닉네임 영역 (팝업 적용) */}
+              <div className="hidden md:flex col-span-2 items-center justify-center gap-1 text-sm text-gray-600 truncate px-2 relative z-10">
+                <AuthorActionMenu authorId={post.author_id} nickname={post.profiles?.nickname} badge={badge} />
               </div>
 
+              {/* 날짜 영역 (클릭 시 이동) */}
               <div suppressHydrationWarning className="hidden md:block col-span-1 text-center text-sm text-gray-400 whitespace-nowrap">
-                {dateStr}
+                <Link href={`/post/${post.id}`} className="block w-full h-full">
+                  {dateStr}
+                </Link>
               </div>
 
+              {/* 조회수 영역 (클릭 시 이동) */}
               <div className="hidden md:block col-span-1 text-center text-sm text-gray-500 font-mono">
-                {post.view_count || 0}
+                <Link href={`/post/${post.id}`} className="block w-full h-full">
+                  {post.view_count || 0}
+                </Link>
               </div>
 
-            </Link>
+            </div>
           </div>
         );
       })}
