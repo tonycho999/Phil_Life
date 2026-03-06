@@ -17,107 +17,141 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # 봇 계정의 UID 고정
 AUTHOR_ID = "7ceb52e2-28a9-422d-b932-2f95952b771c"
 
+# 강력한 시스템 프롬프트: 마크다운 절대 금지, 순수 텍스트+HTML 태그만 허용
+SYSTEM_PROMPT = """
+당신은 웹사이트 게시판용 HTML 전문 에디터입니다.
+[절대 규칙]
+1. 모든 출력은 반드시 순수 HTML 태그(<div>, <p>, <span>, <ul>, <li>, <strong>, <h3>, <hr>, <br>, <em> 등)로만 구성해야 합니다.
+2. 마크다운 기호(**, ##, *, - 등)는 단 하나도 사용하지 마세요.
+3. ```html 이나 ``` 같은 코드 블록 기호도 절대 출력하지 마세요. 
+"""
+
 def get_prompt_for_target(task):
     target = task['target_name']
     region = task['region']
     cat_sub = task['category_sub']
     
-    # 공통 강제 규칙 (마크다운 금지, HTML 강제)
-    common_rules = """
-    [필수 엄수 규칙 - 위반 시 시스템 에러 발생]
-    1. 마크다운 기호(**, ##, *, - 등)는 절대 사용하지 마세요.
-    2. 반드시 순수 HTML 태그(<h3>, <ul>, <li>, <strong>, <br> 등)만 사용하여 작성하세요.
-    3. 주관적인 평가(평점, 요금)는 제외하고 팩트 위주로 간결하게 작성하세요.
-    4. 코드 블록(```html 등)으로 감싸지 말고, 바로 HTML 텍스트만 출력하세요.
-    """
-    
     if cat_sub == "golf":
         return f"""
-        당신은 필리핀 교민 커뮤니티 '필카페24'의 전문 정보 봇 '필정보'입니다.
-        아래 타겟에 대한 골프장 정보를 작성해주세요.
-        {common_rules}
-        
         타겟 골프장: {target} (지역: {region})
         
-        [정확히 아래의 HTML 구조와 태그를 본따서 내용을 채워주세요]
-        <p>안녕하세요, 필리핀 교민 커뮤니티 <strong>필카페24</strong>의 전문 정보 봇 <strong>필정보</strong>입니다.<br>
-        {region}에 위치한 <strong>{target}</strong>에 대한 객관적인 정보를 정리해 드립니다.</p>
+        아래 제공된 [HTML 템플릿]의 구조와 모든 인라인 스타일(style="...") 속성을 100% 똑같이 복사하여 유지하면서, 
+        {target}의 실제 객관적 정보(팩트)만 괄호 ( ) 안에 채워 넣어주세요. 주관적 평가는 제외하세요.
+        
+        [HTML 템플릿]
+        <div style="font-family: sans-serif; line-height: 1.6; color: #334155;">
+            <p style="font-size: 1.05em; margin-bottom: 20px; color: #1e293b;">
+                {region}에 위치한 <strong style="color: #2563eb; font-weight: 700;">{target}</strong>에 대한 핵심 정보를 정리해 드립니다.
+            </p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
 
-        <h3>1. 구장 프로필 (Basic Specs)</h3>
-        <ul>
-            <li><strong>구장명:</strong> {target}</li>
-            <li><strong>위치:</strong> (상세 주소 및 구글맵 정보)</li>
-            <li><strong>규모:</strong> (예: 18홀 / 72파)</li>
-            <li><strong>잔디 종류:</strong> (페어웨이 및 그린 잔디)</li>
-            <li><strong>티오프 간격:</strong> (분 단위 간격)</li>
-        </ul>
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                ⛳ 1. 구장 프로필 (Basic Specs)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">구장명:</strong> {target}</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">위치:</strong> (상세 주소 및 구글맵 정보)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">규모:</strong> (예: 18홀 / 72파 등)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">잔디 종류:</strong> (페어웨이 및 그린 잔디 종류)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">티오프 간격:</strong> (분 단위 간격)</li>
+            </ul>
 
-        <h3>2. 운영 시스템 및 규정 (Field Policy)</h3>
-        <ul>
-            <li><strong>카트 및 캐디:</strong> (운영 방식)</li>
-            <li><strong>복장 규정:</strong> (허용 및 불가 복장)</li>
-            <li><strong>외부 음식:</strong> (반입 가능 여부)</li>
-            <li><strong>휴장일:</strong> (정기 관리일 등)</li>
-        </ul>
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🏌️‍♂️ 2. 운영 시스템 및 규정 (Field Policy)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">카트 및 캐디:</strong> (운영 방식)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">복장 규정:</strong> (허용 및 불가 복장)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">외부 음식:</strong> (반입 가능 여부)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">휴장일:</strong> (정기 관리일 등)</li>
+            </ul>
 
-        <h3>3. 주변 인프라 (Logistics Hub)</h3>
-        <ul>
-            <li><strong>클럽하우스 식사:</strong> (주요 메뉴 및 한식 여부)</li>
-            <li><strong>주변 식당 (15분 내):</strong> (인근 추천 식당 종류)</li>
-            <li><strong>가장 가까운 숙소:</strong> (호텔/리조트명)</li>
-        </ul>
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🍽️ 3. 주변 인프라 (Logistics Hub)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">클럽하우스 식사:</strong> (주요 메뉴 및 한식 여부)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">주변 식당 (15분 내):</strong> (인근 추천 식당 종류)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">가장 가까운 숙소:</strong> (호텔/리조트명)</li>
+            </ul>
 
-        <h3>4. 부대시설 정보 (Facilities)</h3>
-        <ul>
-            <li><strong>연습 시설:</strong> (드라이빙 레인지, 퍼팅장 등)</li>
-            <li><strong>편의 시설:</strong> (프로샵, 샤워실 등)</li>
-        </ul>
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🏪 4. 부대시설 정보 (Facilities)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">연습 시설:</strong> (드라이빙 레인지, 퍼팅장 등)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">편의 시설:</strong> (프로샵, 샤워실 등)</li>
+            </ul>
 
-        <h3>5. 골퍼를 위한 실무 팁 (Non-Subjective Tips)</h3>
-        <ul>
-            <li><strong>이동 시 주의사항:</strong> (트래픽이나 도로 상태)</li>
-            <li><strong>결제 방식:</strong> (카드/현금 사용 팁)</li>
-        </ul>
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                💡 5. 골퍼를 위한 실무 팁 (Non-Subjective Tips)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">이동 시 주의사항:</strong> (트래픽이나 도로 상태 등)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">결제 방식:</strong> (카드/현금 사용 팁 등)</li>
+            </ul>
+
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
+            <p style="color: #64748b; font-size: 0.9em; margin-top: 10px;">
+                <em>※ 본 정보는 현지 사정에 따라 일부 변경될 수 있으므로 방문 전 참고용으로 활용해 주시기 바랍니다.</em>
+            </p>
+        </div>
         """
         
     elif cat_sub == "hotel":
         return f"""
-        당신은 필리핀 교민 커뮤니티 '필카페24'의 전문 정보 봇 '필정보'입니다.
-        아래 타겟에 대한 호텔/리조트 정보를 작성해주세요.
-        {common_rules}
-        
         타겟 호텔: {target} (지역: {region})
         
-        [정확히 아래의 HTML 구조와 태그를 본따서 내용을 채워주세요]
-        <p>안녕하세요, 필리핀 교민 커뮤니티 <strong>필카페24</strong>의 전문 정보 봇 <strong>필정보</strong>입니다.<br>
-        {region}에 위치한 <strong>{target}</strong>에 대한 객관적인 정보를 정리해 드립니다.</p>
+        아래 제공된 [HTML 템플릿]의 구조와 모든 인라인 스타일(style="...") 속성을 100% 똑같이 복사하여 유지하면서, 
+        {target}의 실제 객관적 정보(팩트)만 괄호 ( ) 안에 채워 넣어주세요. 주관적 평가는 제외하세요.
+        
+        [HTML 템플릿]
+        <div style="font-family: sans-serif; line-height: 1.6; color: #334155;">
+            <p style="font-size: 1.05em; margin-bottom: 20px; color: #1e293b;">
+                {region}에 위치한 <strong style="color: #2563eb; font-weight: 700;">{target}</strong>에 대한 객관적인 정보를 정리해 드립니다.
+            </p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
 
-        <h3>1. 호텔 프로필 (Basic Specs)</h3>
-        <ul>
-            <li><strong>호텔명:</strong> {target}</li>
-            <li><strong>위치:</strong> (상세 주소)</li>
-            <li><strong>성급 및 오픈:</strong> (몇 성급, 언제 오픈/리모델링 했는지)</li>
-        </ul>
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🏨 1. 호텔 프로필 (Basic Specs)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">호텔명:</strong> {target}</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">위치:</strong> (상세 주소)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">성급 및 오픈:</strong> (몇 성급, 언제 오픈/리모델링 했는지)</li>
+            </ul>
 
-        <h3>2. 객실 및 규정 (Room & Policy)</h3>
-        <ul>
-            <li><strong>체크인/체크아웃:</strong> (시간)</li>
-            <li><strong>디파짓(보증금):</strong> (요구 여부 및 방식)</li>
-            <li><strong>주요 객실 타입:</strong> (대표적인 방 종류)</li>
-        </ul>
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🛏️ 2. 객실 및 규정 (Room & Policy)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">체크인/체크아웃:</strong> (시간)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">디파짓(보증금):</strong> (요구 여부 및 방식)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">주요 객실 타입:</strong> (대표적인 방 종류)</li>
+            </ul>
 
-        <h3>3. 부대시설 및 다이닝 (Facilities & Dining)</h3>
-        <ul>
-            <li><strong>수영장:</strong> (유무 및 특징)</li>
-            <li><strong>다이닝:</strong> (조식당 및 주요 레스토랑)</li>
-            <li><strong>기타 시설:</strong> (피트니스, 카지노 등)</li>
-        </ul>
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🍽️ 3. 부대시설 및 다이닝 (Facilities & Dining)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">수영장:</strong> (유무 및 특징)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">다이닝:</strong> (조식당 및 주요 레스토랑)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">기타 시설:</strong> (피트니스, 카지노 등)</li>
+            </ul>
 
-        <h3>4. 이동 및 주변 인프라 (Location Tips)</h3>
-        <ul>
-            <li><strong>공항 접근성:</strong> (가장 가까운 공항에서 걸리는 시간)</li>
-            <li><strong>주변 명소:</strong> (도보/단거리 이동 가능한 인프라)</li>
-        </ul>
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🗺️ 4. 이동 및 주변 인프라 (Location Tips)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">공항 접근성:</strong> (가장 가까운 공항에서 걸리는 시간)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">주변 명소:</strong> (도보/단거리 이동 가능한 인프라)</li>
+            </ul>
+
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
+            <p style="color: #64748b; font-size: 0.9em; margin-top: 10px;">
+                <em>※ 본 정보는 현지 사정에 따라 일부 변경될 수 있으므로 방문 전 참고용으로 활용해 주시기 바랍니다.</em>
+            </p>
+        </div>
         """
     return ""
 
@@ -158,13 +192,13 @@ def process_tasks():
             continue
 
         try:
-            content = generate_text(prompt=prompt, temperature=0.7)
+            content = generate_text(prompt=prompt, temperature=0.3, system_prompt=SYSTEM_PROMPT)
             
             if content.startswith("❌"):
                 print(f"❌ AI 생성 실패: {content}")
                 continue
                 
-            # AI가 혹시나 마크다운 코드블록(```html ... ```)을 붙였을 경우를 대비해 껍데기 벗겨내기
+            # 코드 블록 잔해 제거
             content = content.replace("```html", "").replace("```", "").strip()
             
             title = f"[{task['region']}] {target} - 팩트체크 가이드"
