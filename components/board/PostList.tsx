@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-// ★ 추가됨: 우리가 만든 닉네임 클릭 팝업 메뉴 불러오기
+// ★ 우리가 만든 닉네임 클릭 팝업 메뉴 불러오기
 import AuthorActionMenu from "@/components/post/AuthorActionMenu";
 
 interface PostListProps {
@@ -12,7 +12,6 @@ interface PostListProps {
   pageSize: number;
 }
 
-// ★ 수정됨: 최신 0~10레벨, S등급(99), M(10레벨) 색상 함수 적용
 function getLevelBadgeInfo(level: any) {
   const strLevel = String(level);
   
@@ -57,11 +56,10 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
         const badge = getLevelBadgeInfo(userLevel);
 
         return (
-          // ★ 수정됨: 전체를 감싸던 Link를 div로 변경하여 닉네임 클릭 충돌을 방지합니다.
           <div key={post.id} className="group border-b border-gray-100 hover:bg-gray-50 transition">
             <div className="grid grid-cols-12 gap-2 py-3 items-center">
               
-              {/* 번호 영역 (클릭 시 이동) */}
+              {/* 번호 영역 */}
               <div className="hidden md:block col-span-1 text-center text-gray-500 text-sm font-mono">
                 <Link href={`/post/${post.id}`} className="block w-full h-full">
                   {post.is_pinned ? (
@@ -74,7 +72,7 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
 
               {/* 제목 & 모바일 작성자 영역 */}
               <div className="col-span-12 md:col-span-7 px-4 md:px-0">
-                {/* 제목 (클릭 시 이동) */}
+                {/* 제목 */}
                 <Link href={`/post/${post.id}`} className="flex items-center gap-1.5 truncate">
                   {post.is_pinned && (
                     <span className="md:hidden bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded mr-1 font-bold">공지</span>
@@ -97,8 +95,8 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
                   )}
                 </Link>
                 
-                {/* 모바일 닉네임 영역 (팝업 적용) */}
-                <div className="md:hidden flex gap-2 text-xs text-gray-400 mt-1 items-center relative z-10">
+                {/* 모바일 닉네임 영역 (팝업이 잘리지 않도록 relative z-10 제거) */}
+                <div className="md:hidden flex gap-2 text-xs text-gray-400 mt-1 items-center">
                   <AuthorActionMenu authorId={post.author_id} nickname={post.profiles?.nickname} badge={badge} />
                   <span>|</span>
                   <span suppressHydrationWarning>{dateStr}</span>
@@ -107,19 +105,19 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
                 </div>
               </div>
 
-              {/* PC 닉네임 영역 (팝업 적용) */}
-              <div className="hidden md:flex col-span-2 items-center justify-center gap-1 text-sm text-gray-600 truncate px-2 relative z-10">
+              {/* PC 닉네임 영역 (팝업이 잘리지 않도록 truncate 와 relative z-10 제거) */}
+              <div className="hidden md:flex col-span-2 items-center justify-center gap-1 text-sm text-gray-600 px-2">
                 <AuthorActionMenu authorId={post.author_id} nickname={post.profiles?.nickname} badge={badge} />
               </div>
 
-              {/* 날짜 영역 (클릭 시 이동) */}
+              {/* 날짜 영역 */}
               <div suppressHydrationWarning className="hidden md:block col-span-1 text-center text-sm text-gray-400 whitespace-nowrap">
                 <Link href={`/post/${post.id}`} className="block w-full h-full">
                   {dateStr}
                 </Link>
               </div>
 
-              {/* 조회수 영역 (클릭 시 이동) */}
+              {/* 조회수 영역 */}
               <div className="hidden md:block col-span-1 text-center text-sm text-gray-500 font-mono">
                 <Link href={`/post/${post.id}`} className="block w-full h-full">
                   {post.view_count || 0}
