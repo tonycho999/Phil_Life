@@ -24,19 +24,19 @@ export const metadata: Metadata = {
   icons: {
     icon: "/images/favicon.png", // ★ 여기에 public 폴더에 넣은 파일 경로를 적어줍니다.
   },
-  keywords: ["필카페24", "필리핀 커뮤니티", "필리핀 교민", "마닐라 뉴스", "필리핀 여행 정보", "필리핀 구인구직", "필리핀 부동산", "PhilCafe24"],
+  keywords: ["필카페24", "필리핀 커뮤니티", "필리핀 교민", "필리핀", "마닐라", "세부', "보라카이", "보홀", "바기오", "클락", "앙헬레스", "마닐라 뉴스", "필리핀 여행 정보", "필리핀 구인구직", "필리핀 부동산", "PhCafe24"],
   alternates: {
-    canonical: "https://www.philcafe24.com/",
+    canonical: "https://www.phcafe24.com/",
   },
   openGraph: {
     type: "website",
-    siteName: "필카페24 (PhilCafe24)",
+    siteName: "필카페24 (PhCafe24)",
     title: "필카페24 - 필리핀 실시간 정보와 소통의 장",
     description: "필리핀 교민생활, 여행, 비즈니스의 모든 것. 지금 필카페24에서 시작하세요.",
-    url: "https://www.philcafe24.com/",
+    url: "https://www.phcafe24.com/",
     images: [
       {
-        url: "https://www.philcafe24.com/images/og-main.jpg",
+        url: "https://www.phcafe24.com/images/og-image.png", // ★ 수정된 부분: 새로 만든 og-image.png 파일로 경로를 변경했습니다.
         width: 1200,
         height: 630,
         alt: "필카페24 대표 이미지",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "필카페24 | PhilCafe24",
+    title: "필카페24 | PhCafe24",
     description: "24시간 생생한 필리핀 현지 소식을 전합니다.",
   },
   robots: {
