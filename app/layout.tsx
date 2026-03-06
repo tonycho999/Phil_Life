@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     url: "https://www.phcafe24.com/",
     images: [
       {
-        url: "https://www.phcafe24.com/images/og-image.png", // ★ 수정된 부분: 새로 만든 og-image.png 파일로 경로를 변경했습니다.
+        url: "https://phcafe24.com/images/og-image.png", // ★ 수정된 부분: 새로 만든 og-image.png 파일로 경로를 변경했습니다.
         width: 1200,
         height: 630,
         alt: "필카페24 대표 이미지",
