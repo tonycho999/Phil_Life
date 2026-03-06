@@ -1,0 +1,142 @@
+[
+  {
+    "target_name": "미모사 플러스 골프 코스 (Mimosa Plus Golf Course)",
+    "region": "클락",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "pending"
+  },
+  {
+    "target_name": "솔레어 리조트 & 카지노 (Solaire Resort & Casino)",
+    "region": "마닐라 파라냐케",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "pending"
+  },
+  {
+    "target_name": "썬밸리 골프 & 컨트리 클럽 (Sun Valley Golf & Country Club)",
+    "region": "클락",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "pending"
+  },
+  {
+    "target_name": "제이파크 아일랜드 리조트 & 워터파크 (Jpark Island Resort)",
+    "region": "세부 막탄",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "pending"
+  },
+  {
+    "target_name": "이글 릿지 골프 & 컨트리 클럽 (Eagle Ridge Golf & Country Club)",
+    "region": "카비테 젠트리",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "pending"
+  },
+  {
+    "target_name": "샹그릴라 보라카이 리조트 & 스파 (Shangri-La Boracay)",
+    "region": "보라카이",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "pending"
+  },
+  {
+    "target_name": "마운트 말라라얏 골프 & 컨트리 클럽 (Mount Malarayat)",
+    "region": "바탕가스 리파",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "pending"
+  },
+  {
+    "target_name": "콘래드 마닐라 (Conrad Manila)",
+    "region": "마닐라 파사이",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "pending"
+  },
+  {
+    "target_name": "FA 코리아 컨트리 클럽 (FA Korea Country Club)",
+    "region": "클락",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "pending"
+  },
+  {
+    "target_name": "헤난 크리스탈 샌즈 리조트 (Henann Crystal Sands Resort)",
+    "region": "보라카이",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "pending"
+  },
+  {
+    "target_name": "루이시따 골프 & 컨트리 클럽 (Luisita Golf & Country Club)",
+    "region": "딸락",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "pending"
+  },
+  {
+    "target_name": "샹그릴라 막탄 세부 (Shangri-La Mactan)",
+    "region": "세부 막탄",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "pending"
+  },
+  {
+    "target_name": "스플랜디도 딸 골프 클럽 (Splendido Taal Golf Club)",
+    "region": "따가이따이",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "pending"
+  },
+  {
+    "target_name": "스위스텔 클락 (Swissôtel Clark)",
+    "region": "클락",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "pending"
+  },
+  {
+    "target_name": "수빅 인터내셔널 골프 클럽 (Subic International Golf Club)",
+    "region": "수빅",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "pending"
+  },
+  {
+    "target_name": "샹그릴라 더 포트 (Shangri-La The Fort)",
+    "region": "마닐라 BGC",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "pending"
+  },
+  {
+    "target_name": "세부 컨트리 클럽 (Cebu Country Club)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "pending"
+  },
+  {
+    "target_name": "더 페닌슐라 마닐라 (The Peninsula Manila)",
+    "region": "마닐라 마카티",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "pending"
+  },
+  {
+    "target_name": "깐루방 골프 & 컨트리 클럽 (Canlubang Golf & Country Club)",
+    "region": "라구나",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "pending"
+  },
+  {
+    "target_name": "시티 오브 드림즈 마닐라 - 누와 (Nüwa at City of Dreams)",
+    "region": "마닐라 파라냐케",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "pending"
+  }
+]
