@@ -18,7 +18,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-pro-latest')
 
-# ★ 봇 계정의 UID 고정
+# 봇 계정의 UID 고정
 AUTHOR_ID = "7ceb52e2-28a9-422d-b932-2f95952b771c"
 
 def get_prompt_for_target(task):
@@ -59,7 +59,6 @@ def get_prompt_for_target(task):
     return ""
 
 def process_tasks():
-    # JSON 파일 절대 경로 설정
     base_dir = os.path.dirname(os.path.abspath(__file__))
     json_path = os.path.join(base_dir, 'ph_info_tasks.json')
     
@@ -70,16 +69,27 @@ def process_tasks():
         print(f"JSON 로드 에러: {e}")
         return
 
-    is_updated = False # 변경 사항이 있는지 체크
+    is_updated = False
+    
+    # ★ 추가됨: 현재 봇 실행에서 작성한 개수 카운트
+    processed_golf = 0
+    processed_hotel = 0
 
     for task in tasks:
-        # ★ 중복 방지: 이미 완료(completed)된 작업은 건너뜀
+        # 이미 완료된 작업은 건너뜀
         if task.get('status') == 'completed':
             continue
 
-        target = task['target_name']
         cat_main = task['category_main']
         cat_sub = task['category_sub']
+        
+        # ★ 추가됨: 이미 골프장 1개, 호텔 1개를 썼다면 이번 턴에서는 패스
+        if cat_sub == "golf" and processed_golf >= 1:
+            continue
+        if cat_sub == "hotel" and processed_hotel >= 1:
+            continue
+
+        target = task['target_name']
         
         print(f"⏳ [{target}] 정보 생성 시작...")
         
@@ -94,7 +104,7 @@ def process_tasks():
             
             title = f"[{task['region']}] {target} - 팩트체크 가이드"
             
-            # Supabase 삽입 데이터 (author_id 적용)
+            # Supabase 삽입 데이터
             post_data = {
                 "title": title,
                 "content": content,
@@ -108,9 +118,19 @@ def process_tasks():
             
             print(f"✅ [{target}] DB 저장 완료!")
             
-            # ★ 성공 시 상태를 completed로 변경
+            # 성공 시 상태를 completed로 변경 및 카운트 증가
             task['status'] = 'completed'
             is_updated = True
+            
+            if cat_sub == "golf":
+                processed_golf += 1
+            elif cat_sub == "hotel":
+                processed_hotel += 1
+            
+            # ★ 추가됨: 목표치(골프1, 호텔1)를 달성하면 더 이상 돌지 않고 바로 종료
+            if processed_golf >= 1 and processed_hotel >= 1:
+                print("🎯 1회 목표량(골프장 1, 호텔 1) 달성 완료! 루프를 종료합니다.")
+                break
             
             # API 호출 제한 방지
             time.sleep(5)
@@ -118,7 +138,7 @@ def process_tasks():
         except Exception as e:
             print(f"❌ [{target}] 처리 중 에러 발생: {e}")
 
-    # ★ 작업 내용이 업데이트 된 경우(pending -> completed) JSON 파일을 덮어써서 저장
+    # 작업 내용이 업데이트 된 경우(pending -> completed) JSON 파일을 덮어써서 저장
     if is_updated:
         try:
             with open(json_path, 'w', encoding='utf-8') as f:
