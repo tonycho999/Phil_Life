@@ -7,6 +7,8 @@ import CommentSection from "@/components/post/CommentSection";
 import PostControls from "@/components/post/PostControls";
 import { Eye } from "lucide-react";
 import ViewUpdater from "@/components/post/ViewUpdater";
+// ★ 추가됨: 방금 만든 팝업 메뉴 컴포넌트 불러오기
+import AuthorActionMenu from "@/components/post/AuthorActionMenu";
 
 export const runtime = 'edge';
 export const dynamic = "force-dynamic";
@@ -156,12 +158,12 @@ export default async function PostDetailPage({ params }: { params: any }) {
 
         <div className="flex justify-between items-center text-sm text-gray-500 mt-3">
             <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5">
-                  <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${badge.style}`}>
-                    {badge.label}
-                  </span>
-                  <span className="font-bold text-gray-800">{post.profiles?.nickname || "알 수 없음"}</span>
-                </div>
+                {/* ★ 수정됨: 정적이던 닉네임 영역을 팝업 메뉴 컴포넌트로 교체했습니다. */}
+                <AuthorActionMenu 
+                  authorId={post.author_id} 
+                  nickname={post.profiles?.nickname} 
+                  badge={badge} 
+                />
                 <span suppressHydrationWarning className="text-xs text-gray-400">
                   {new Date(post.created_at).toLocaleString('ko-KR', {
                     timeZone: 'Asia/Manila', // ★ 핵심: 필리핀 시간(UTC+8)으로 강제 변환
