@@ -8,9 +8,9 @@ import google.generativeai as genai
 # 환경 변수 로드
 load_dotenv()
 
-# Supabase 설정
-SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
-SUPABASE_KEY = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+# ★ 수정된 부분: .yml 파일에 설정된 변수명과 동일하게 변경했습니다.
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Gemini AI 설정
@@ -71,7 +71,6 @@ def process_tasks():
 
     is_updated = False
     
-    # ★ 추가됨: 현재 봇 실행에서 작성한 개수 카운트
     processed_golf = 0
     processed_hotel = 0
 
@@ -83,7 +82,7 @@ def process_tasks():
         cat_main = task['category_main']
         cat_sub = task['category_sub']
         
-        # ★ 추가됨: 이미 골프장 1개, 호텔 1개를 썼다면 이번 턴에서는 패스
+        # 이미 골프장 1개, 호텔 1개를 썼다면 이번 턴에서는 패스
         if cat_sub == "golf" and processed_golf >= 1:
             continue
         if cat_sub == "hotel" and processed_hotel >= 1:
@@ -127,7 +126,7 @@ def process_tasks():
             elif cat_sub == "hotel":
                 processed_hotel += 1
             
-            # ★ 추가됨: 목표치(골프1, 호텔1)를 달성하면 더 이상 돌지 않고 바로 종료
+            # 목표치(골프1, 호텔1)를 달성하면 더 이상 돌지 않고 바로 종료
             if processed_golf >= 1 and processed_hotel >= 1:
                 print("🎯 1회 목표량(골프장 1, 호텔 1) 달성 완료! 루프를 종료합니다.")
                 break
