@@ -98,22 +98,40 @@ function HomeBoardWidget({ title, subtitle, posts, link, color = "blue", icon: I
   );
 }
 
-export default async function Home() {
+export default async function Home({ searchParams }: any) {
   const supabase = createClient();
+  
+  // ★ 추가됨: 검색어 확인 및 쿼리 동적 생성 로직
+  const q = searchParams?.q || "";
 
-  // ★ DB에서 level 값도 같이 가져오도록 수정
+  let newsQuery = supabase.from("posts").select("*, profiles(nickname, level)").eq("category_main", "news").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5);
+  let communityQuery = supabase.from("posts").select("*, profiles(nickname, level)").eq("category_main", "community").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5);
+  let infoQuery = supabase.from("posts").select("*, profiles(nickname, level)").eq("category_main", "info").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5);
+  let qnaQuery = supabase.from("posts").select("*, profiles(nickname, level)").eq("category_sub", "qna").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5);
+
+  if (q) {
+    newsQuery = newsQuery.ilike("title", `%${q}%`);
+    communityQuery = communityQuery.ilike("title", `%${q}%`);
+    infoQuery = infoQuery.ilike("title", `%${q}%`);
+    qnaQuery = qnaQuery.ilike("title", `%${q}%`);
+  }
+
+  // ★ 수정됨: 동적으로 만들어진 쿼리를 실행하도록 변경
   const [news, community, info, qna] = await Promise.all([
-    supabase.from("posts").select("*, profiles(nickname, level)").eq("category_main", "news").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
-    supabase.from("posts").select("*, profiles(nickname, level)").eq("category_main", "community").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
-    supabase.from("posts").select("*, profiles(nickname, level)").eq("category_main", "info").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
-    supabase.from("posts").select("*, profiles(nickname, level)").eq("category_sub", "qna").eq("is_hidden", false).order("created_at", { ascending: false }).limit(5),
+    newsQuery,
+    communityQuery,
+    infoQuery,
+    qnaQuery,
   ]);
 
   return (
     <div className="space-y-6">
       {/* 메인 타이틀 */}
       <div className="flex items-center gap-2 px-1">
-          <h2 className="text-lg font-bold text-gray-800">🔥 실시간 인기 게시글</h2>
+          <h2 className="text-lg font-bold text-gray-800">
+            {/* ★ 추가됨: 검색어가 있을 때 타이틀 변경 */}
+            {q ? `🔍 '${q}' 검색 결과` : "🔥 실시간 인기 게시글"}
+          </h2>
       </div>
 
       {/* 게시판 위젯 그리드 (2열 배치) */}
