@@ -39,35 +39,35 @@
     "region": "클락 (Clark Freeport)",
     "category_main": "info",
     "category_sub": "visa",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "브렌트 국제학교 (Brent International School)",
     "region": "마닐라 (비냔) / 수빅 / 바기오",
     "category_main": "info",
     "category_sub": "edu",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "더 메디컬 시티 클락 (The Medical City Clark)",
     "region": "클락",
     "category_main": "info",
     "category_sub": "medical",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "스마트 커뮤니케이션즈 (Smart Communications)",
     "region": "필리핀 전역",
     "category_main": "info",
     "category_sub": "comm",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 은퇴청 (PRA - Philippine Retirement Authority)",
     "region": "마닐라 (마카티)",
     "category_main": "info",
     "category_sub": "law",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "마카티 메디컬 센터 (Makati Medical Center)",
