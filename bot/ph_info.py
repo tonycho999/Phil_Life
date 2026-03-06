@@ -15,7 +15,7 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # 봇 계정의 UID 고정
-AUTHOR_ID = "7ceb52e2-28a9-422d-b932-2f95952b771c"
+AUTHOR_ID = "451341d5-6bf9-4579-9eb2-4533514f17f7"
 
 # 강력한 시스템 프롬프트: 마크다운 절대 금지, 순수 텍스트+HTML 태그만 허용
 SYSTEM_PROMPT = """
