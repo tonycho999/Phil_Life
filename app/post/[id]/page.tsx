@@ -31,6 +31,15 @@ export default async function PostDetailPage({ params }: { params: any }) {
 
   const supabase = createClient();
   
+  // 1. 현재 유저 레벨 확인 (비회원은 -1)
+  const { data: { user } } = await supabase.auth.getUser();
+  let myLevel = -1; 
+  if (user) {
+    const { data: myProfile } = await supabase.from("profiles").select("level").eq("id", user.id).single();
+    if (myProfile) myLevel = myProfile.level;
+  }
+
+  // 2. 게시글 데이터 가져오기
   const { data: post, error } = await supabase
     .from("posts")
     .select("*, profiles(nickname, grade, level)")
@@ -39,6 +48,39 @@ export default async function PostDetailPage({ params }: { params: any }) {
 
   if (error || !post) {
     return notFound();
+  }
+
+  // 3. 게시판 읽기 권한 체크 로직
+  const { data: boardInfo } = await supabase
+    .from("boards")
+    .select("read_level")
+    .eq("category_sub", post.category_sub)
+    .single();
+
+  const requiredReadLevel = boardInfo?.read_level || 1;
+
+  // 권한 미달 시 렌더링 중단 및 뒤로가기 링크 제공
+  if (myLevel < requiredReadLevel) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-32 text-center">
+        <div className="bg-white rounded-xl p-10 border border-gray-200 shadow-sm">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">🚫 접근 권한이 없습니다</h2>
+          <p className="text-gray-600 mb-8">
+            이 게시판의 글은 <strong>Lv.{requiredReadLevel}</strong> 이상만 읽을 수 있습니다.<br/>
+            (현재 회원님의 등급: {user ? `Lv.${myLevel}` : '비회원'})
+          </p>
+          {!user ? (
+            <Link href="/login" className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition inline-block">
+              로그인하러 가기
+            </Link>
+          ) : (
+            <Link href={`/${post.category_main}/${post.category_sub}`} className="bg-gray-800 text-white px-8 py-3 rounded-lg font-bold hover:bg-gray-700 transition inline-block">
+              목록으로 돌아가기
+            </Link>
+          )}
+        </div>
+      </div>
+    );
   }
 
   const renderContent = () => {
