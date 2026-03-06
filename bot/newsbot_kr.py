@@ -89,7 +89,7 @@ def run_newsbot_kr():
     headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
     
     # ★ 1차 방어: 네이버 검색어에 강력한 마이너스(-) 키워드 추가 (정치, 선거 등 원천 차단)
-    search_query = "필리핀 -정치 -선거 -대통령 -국회 -여당 -야당 -민주당 -국민의힘 -총선 -공천"
+    search_query = "필리핀 -국회 -여당 -야당 -민주당 -국힘 -총선 -공천"
     params = {"query": search_query, "display": 20, "sort": "date"} 
 
     response = requests.get(url, headers=headers, params=params)
@@ -100,7 +100,7 @@ def run_newsbot_kr():
         inserted_count = 0 
         
         # ★ 2차 방어: 파이썬 단에서 혹시라도 뚫고 들어온 정치 단어(제목+본문) 컷트용 블랙리스트
-        politics_blacklist = ['정치', '선거', '대통령', '국회', '여당', '야당', '더불어민주당', '국민의힘', '총선', '공천', '마르코스', '두테르테', '의원', '출마', '당대표']
+        politics_blacklist = ['국회', '여당', '야당', '더불어민주당', '국민의힘', '국회의원']
         
         for item in data['items']:
             pub_date = parsedate_to_datetime(item['pubDate']) 
