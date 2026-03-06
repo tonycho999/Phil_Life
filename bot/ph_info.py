@@ -4,8 +4,6 @@ import time
 from dotenv import load_dotenv
 from supabase import create_client, Client
 
-# ★ 수정된 부분 1: ai_selector.py에서 generate_text 함수를 가져옵니다.
-# 이제 Gemini 설정은 모두 ai_selector가 알아서 처리하므로 여기서는 설정할 필요가 없습니다.
 from ai_selector import generate_text
 
 # 환경 변수 로드
@@ -93,25 +91,23 @@ def process_tasks():
             continue
 
         try:
-            # ★ 수정된 부분 2: ai_selector.py의 generate_text 함수를 호출하여 내용을 받아옵니다.
-            # 정보 전달 목적이므로 temperature를 0.7 정도로 주어 적당한 유연성을 갖게 합니다.
             content = generate_text(prompt=prompt, temperature=0.7)
             
-            # AI가 ❌(에러 메세지)를 뱉었는지 확인
             if content.startswith("❌"):
                 print(f"❌ AI 생성 실패: {content}")
                 continue
             
             title = f"[{task['region']}] {target} - 팩트체크 가이드"
             
-            # Supabase 삽입 데이터
+            # ★ 수정된 부분: format 항목을 "html"로 추가
             post_data = {
                 "title": title,
                 "content": content,
                 "category_main": task['category_main'],
                 "category_sub": cat_sub,
                 "author_id": AUTHOR_ID,
-                "is_hidden": False
+                "is_hidden": False,
+                "format": "html"  # <-- 요청하신 항목 추가
             }
             
             data, count = supabase.table('posts').insert(post_data).execute()
