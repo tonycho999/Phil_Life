@@ -3,20 +3,18 @@ import json
 import time
 from dotenv import load_dotenv
 from supabase import create_client, Client
-import google.generativeai as genai
+
+# ★ 수정된 부분 1: ai_selector.py에서 generate_text 함수를 가져옵니다.
+# 이제 Gemini 설정은 모두 ai_selector가 알아서 처리하므로 여기서는 설정할 필요가 없습니다.
+from ai_selector import generate_text
 
 # 환경 변수 로드
 load_dotenv()
 
-# ★ 수정된 부분: .yml 파일에 설정된 변수명과 동일하게 변경했습니다.
+# Supabase 설정
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-# Gemini AI 설정
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-pro-latest')
 
 # 봇 계정의 UID 고정
 AUTHOR_ID = "7ceb52e2-28a9-422d-b932-2f95952b771c"
@@ -79,7 +77,6 @@ def process_tasks():
         if task.get('status') == 'completed':
             continue
 
-        cat_main = task['category_main']
         cat_sub = task['category_sub']
         
         # 이미 골프장 1개, 호텔 1개를 썼다면 이번 턴에서는 패스
@@ -89,7 +86,6 @@ def process_tasks():
             continue
 
         target = task['target_name']
-        
         print(f"⏳ [{target}] 정보 생성 시작...")
         
         prompt = get_prompt_for_target(task)
@@ -97,9 +93,14 @@ def process_tasks():
             continue
 
         try:
-            # Gemini에게 글 작성 요청
-            response = model.generate_content(prompt)
-            content = response.text
+            # ★ 수정된 부분 2: ai_selector.py의 generate_text 함수를 호출하여 내용을 받아옵니다.
+            # 정보 전달 목적이므로 temperature를 0.7 정도로 주어 적당한 유연성을 갖게 합니다.
+            content = generate_text(prompt=prompt, temperature=0.7)
+            
+            # AI가 ❌(에러 메세지)를 뱉었는지 확인
+            if content.startswith("❌"):
+                print(f"❌ AI 생성 실패: {content}")
+                continue
             
             title = f"[{task['region']}] {target} - 팩트체크 가이드"
             
@@ -107,7 +108,7 @@ def process_tasks():
             post_data = {
                 "title": title,
                 "content": content,
-                "category_main": cat_main,
+                "category_main": task['category_main'],
                 "category_sub": cat_sub,
                 "author_id": AUTHOR_ID,
                 "is_hidden": False
@@ -117,7 +118,7 @@ def process_tasks():
             
             print(f"✅ [{target}] DB 저장 완료!")
             
-            # 성공 시 상태를 completed로 변경 및 카운트 증가
+            # 성공 시에만 상태를 completed로 변경
             task['status'] = 'completed'
             is_updated = True
             
@@ -126,7 +127,7 @@ def process_tasks():
             elif cat_sub == "hotel":
                 processed_hotel += 1
             
-            # 목표치(골프1, 호텔1)를 달성하면 더 이상 돌지 않고 바로 종료
+            # 골프장 1개, 호텔 1개를 모두 작성했으면 루프 즉시 종료
             if processed_golf >= 1 and processed_hotel >= 1:
                 print("🎯 1회 목표량(골프장 1, 호텔 1) 달성 완료! 루프를 종료합니다.")
                 break
@@ -137,7 +138,7 @@ def process_tasks():
         except Exception as e:
             print(f"❌ [{target}] 처리 중 에러 발생: {e}")
 
-    # 작업 내용이 업데이트 된 경우(pending -> completed) JSON 파일을 덮어써서 저장
+    # 작업 내용이 성공적으로 업데이트 된 경우에만 JSON 파일 덮어쓰기
     if is_updated:
         try:
             with open(json_path, 'w', encoding='utf-8') as f:
