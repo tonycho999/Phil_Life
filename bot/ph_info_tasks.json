@@ -1,0 +1,86 @@
+[
+  {
+    "target_name": "필리핀 이민국 본청 (Bureau of Immigration Main Office)",
+    "region": "마닐라 (인트라무로스)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "pending"
+  },
+  {
+    "target_name": "국제학교 마닐라 (ISM - International School Manila)",
+    "region": "마닐라 (BGC)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "pending"
+  },
+  {
+    "target_name": "세인트 루크 메디컬 센터 (St. Luke's Medical Center)",
+    "region": "마닐라 (BGC / 퀘존)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "글로브 텔레콤 (Globe Telecom - 모바일/인터넷)",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "주필리핀 대한민국 대사관 영사과 (여권/공증/가족관계)",
+    "region": "마닐라 (BGC)",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "pending"
+  },
+  {
+    "target_name": "클락 이민국 분소 (BI Clark Field Office)",
+    "region": "클락 (Clark Freeport)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "pending"
+  },
+  {
+    "target_name": "브렌트 국제학교 (Brent International School)",
+    "region": "마닐라 (비냔) / 수빅 / 바기오",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "pending"
+  },
+  {
+    "target_name": "더 메디컬 시티 클락 (The Medical City Clark)",
+    "region": "클락",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "스마트 커뮤니케이션즈 (Smart Communications)",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 은퇴청 (PRA - Philippine Retirement Authority)",
+    "region": "마닐라 (마카티)",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "pending"
+  },
+  {
+    "target_name": "마카티 메디컬 센터 (Makati Medical Center)",
+    "region": "마닐라 (마카티)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "PLDT Home (필리핀 유선 인터넷/WIFI)",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  }
+]
