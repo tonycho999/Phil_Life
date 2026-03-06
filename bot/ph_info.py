@@ -67,8 +67,9 @@ def process_tasks():
 
     is_updated = False
     
-    processed_golf = 0
-    processed_hotel = 0
+    # ★ 핵심 복구 부분: 성공/실패 여부와 상관없이 이번 턴에 '건드렸는지'만 체크
+    attempted_golf = False
+    attempted_hotel = False
 
     for task in tasks:
         # 이미 완료된 작업은 건너뜀
@@ -77,11 +78,15 @@ def process_tasks():
 
         cat_sub = task['category_sub']
         
-        # 이미 골프장 1개, 호텔 1개를 썼다면 이번 턴에서는 패스
-        if cat_sub == "golf" and processed_golf >= 1:
-            continue
-        if cat_sub == "hotel" and processed_hotel >= 1:
-            continue
+        # ★ 핵심 복구 부분: 이미 한 번 시도했다면 가차 없이 패스 (연쇄 에러 루프 방지)
+        if cat_sub == "golf":
+            if attempted_golf:
+                continue
+            attempted_golf = True  # 지금 골프장을 시도함
+        elif cat_sub == "hotel":
+            if attempted_hotel:
+                continue
+            attempted_hotel = True # 지금 호텔을 시도함
 
         target = task['target_name']
         print(f"⏳ [{target}] 정보 생성 시작...")
@@ -95,11 +100,11 @@ def process_tasks():
             
             if content.startswith("❌"):
                 print(f"❌ AI 생성 실패: {content}")
+                # 실패하더라도 attempted 변수가 True가 되었으므로 다음 골프장/호텔로 넘어가지 않음
                 continue
             
             title = f"[{task['region']}] {target} - 팩트체크 가이드"
             
-            # ★ 수정된 부분: format 항목을 "html"로 추가
             post_data = {
                 "title": title,
                 "content": content,
@@ -107,7 +112,7 @@ def process_tasks():
                 "category_sub": cat_sub,
                 "author_id": AUTHOR_ID,
                 "is_hidden": False,
-                "format": "html"  # <-- 요청하신 항목 추가
+                "format": "html"
             }
             
             data, count = supabase.table('posts').insert(post_data).execute()
@@ -118,21 +123,16 @@ def process_tasks():
             task['status'] = 'completed'
             is_updated = True
             
-            if cat_sub == "golf":
-                processed_golf += 1
-            elif cat_sub == "hotel":
-                processed_hotel += 1
-            
-            # 골프장 1개, 호텔 1개를 모두 작성했으면 루프 즉시 종료
-            if processed_golf >= 1 and processed_hotel >= 1:
-                print("🎯 1회 목표량(골프장 1, 호텔 1) 달성 완료! 루프를 종료합니다.")
-                break
-            
             # API 호출 제한 방지
             time.sleep(5)
             
         except Exception as e:
             print(f"❌ [{target}] 처리 중 에러 발생: {e}")
+
+        # 골프장 1개, 호텔 1개 시도를 모두 마쳤으면 남아있는 목록은 무시하고 루프 즉시 종료!
+        if attempted_golf and attempted_hotel:
+            print("🎯 1회 목표량(골프장 1, 호텔 1) 시도 완료! 루프를 종료합니다.")
+            break
 
     # 작업 내용이 성공적으로 업데이트 된 경우에만 JSON 파일 덮어쓰기
     if is_updated:
