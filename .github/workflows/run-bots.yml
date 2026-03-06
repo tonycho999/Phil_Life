@@ -40,3 +40,10 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
           python bot/main.py
+
+      - name: 📝 변경된 JSON 파일 GitHub에 자동 반영
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add bot/ph_info_tasks.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 필정보 봇: 포스팅 완료(pending -> completed) 업데이트" && git push)
