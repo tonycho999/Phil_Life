@@ -1,12 +1,26 @@
-import { createClient } from "@/lib/supabase";
+// ★ 수정됨: 서버 환경에서 쿠키를 읽을 수 있도록 ssr/cookies 임포트
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { MENUS } from "@/lib/constants";
 
 export default async function MyPostsPage() {
-  const supabase = createClient();
+  // ★ 수정됨: 서버 컴포넌트에서 쿠키를 읽어 로그인 상태를 확인할 수 있도록 변경
+  const cookieStore = cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
 
-  // 1. 로그인 체크
+  // 1. 로그인 체크 (이제 쿠키를 읽으므로 정상적으로 유저를 인식합니다)
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     redirect("/"); // 비로그인 시 메인으로 튕기기
@@ -62,7 +76,8 @@ export default async function MyPostsPage() {
               </h3>
               
               <div className="flex justify-between items-center text-xs text-gray-400">
-                <span>조회 {post.views || 0}</span>
+                {/* ★ 수정됨: DB 컬럼명에 맞게 view_count로 수정 */}
+                <span>조회 {post.view_count || 0}</span>
                 {post.is_hidden && <span className="text-red-500 font-bold">숨김 처리됨</span>}
               </div>
             </Link>
