@@ -1,4 +1,6 @@
-import { createClient } from "@/lib/supabase";
+// ★ 수정됨: 브라우저용 클라이언트 임포트 삭제, 서버용 ssr 및 cookies 임포트 추가
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CommentSection from "@/components/post/CommentSection";
@@ -29,9 +31,21 @@ export default async function PostDetailPage({ params }: { params: any }) {
   const resolvedParams = await params;
   const postId = resolvedParams.id;
 
-  const supabase = createClient();
+  // ★ 수정됨: 서버 컴포넌트 환경에서 쿠키(로그인 정보)를 읽을 수 있도록 변경
+  const cookieStore = cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
   
-  // 1. 현재 유저 레벨 확인 (비회원은 -1)
+  // 1. 현재 유저 레벨 확인 (이제 서버가 쿠키를 읽으므로 관리자/회원을 정상 인식합니다)
   const { data: { user } } = await supabase.auth.getUser();
   let myLevel = -1; 
   if (user) {
