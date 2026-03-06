@@ -99,7 +99,8 @@ export default function MainHeader() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!keyword.trim()) return;
-    router.push(`/?q=${keyword}`);
+    // ★ 수정된 부분: 홈(/?q=)이 아닌 검색 전용 페이지(/search?q=)로 이동합니다.
+    router.push(`/search?q=${keyword}`);
   };
 
   return (
