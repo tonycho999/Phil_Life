@@ -36,7 +36,7 @@ def search_google(query):
         print("⚠️ 구글 API 키가 없습니다. 검색 없이 진행합니다.")
         return "검색 결과 없음."
         
-    url = "[https://www.googleapis.com/customsearch/v1](https://www.googleapis.com/customsearch/v1)"
+    url = "https://www.googleapis.com/customsearch/v1"
     params = {
         "key": GOOGLE_SEARCH_API_KEY,
         "cx": GOOGLE_SEARCH_CX,
