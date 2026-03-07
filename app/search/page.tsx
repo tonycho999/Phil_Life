@@ -24,6 +24,8 @@ function getLevelBadgeInfo(level: any) {
 export default async function SearchPage({ searchParams }: any) {
   const supabase = createClient();
   const q = searchParams?.q || "";
+  // ★ 추가됨: URL 파라미터에서 author_id를 가져옵니다.
+  const authorId = searchParams?.author || "";
 
   // 카테고리 구분 없이 제목에 검색어가 포함된 모든 게시글을 최신순으로 가져옵니다.
   let query = supabase
@@ -32,11 +34,19 @@ export default async function SearchPage({ searchParams }: any) {
     .eq("is_hidden", false)
     .order("created_at", { ascending: false });
 
+  // ★ 수정됨: 검색어(q)가 있으면 제목 검색, 작성자ID(author)가 있으면 해당 유저 필터링
   if (q) {
     query = query.ilike("title", `%${q}%`);
   }
+  
+  if (authorId) {
+    query = query.eq("author_id", authorId);
+  }
 
   const { data: searchResults, error } = await query;
+
+  // ★ 추가됨: 닉네임 표시를 위해 결과 데이터에서 첫 번째 닉네임 참조 (작성자 글 보기 모드일 때 사용)
+  const authorNickname = searchResults && searchResults.length > 0 ? searchResults[0].profiles?.nickname : "";
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -44,7 +54,11 @@ export default async function SearchPage({ searchParams }: any) {
       <div className="bg-blue-50/50 border-b border-gray-100 px-6 py-5">
         <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
           <Search className="text-blue-600" size={24} />
-          {q ? `'${q}' 검색 결과` : "전체 검색 결과"}
+          {/* ★ 수정됨: 작성자 검색 시 문구 변경 */}
+          {authorId 
+            ? `${authorNickname ? `'${authorNickname}'` : '작성자'} 님의 게시글` 
+            : (q ? `'${q}' 검색 결과` : "전체 검색 결과")
+          }
           <span className="text-sm font-normal text-gray-500 ml-2">
             (총 {searchResults?.length || 0}건)
           </span>
