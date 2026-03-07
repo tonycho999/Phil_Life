@@ -26,6 +26,61 @@ SYSTEM_PROMPT = """
 3. ```html 이나 ``` 같은 코드 블록 기호도 절대 출력하지 마세요. 
 """
 
+# ★ 신규 추가됨: JSON 파일이 모두 완료되었을 때 AI가 스스로 새 리스트를 짜오는 함수
+def generate_new_tasks_if_empty(tasks, json_path):
+    # 아직 pending(미완료)인 작업이 남아있는지 검사합니다.
+    pending_tasks = [t for t in tasks if t.get('status') != 'completed']
+    if len(pending_tasks) > 0:
+        return tasks # 할 일이 남아있으면 그대로 리턴
+        
+    print("\n🔄 [시스템 알림] 모든 타겟 작성이 완료되었습니다! AI가 새로운 필리핀 여행지를 발굴합니다...")
+    
+    # AI에게 새로운 JSON 리스트를 뽑아달라고 강력하게 명령합니다.
+    auto_prompt = """
+    당신은 필리핀 현지 여행 전문가입니다.
+    기존에 잘 알려진 대형 리조트나 명소 외에도, 사람들이 좋아할 만한 필리핀의 새로운 타겟 4곳을 추천해주세요.
+    (골프장 1곳, 호텔/리조트 1곳, 관광지 1곳, 다이빙 포인트 1곳)
+    
+    반드시 아래의 순수 JSON 배열 형식으로만 대답하고, 마크다운 기호(```json 등)나 다른 인삿말은 일절 넣지 마세요.
+    
+    [
+      {
+        "target_name": "새로운 장소 이름 (영문명 포함)",
+        "region": "지역명 (예: 세부, 보홀, 팔라완, 바탕가스 등)",
+        "category_main": "travel",
+        "category_sub": "golf",
+        "status": "pending"
+      },
+      ... (hotel, attraction, diving 도 동일한 형식으로 총 4개 작성)
+    ]
+    """
+    
+    try:
+        # 온도(temperature)를 0.7 정도로 줘서 매번 다양한 장소가 나오게 유도
+        ai_response = generate_text(prompt=auto_prompt, temperature=0.7, system_prompt="오직 순수 JSON 데이터만 반환하라.")
+        
+        # AI가 혹시나 붙였을 마크다운 찌꺼기 완벽 제거
+        clean_json_str = ai_response.replace("```json", "").replace("```", "").strip()
+        
+        # 문자열을 파이썬 리스트로 변환
+        new_tasks = json.loads(clean_json_str)
+        
+        if isinstance(new_tasks, list) and len(new_tasks) > 0:
+            tasks.extend(new_tasks) # 기존 리스트 뒤에 새 리스트 이어붙이기
+            
+            # 새 리스트를 물리적 파일에 즉시 저장
+            with open(json_path, 'w', encoding='utf-8') as f:
+                json.dump(tasks, f, ensure_ascii=False, indent=2)
+                
+            print(f"✨ 성공! AI가 {len(new_tasks)}개의 새로운 타겟을 JSON 파일에 추가했습니다!\n")
+            return tasks
+            
+    except Exception as e:
+        print(f"❌ AI 새로운 리스트 자동 생성 실패 (다음 턴에 재시도): {e}")
+        
+    return tasks
+
+
 def get_prompt_for_target(task):
     target = task['target_name']
     region = task['region']
@@ -278,6 +333,9 @@ def process_tasks():
     except Exception as e:
         print(f"JSON 로드 에러: {e}")
         return
+
+    # ★ 방금 추가된 AI 무한 자동 생성 로직 실행!
+    tasks = generate_new_tasks_if_empty(tasks, json_path)
 
     is_updated = False
     
