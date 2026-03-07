@@ -74,14 +74,14 @@
     "region": "따가이따이",
     "category_main": "travel",
     "category_sub": "golf",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "스위스텔 클락 (Swissôtel Clark)",
     "region": "클락",
     "category_main": "travel",
     "category_sub": "hotel",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "수빅 인터내셔널 골프 클럽 (Subic International Golf Club)",
