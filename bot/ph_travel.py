@@ -153,6 +153,119 @@ def get_prompt_for_target(task):
             </p>
         </div>
         """
+        
+    elif cat_sub == "attraction":
+        return f"""
+        타겟 관광지: {target} (지역: {region})
+        
+        아래 제공된 [HTML 템플릿]의 구조와 모든 인라인 스타일(style="...") 속성을 100% 똑같이 복사하여 유지하면서, 
+        {target}의 실제 객관적 정보(팩트)만 괄호 ( ) 안에 채워 넣어주세요. 주관적 평가는 제외하세요.
+        
+        [HTML 템플릿]
+        <div style="font-family: sans-serif; line-height: 1.6; color: #334155;">
+            <p style="font-size: 1.05em; margin-bottom: 20px; color: #1e293b;">
+                {region}의 대표 관광 명소인 <strong style="color: #2563eb; font-weight: 700;">{target}</strong>에 대한 핵심 정보를 안내해 드립니다.
+            </p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
+
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🏞️ 1. 관광지 기본 정보 (Basic Info)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">명소 이름:</strong> {target}</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">위치:</strong> (상세 주소)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">운영 시간:</strong> (오픈 및 마감 시간, 휴무일)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">입장료:</strong> (성인/아동 요금 기준)</li>
+            </ul>
+
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                ✨ 2. 주요 볼거리 및 특징 (Highlights)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">대표 명물:</strong> (이곳에서 반드시 봐야 할 것)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">즐길 거리:</strong> (체험, 액티비티, 사진 포인트 등)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">소요 시간:</strong> (관람에 필요한 대략적인 시간)</li>
+            </ul>
+
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🗺️ 3. 접근성 및 주변 인프라 (Logistics)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">이동 방법:</strong> (주요 거점에서의 대중교통 또는 그랩/택시 이용 팁)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">주변 연계 코스:</strong> (함께 방문하기 좋은 근처 명소)</li>
+            </ul>
+
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                💡 4. 방문객 실무 팁 (Visitor Tips)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">추천 시간대:</strong> (사람이 덜 붐비거나 사진 찍기 좋은 시간)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">주의사항:</strong> (복장 제한, 소지품 주의, 자외선 차단 등)</li>
+            </ul>
+
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
+            <p style="color: #64748b; font-size: 0.9em; margin-top: 10px;">
+                <em>※ 본 정보는 현지 사정에 따라 일부 변경될 수 있으므로 방문 전 참고용으로 활용해 주시기 바랍니다.</em>
+            </p>
+        </div>
+        """
+
+    elif cat_sub == "diving":
+        return f"""
+        타겟 다이빙 포인트/샵: {target} (지역: {region})
+        
+        아래 제공된 [HTML 템플릿]의 구조와 모든 인라인 스타일(style="...") 속성을 100% 똑같이 복사하여 유지하면서, 
+        {target}의 실제 객관적 정보(팩트)만 괄호 ( ) 안에 채워 넣어주세요. 주관적 평가는 제외하세요.
+        
+        [HTML 템플릿]
+        <div style="font-family: sans-serif; line-height: 1.6; color: #334155;">
+            <p style="font-size: 1.05em; margin-bottom: 20px; color: #1e293b;">
+                {region}의 인기 다이빙 스팟인 <strong style="color: #2563eb; font-weight: 700;">{target}</strong>에 대한 핵심 정보를 정리해 드립니다.
+            </p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
+
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🤿 1. 포인트 프로필 (Point Specs)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">포인트명:</strong> {target}</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">위치:</strong> (대략적인 바다 위치 및 접근 출발지)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">권장 레벨:</strong> (오픈워터, 어드밴스드 등 요구 자격)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">최대 수심/조류:</strong> (평균 수심 및 조류 강도)</li>
+            </ul>
+
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🐠 2. 수중 환경 및 주요 생물 (Marine Life)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">지형 특징:</strong> (절벽, 산호초, 난파선, 동굴 등)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">주요 관찰 생물:</strong> (거북이, 잭피쉬, 고래상어 등 기대 어종)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">시야:</strong> (평균적인 수중 시야 거리)</li>
+            </ul>
+
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                🚤 3. 접근성 및 다이브 샵 인프라 (Logistics)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">이동 소요 시간:</strong> (항구 또는 비치에서 보트로 걸리는 시간)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">주변 인프라:</strong> (인근 다이빙 리조트 밀집도 등)</li>
+            </ul>
+
+            <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+                💡 4. 다이버 실무 팁 (Diving Tips)
+            </h3>
+            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">최적 시즌:</strong> (파도가 잔잔하고 시야가 좋은 달)</li>
+                <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">주의사항:</strong> (환경 보호 규정 및 위험 요소)</li>
+            </ul>
+
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
+            <p style="color: #64748b; font-size: 0.9em; margin-top: 10px;">
+                <em>※ 바다 상황은 당일 기상과 조류에 따라 달라질 수 있으므로, 항상 현지 가이드의 지시에 따라 안전 다이빙하시기 바랍니다.</em>
+            </p>
+        </div>
+        """
+
     return ""
 
 def process_tasks():
@@ -168,8 +281,11 @@ def process_tasks():
 
     is_updated = False
     
+    # 각 카테고리별 1회 실행 확인용 변수
     attempted_golf = False
     attempted_hotel = False
+    attempted_attraction = False
+    attempted_diving = False
 
     for task in tasks:
         if task.get('status') == 'completed':
@@ -177,12 +293,19 @@ def process_tasks():
 
         cat_sub = task['category_sub']
         
+        # 카테고리별 중복 시도 방지 로직
         if cat_sub == "golf":
             if attempted_golf: continue
             attempted_golf = True
         elif cat_sub == "hotel":
             if attempted_hotel: continue
             attempted_hotel = True
+        elif cat_sub == "attraction":
+            if attempted_attraction: continue
+            attempted_attraction = True
+        elif cat_sub == "diving":
+            if attempted_diving: continue
+            attempted_diving = True
 
         target = task['target_name']
         print(f"⏳ [{target}] 정보 생성 시작...")
@@ -223,8 +346,9 @@ def process_tasks():
         except Exception as e:
             print(f"❌ [{target}] 처리 중 에러 발생: {e}")
 
-        if attempted_golf and attempted_hotel:
-            print("🎯 1회 목표량 시도 완료! 루프 종료.")
+        # 4가지 카테고리 모두 한 번씩 시도했다면 루프 종료
+        if attempted_golf and attempted_hotel and attempted_attraction and attempted_diving:
+            print("🎯 1회 목표량(골프, 호텔, 관광지, 다이빙) 시도 완료! 루프 종료.")
             break
 
     if is_updated:
