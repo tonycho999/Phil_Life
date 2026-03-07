@@ -67,6 +67,7 @@ export const MENUS: any = [
     sub: [
       { id: "golf", label: "골프 정보" },
       { id: "hotel", label: "호텔/풀빌라" },
+      { id: "attraction", label: "관광지" },
       { id: "food", label: "맛집/마사지" }, // 여행객 관점
       { id: "review", label: "여행 후기" },
     ],
