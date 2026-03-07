@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import requests
 from dotenv import load_dotenv
 from supabase import create_client, Client
 
@@ -9,156 +10,198 @@ from ai_selector import generate_text
 # 환경 변수 로드
 load_dotenv()
 
-# Supabase 설정
+# Supabase 및 Google API 설정
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+GOOGLE_SEARCH_API_KEY = os.getenv("GOOGLE_SEARCH_API_KEY")
+GOOGLE_SEARCH_CX = os.getenv("GOOGLE_SEARCH_CX")
+
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# 필정보 봇 계정의 UID (요청하신 ID 고정)
-AUTHOR_ID = "7ceb52e2-28a9-422d-b932-2f95952b771c"
+# 봇 계정의 UID 고정
+AUTHOR_ID = "451341d5-6bf9-4579-9eb2-4533514f17f7"
 
-# 강력한 시스템 프롬프트: 마크다운 절대 금지, 순수 텍스트+HTML 태그만 허용
+# 강력한 시스템 프롬프트: 마크다운 금지, 오직 HTML만
 SYSTEM_PROMPT = """
-당신은 필리핀 교민 및 여행객을 위한 전문 정보(비자, 교육, 법률, 의료, 통신) 웹사이트 게시판용 HTML 에디터입니다.
+당신은 필리핀 교민과 여행객을 위해 객관적인 팩트만 전달하는 정보 정리 에디터입니다.
 [절대 규칙]
-1. 모든 출력은 반드시 순수 HTML 태그(<div>, <p>, <span>, <strong>, <h3>, <hr>, <br>, <em> 등)로만 구성해야 합니다.
-2. 마크다운 기호(**, ##, *, - 등)는 단 하나도 사용하지 마세요.
-3. ```html 이나 ``` 같은 코드 블록 기호도 절대 출력하지 마세요. 
+1. 모든 출력은 반드시 순수 HTML 태그(<div>, <p>, <span>, <ul>, <li>, <strong>, <h3>, <hr>, <br> 등)로만 구성하세요.
+2. 마크다운 기호(**, ##, *, - 등) 및 코드 블록(```html)은 절대 사용하지 마세요.
+3. 주어진 [구글 검색 결과]에서 수치(가격, 요금), 연락처, 운영시간 등 팩트만 발췌해서 괄호() 안에 채우세요. 검색 결과에 없는 내용은 "현지 확인 필요"라고 적으세요.
 """
 
-def get_prompt_for_target(task):
-    target = task['target_name']
-    region = task['region']
-    cat_sub = task['category_sub']
-    
-    # 카테고리별로 AI에게 강조할 포인트를 다르게 지시합니다.
-    focus_points = {
-        "visa": "비자 종류, 발급 절차, 필요 서류, 수수료, 이민국 위치 및 주의사항",
-        "edu": "국제학교/어학원 커리큘럼, 학비 수준, 입학 조건, 위치 및 시설 특징",
-        "law": "주요 법률/세무 서비스 내용, 상담 절차, 교민 주의사항, 대략적인 소요 기간",
-        "medical": "주요 진료 과목, 병원 규모, 응급실 운영 여부, 외국인/한국인 통역 지원 여부, 보험 적용",
-        "comm": "통신사/인터넷 설치 절차, 요금제 비교, 필요 서류, 고객센터 정보, 장애 시 대처법"
+# ★ 신규: 구글 실시간 검색 함수
+def search_google(query):
+    if not GOOGLE_SEARCH_API_KEY or not GOOGLE_SEARCH_CX:
+        print("⚠️ 구글 API 키가 없습니다. 검색 없이 진행합니다.")
+        return "검색 결과 없음."
+        
+    url = "[https://www.googleapis.com/customsearch/v1](https://www.googleapis.com/customsearch/v1)"
+    params = {
+        "key": GOOGLE_SEARCH_API_KEY,
+        "cx": GOOGLE_SEARCH_CX,
+        "q": query,
+        "num": 3  # 상위 3개 검색 결과만 가져옴
     }
     
-    focus_instruction = focus_points.get(cat_sub, "기본 정보, 상세 서비스 내용, 주의사항, 연락처 및 위치")
+    try:
+        print(f"🔍 구글 실시간 검색 중: {query}")
+        res = requests.get(url, params=params)
+        data = res.json()
+        
+        snippets = []
+        for item in data.get("items", []):
+            snippets.append(f"- 제목: {item.get('title')}\n  내용: {item.get('snippet')}")
+            
+        context = "\n\n".join(snippets)
+        return context if context else "검색 결과가 충분하지 않습니다."
+    except Exception as e:
+        print(f"❌ 구글 검색 에러: {e}")
+        return "검색 중 오류 발생."
 
+# ★ 신규: JSON이 비었을 때 필정보(Info) 타겟 자동 생성
+def generate_new_info_tasks_if_empty(tasks, json_path):
+    pending_tasks = [t for t in tasks if t.get('status') != 'completed']
+    if len(pending_tasks) > 0:
+        return tasks 
+        
+    print("\n🔄 [시스템 알림] 모든 정보 작성이 완료되었습니다! AI가 새로운 필리핀 생활/행정 정보를 발굴합니다...")
+    
+    auto_prompt = """
+    당신은 필리핀 현지 전문가입니다. 필리핀 교민이나 장기 체류자가 꼭 알아야 할 생활/행정/의료/통신 정보 타겟 5개를 추천해주세요.
+    (비자/이민국 1개, 학교/교육 1개, 병원/의료 1개, 통신사/인터넷 1개, 대사관/관공서 1개)
+    
+    반드시 아래의 순수 JSON 배열 형식으로만 대답하세요.
+    [
+      {
+        "target_name": "예: 필리핀 운전면허증 (LTO) 발급 및 갱신",
+        "region": "필리핀 전역",
+        "category_main": "info",
+        "category_sub": "law",
+        "status": "pending"
+      },
+      ... (visa, edu, medical, comm 등 총 5개 작성)
+    ]
+    """
+    
+    try:
+        ai_response = generate_text(prompt=auto_prompt, temperature=0.7, system_prompt="오직 순수 JSON 데이터만 반환하라.")
+        clean_json_str = ai_response.replace("```json", "").replace("```", "").strip()
+        new_tasks = json.loads(clean_json_str)
+        
+        if isinstance(new_tasks, list) and len(new_tasks) > 0:
+            tasks.extend(new_tasks)
+            with open(json_path, 'w', encoding='utf-8') as f:
+                json.dump(tasks, f, ensure_ascii=False, indent=2)
+            print(f"✨ 성공! AI가 {len(new_tasks)}개의 새로운 정보 타겟을 JSON에 추가했습니다!\n")
+            return tasks
+    except Exception as e:
+        print(f"❌ AI 정보 리스트 자동 생성 실패: {e}")
+        
+    return tasks
+
+def get_prompt_for_target(task, search_context):
+    target = task['target_name']
+    region = task['region']
+    
     return f"""
-    타겟 정보: {target} (지역: {region})
-    분야: {cat_sub}
+    작성 타겟: {target} (지역: {region})
     
-    이 타겟에 대한 객관적이고 정확한 실무 정보({focus_instruction})를 조사하여 작성해 주세요.
-    아래 제공된 [HTML 템플릿]의 구조와 모든 인라인 스타일(style="...") 속성을 100% 똑같이 복사하여 유지하면서, 
-    괄호 ( ) 안에 실제 팩트 정보만 채워 넣어주세요.
+    [구글 최신 검색 결과 (참고용)]
+    {search_context}
     
-    [HTML 템플릿 시작]
-    <div style="font-family: 'Malgun Gothic', sans-serif; line-height: 1.7; color: #334155; max-width: 100%;">
-        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-            <p style="font-size: 1.1em; color: #0f172a; margin: 0; font-weight: bold;">
-                <span style="color: #4f46e5;">{target}</span>에 대한 핵심 실무 정보를 정리해 드립니다.
-            </p>
-            <p style="font-size: 0.9em; color: #64748b; margin: 8px 0 0 0;">📍 지역: {region} </p>
-        </div>
+    위 검색 결과를 바탕으로 아래 [HTML 템플릿]의 구조와 스타일(style)을 100% 유지하면서,
+    {target}에 대한 최신 요금, 시간, 절차 등 '객관적인 팩트'만 괄호 ( ) 안에 채워주세요.
+    검색 결과에 명확한 숫자가 없다면 지어내지 말고 "(공식 채널 확인 필요)" 라고 적으세요.
+    
+    [HTML 템플릿]
+    <div style="font-family: sans-serif; line-height: 1.6; color: #334155;">
+        <p style="font-size: 1.05em; margin-bottom: 20px; color: #1e293b;">
+            {region} <strong style="color: #2563eb; font-weight: 700;">{target}</strong>에 대한 최신 실무/행정 정보를 안내해 드립니다.
+        </p>
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
 
-        <h3 style="font-size: 1.15em; font-weight: 700; color: #1e1b4b; margin: 30px 0 15px 0; border-left: 4px solid #4f46e5; padding-left: 12px;">
-            📌 1. 기본 정보 (Basic Information)
+        <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+            📌 1. 기관/서비스 기본 정보
         </h3>
-        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin-bottom: 25px;">
-            <p style="margin: 0 0 12px 0;"><strong style="color: #312e81; font-weight: 700;">• 기관/서비스명:</strong> {target}</p>
-            <p style="margin: 0 0 12px 0;"><strong style="color: #312e81; font-weight: 700;">• 위치/주소:</strong> (정확한 주소 또는 대략적인 위치 정보)</p>
-            <p style="margin: 0 0 12px 0;"><strong style="color: #312e81; font-weight: 700;">• 운영/진료 시간:</strong> (영업 시간, 휴무일 정보)</p>
-            <p style="margin: 0;"><strong style="color: #312e81; font-weight: 700;">• 연락처:</strong> (전화번호, 웹사이트 또는 카카오톡 채널 등)</p>
-        </div>
+        <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+            <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">명칭:</strong> {target}</li>
+            <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">위치/주소:</strong> (실제 주소 또는 공식 홈페이지 링크)</li>
+            <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">운영 시간:</strong> (영업/민원 접수 시간)</li>
+            <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">연락처:</strong> (전화번호, 이메일 등)</li>
+        </ul>
 
-        <h3 style="font-size: 1.15em; font-weight: 700; color: #1e1b4b; margin: 30px 0 15px 0; border-left: 4px solid #4f46e5; padding-left: 12px;">
-            📋 2. 상세 내용 및 절차 (Details & Procedures)
+        <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+            📋 2. 주요 업무 및 비용 (핵심 팩트)
         </h3>
-        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin-bottom: 25px;">
-            <p style="margin: 0 0 12px 0;"><strong style="color: #312e81; font-weight: 700;">• 주요 서비스:</strong> (제공하는 핵심 업무나 진료/교육 내용)</p>
-            <p style="margin: 0 0 12px 0;"><strong style="color: #312e81; font-weight: 700;">• 필요 서류/조건:</strong> (방문 전 준비해야 할 사항)</p>
-            <p style="margin: 0;"><strong style="color: #312e81; font-weight: 700;">• 비용/소요시간:</strong> (대략적인 비용 및 수속, 진료, 설치 등에 걸리는 시간)</p>
-        </div>
+        <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+            <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">주요 서비스:</strong> (검색된 주요 업무/상품 2~3가지)</li>
+            <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">비용/수수료:</strong> (검색된 최신 요금, 수수료, 가격 정보 기재)</li>
+            <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">필요 서류/준비물:</strong> (방문 시 지참 항목)</li>
+        </ul>
 
-        <h3 style="font-size: 1.15em; font-weight: 700; color: #1e1b4b; margin: 30px 0 15px 0; border-left: 4px solid #4f46e5; padding-left: 12px;">
-            💡 3. 교민/여행객 실전 팁 (Practical Tips)
+        <h3 style="font-size: 1.15em; font-weight: 700; color: #1e40af; margin: 25px 0 10px 0; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px;">
+            💡 3. 교민/방문객 실무 팁
         </h3>
-        <div style="background-color: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; padding: 18px; margin-bottom: 25px;">
-            <p style="margin: 0 0 8px 0; color: #3730a3; font-weight: bold;">주의사항 및 팁:</p>
-            <p style="margin: 0; color: #3730a3; font-size: 0.95em;">
-                (실제 교민들이 겪는 유의사항, 붐비는 시간대 피하는 법, 언어 장벽 해결 팁 등 실용적인 조언 작성)
-            </p>
-        </div>
+        <ul style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+            <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">처리 기간/대기:</strong> (업무 처리에 걸리는 대략적인 시간)</li>
+            <li style="margin-bottom: 8px; padding-left: 15px; text-indent: -15px;"><span style="color: #3b82f6; font-weight: bold;">•</span> <strong style="font-weight: 700; color: #0f172a;">주의사항:</strong> (예약 필수, 복장 제한 등)</li>
+        </ul>
 
-        <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 30px 0 20px 0;">
-        <p style="color: #94a3b8; font-size: 0.85em; text-align: center; margin: 0;">
-            <em>※ 본 정보는 현지 사정(법령 개정, 정책 변경 등)에 따라 예고 없이 변동될 수 있으므로 방문 전 반드시 교차 검증하시기 바랍니다.</em>
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
+        <p style="color: #64748b; font-size: 0.9em; margin-top: 10px;">
+            <em>※ 본 정보는 웹 검색 데이터를 기반으로 요약되었으나, 현지 사정에 따라 예고 없이 변경될 수 있으므로 방문 전 반드시 공식 채널을 확인하시기 바랍니다.</em>
         </p>
     </div>
-    [HTML 템플릿 끝]
     """
 
 def process_tasks():
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    # 필정보용 JSON 파일 이름
     json_path = os.path.join(base_dir, 'ph_info_tasks.json')
     
     try:
         with open(json_path, 'r', encoding='utf-8') as f:
             tasks = json.load(f)
     except Exception as e:
-        print(f"JSON 로드 에러 (ph_info_tasks.json 확인 필요): {e}")
+        print(f"JSON 로드 에러: {e}")
         return
 
+    # ★ AI 자동 확장 로직 실행
+    tasks = generate_new_info_tasks_if_empty(tasks, json_path)
+
     is_updated = False
-    
-    # 각 서브 카테고리별로 1회 실행 여부를 체크하는 변수
-    attempted = {
-        "visa": False,
-        "edu": False,
-        "law": False,
-        "medical": False,
-        "comm": False
-    }
+    attempted_count = 0
 
     for task in tasks:
         if task.get('status') == 'completed':
             continue
 
-        cat_sub = task['category_sub']
-        
-        # 딕셔너리에 정의된 서브 카테고리인지 확인 후, 이미 실행했다면 패스
-        if cat_sub in attempted:
-            if attempted[cat_sub]:
-                continue
-            attempted[cat_sub] = True
-        else:
-            # 알 수 없는 카테고리면 패스
-            continue
-
         target = task['target_name']
-        print(f"⏳ [필정보 - {cat_sub}] {target} 정보 생성 시작...")
+        print(f"\n⏳ [{target}] 팩트 수집 및 생성 시작...")
         
-        prompt = get_prompt_for_target(task)
-        if not prompt:
-            continue
+        # 1. 구글 검색으로 최신 데이터 가져오기
+        search_query = f"필리핀 {target} 최신 요금 서류 시간"
+        search_context = search_google(search_query)
+        
+        # 2. 검색 데이터를 포함하여 프롬프트 생성
+        prompt = get_prompt_for_target(task, search_context)
 
         try:
-            content = generate_text(prompt=prompt, temperature=0.3, system_prompt=SYSTEM_PROMPT)
+            # 3. AI에게 팩트 요약 작성 지시
+            content = generate_text(prompt=prompt, temperature=0.2, system_prompt=SYSTEM_PROMPT)
             
             if content.startswith("❌"):
                 print(f"❌ AI 생성 실패: {content}")
                 continue
                 
-            # 코드 블록 잔해 제거
             content = content.replace("```html", "").replace("```", "").strip()
-            
-            # 게시글 제목
             title = f"[{task['region']}] {target} - 실무 및 이용 가이드"
             
             post_data = {
                 "title": title,
                 "content": content,
-                "category_main": "info", # 필정보 (강제 지정)
-                "category_sub": cat_sub,
+                "category_main": task['category_main'],
+                "category_sub": task['category_sub'],
                 "author_id": AUTHOR_ID,
                 "is_hidden": False,
                 "format": "html"
@@ -169,14 +212,15 @@ def process_tasks():
             
             task['status'] = 'completed'
             is_updated = True
+            attempted_count += 1
             time.sleep(5)
             
         except Exception as e:
             print(f"❌ [{target}] 처리 중 에러 발생: {e}")
 
-        # 모든 카테고리를 한 번씩 시도했다면 루프 종료
-        if all(attempted.values()):
-            print("🎯 필정보 모든 카테고리 1회 시도 완료! 루프 종료.")
+        # 1회 실행 시 2개씩만 작성하도록 제한 (API 보호 및 트래픽 분산)
+        if attempted_count >= 2:
+            print("🎯 1회 목표량(2건) 작성 완료. 루프 종료.")
             break
 
     if is_updated:
