@@ -101,7 +101,7 @@ def run_newsbot_kr():
         now = datetime.now(timezone.utc)
         inserted_count = 0 
         
-        politics_blacklist = ['국회', '여당', '야당', '더불어민주당', '국민의힘', '국회의원']
+        politics_blacklist = ['국회', '여당', '야당', '더불어민주당', '청와대', '국민의힘', '국회의원']
         
         for item in data['items']:
             pub_date = parsedate_to_datetime(item['pubDate']) 
