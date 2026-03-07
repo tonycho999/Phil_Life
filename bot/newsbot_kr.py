@@ -91,7 +91,7 @@ def run_newsbot_kr():
     headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
     
     # ★ 1차 방어: 네이버 검색어에 강력한 마이너스(-) 키워드 추가
-    search_query = "필리핀 -국회 -여당 -야당 -민주당 -국힘 -총선 -공천"
+    search_query = "필리핀"
     params = {"query": search_query, "display": 20, "sort": "date"} 
 
     response = requests.get(url, headers=headers, params=params)
