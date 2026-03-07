@@ -24,18 +24,20 @@ def clean_html(raw_html):
 
 def scrape_article(url):
     try:
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
         res = requests.get(url, headers=headers, timeout=10)
         res.encoding = 'utf-8'
         soup = BeautifulSoup(res.text, 'html.parser')
         
-        # ★ 네이버 일반 뉴스, 연예, 스포츠 등 본문 영역 ID를 꼼꼼하게 전부 타겟팅
-        content_area = soup.select_one('#dic_area, #newsct_article, #artc_body, #newsEndContents, [itemprop="articleBody"]')
+        # ★ 수정됨: 네이버 뉴스 외 일반 언론사 본문 패턴(article, .article_body 등) 추가 반영
+        content_area = soup.select_one('#dic_area, #newsct_article, #artc_body, #newsEndContents, [itemprop="articleBody"], .article_body, article, #articleBodyContents')
         
         if content_area:
+            # 불필요한 태그(스크립트, 스타일, 광고 등) 제거 시도
+            for s in content_area(['script', 'style', 'iframe', 'button']):
+                s.decompose()
             raw_text = content_area.get_text(separator='\n', strip=True)
         else:
-            # ★ 핵심 수정: 진짜 본문 상자를 못 찾으면, 엉뚱한 거 긁지 말고 깔끔하게 포기!
             return ""
 
         lines = raw_text.split('\n')
@@ -63,13 +65,13 @@ def get_bot_uuid(nickname):
     except:
         return None
 
-# ★ 중복 기준 35%로 대폭 하향! 조금만 겹쳐도 차단
+# ★ 수정됨: 중복 기준을 0.35에서 0.6으로 완화 (너무 낮으면 다른 뉴스도 다 차단됨)
 def is_similar(new_title, existing_titles):
     for title in existing_titles:
         similarity = difflib.SequenceMatcher(None, new_title, title).ratio()
-        if similarity > 0.35: 
+        if similarity > 0.5: 
             return True
-        if new_title in title or title in new_title:
+        if new_title == title:
             return True
     return False
 
@@ -88,7 +90,7 @@ def run_newsbot_kr():
     url = "https://openapi.naver.com/v1/search/news.json"
     headers = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
     
-    # ★ 1차 방어: 네이버 검색어에 강력한 마이너스(-) 키워드 추가 (정치, 선거 등 원천 차단)
+    # ★ 1차 방어: 네이버 검색어에 강력한 마이너스(-) 키워드 추가
     search_query = "필리핀 -국회 -여당 -야당 -민주당 -국힘 -총선 -공천"
     params = {"query": search_query, "display": 20, "sort": "date"} 
 
@@ -99,7 +101,6 @@ def run_newsbot_kr():
         now = datetime.now(timezone.utc)
         inserted_count = 0 
         
-        # ★ 2차 방어: 파이썬 단에서 혹시라도 뚫고 들어온 정치 단어(제목+본문) 컷트용 블랙리스트
         politics_blacklist = ['국회', '여당', '야당', '더불어민주당', '국민의힘', '국회의원']
         
         for item in data['items']:
@@ -108,7 +109,6 @@ def run_newsbot_kr():
             if now - pub_date <= timedelta(hours=12):
                 title = clean_html(item['title'])
                 
-                # ★ 2차 방어 실행: 제목에 정치 단어가 있으면 즉시 버림
                 if any(bad_word in title for bad_word in politics_blacklist):
                     print(f"🛑 [정치 스킵] 제목 필터링: {title}")
                     continue
@@ -120,13 +120,13 @@ def run_newsbot_kr():
                 link = item['link']
                 full_text = scrape_article(link)
                 
-                # ★ 2차 방어 실행: 본문 스크래핑 후에도 내용에 정치 단어가 있으면 즉시 버림
                 if any(bad_word in full_text for bad_word in politics_blacklist):
                     print(f"🛑 [정치 스킵] 본문 필터링: {title}")
                     continue
                 
                 text_only = full_text.replace("<br>", "").replace(" ", "")
-                if not full_text or len(text_only) < 150: 
+                # ★ 수정됨: 본문 파싱 범위를 넓혔으므로 글자수 제한을 100자로 살짝 조정 (안전성)
+                if not full_text or len(text_only) < 100: 
                     print(f"⏩ [스킵] 내용 부족(또는 파싱 불가): {title}")
                     continue 
                 
