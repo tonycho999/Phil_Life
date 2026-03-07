@@ -82,5 +82,40 @@
     "category_main": "info",
     "category_sub": "comm",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 ACR I-Card 발급 및 외국인 연례 보고 (Annual Report)",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 SSP(Special Study Permit) 및 정규 학교 입학 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 건강보험 PhilHealth 가입 및 주요 사립 병원 이용 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 SIM 카드 의무 등록 및 가정용 광인터넷(Fiber) 설치",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "주필리핀 대한민국 대사관 재외국민 등록 및 영사 확인 업무",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
