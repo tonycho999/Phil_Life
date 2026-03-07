@@ -29,12 +29,12 @@ def scrape_article(url):
         res.encoding = 'utf-8'
         soup = BeautifulSoup(res.text, 'html.parser')
         
-        # ★ 수정됨: 네이버 뉴스 외 일반 언론사 본문 패턴(article, .article_body 등) 추가 반영
-        content_area = soup.select_one('#dic_area, #newsct_article, #artc_body, #newsEndContents, [itemprop="articleBody"], .article_body, article, #articleBodyContents')
+        # ★ 수정됨: 일반 언론사 사이트에서도 본문을 찾을 수 있도록 타겟 태그 확장 (#articleBodyContents, .news_view 등 추가)
+        content_area = soup.select_one('#dic_area, #newsct_article, #artc_body, #newsEndContents, [itemprop="articleBody"], .article_body, article, #articleBodyContents, .news_view, .article_view')
         
         if content_area:
-            # 불필요한 태그(스크립트, 스타일, 광고 등) 제거 시도
-            for s in content_area(['script', 'style', 'iframe', 'button']):
+            # 불필요한 태그 제거
+            for s in content_area(['script', 'style', 'iframe', 'button', 'header', 'footer']):
                 s.decompose()
             raw_text = content_area.get_text(separator='\n', strip=True)
         else:
@@ -65,11 +65,11 @@ def get_bot_uuid(nickname):
     except:
         return None
 
-# ★ 수정됨: 중복 기준을 0.35에서 0.6으로 완화 (너무 낮으면 다른 뉴스도 다 차단됨)
+# ★ 수정됨: 중복 기준을 0.5에서 0.65로 상향 (0.5는 너무 많은 일반 뉴스를 차단함)
 def is_similar(new_title, existing_titles):
     for title in existing_titles:
         similarity = difflib.SequenceMatcher(None, new_title, title).ratio()
-        if similarity > 0.5: 
+        if similarity > 0.65: 
             return True
         if new_title == title:
             return True
@@ -125,8 +125,8 @@ def run_newsbot_kr():
                     continue
                 
                 text_only = full_text.replace("<br>", "").replace(" ", "")
-                # ★ 수정됨: 본문 파싱 범위를 넓혔으므로 글자수 제한을 100자로 살짝 조정 (안전성)
-                if not full_text or len(text_only) < 100: 
+                # ★ 수정됨: 본문 파싱 범위를 넓혔으므로 글자수 제한을 80자로 조정 (내용 확보 유연성)
+                if not full_text or len(text_only) < 80: 
                     print(f"⏩ [스킵] 내용 부족(또는 파싱 불가): {title}")
                     continue 
                 
