@@ -34,7 +34,7 @@ export default async function PostDetailPage({ params }: { params: any }) {
   const postId = resolvedParams.id;
 
   // ★ 수정됨: 서버 컴포넌트 환경에서 쿠키(로그인 정보)를 읽을 수 있도록 변경
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
