@@ -56,7 +56,7 @@ def get_prompt_for_target(task):
             <p style="font-size: 1.1em; color: #0f172a; margin: 0; font-weight: bold;">
                 <span style="color: #4f46e5;">{target}</span>에 대한 핵심 실무 정보를 정리해 드립니다.
             </p>
-            <p style="font-size: 0.9em; color: #64748b; margin: 8px 0 0 0;">📍 지역: {region} | 🗂️ 분야: {cat_sub.upper()}</p>
+            <p style="font-size: 0.9em; color: #64748b; margin: 8px 0 0 0;">📍 지역: {region} </p>
         </div>
 
         <h3 style="font-size: 1.15em; font-weight: 700; color: #1e1b4b; margin: 30px 0 15px 0; border-left: 4px solid #4f46e5; padding-left: 12px;">
