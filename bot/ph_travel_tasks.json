@@ -96,33 +96,5 @@
     "category_main": "travel",
     "category_sub": "hotel",
     "status": "completed"
-  },
-  {
-    "target_name": "세부 컨트리 클럽 (Cebu Country Club)",
-    "region": "세부",
-    "category_main": "travel",
-    "category_sub": "golf",
-    "status": "pending"
-  },
-  {
-    "target_name": "더 페닌슐라 마닐라 (The Peninsula Manila)",
-    "region": "마닐라 마카티",
-    "category_main": "travel",
-    "category_sub": "hotel",
-    "status": "pending"
-  },
-  {
-    "target_name": "깐루방 골프 & 컨트리 클럽 (Canlubang Golf & Country Club)",
-    "region": "라구나",
-    "category_main": "travel",
-    "category_sub": "golf",
-    "status": "pending"
-  },
-  {
-    "target_name": "시티 오브 드림즈 마닐라 - 누와 (Nüwa at City of Dreams)",
-    "region": "마닐라 파라냐케",
-    "category_main": "travel",
-    "category_sub": "hotel",
-    "status": "pending"
   }
 ]
