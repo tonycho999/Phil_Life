@@ -60,14 +60,14 @@
     "region": "딸락",
     "category_main": "travel",
     "category_sub": "golf",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "샹그릴라 막탄 세부 (Shangri-La Mactan)",
     "region": "세부 막탄",
     "category_main": "travel",
     "category_sub": "hotel",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "스플랜디도 딸 골프 클럽 (Splendido Taal Golf Club)",
