@@ -29,6 +29,12 @@ def scrape_article(url):
         res.encoding = 'utf-8'
         soup = BeautifulSoup(res.text, 'html.parser')
         
+        # ★ 추가됨: 기사 대표 이미지(og:image) 추출
+        image_url = ""
+        og_image = soup.find('meta', property='og:image')
+        if og_image and og_image.get('content'):
+            image_url = og_image['content']
+        
         # ★ 수정됨: 일반 언론사 사이트에서도 본문을 찾을 수 있도록 타겟 태그 확장 (#articleBodyContents, .news_view 등 추가)
         content_area = soup.select_one('#dic_area, #newsct_article, #artc_body, #newsEndContents, [itemprop="articleBody"], .article_body, article, #articleBodyContents, .news_view, .article_view')
         
@@ -38,7 +44,7 @@ def scrape_article(url):
                 s.decompose()
             raw_text = content_area.get_text(separator='\n', strip=True)
         else:
-            return ""
+            return "", "" # ★ 수정됨: 이미지도 함께 반환해야 하므로 빈 튜플 반환
 
         lines = raw_text.split('\n')
         blacklist = ['구독되었습니다', 'Copyright', '무단 전재', '재배포 금지', '이동 통신망을 이용하여', '기자의 다른 기사', '섹션 정보', '만나보세요']
@@ -50,9 +56,9 @@ def scrape_article(url):
             if any(bad in line for bad in blacklist): continue 
             clean_lines.append(line)
             
-        return "<br><br>".join(clean_lines)
+        return "<br><br>".join(clean_lines), image_url # ★ 수정됨: 텍스트와 이미지 URL을 함께 반환
     except:
-        return ""
+        return "", "" # ★ 수정됨: 예외 시 빈 튜플 반환
 
 def get_bot_uuid(nickname):
     filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bot_profiles.json")
@@ -118,7 +124,7 @@ def run_newsbot_kr():
                     continue
 
                 link = item['link']
-                full_text = scrape_article(link)
+                full_text, image_url = scrape_article(link) # ★ 수정됨: 텍스트와 이미지를 각각 받아옴
                 
                 if any(bad_word in full_text for bad_word in politics_blacklist):
                     print(f"🛑 [정치 스킵] 본문 필터링: {title}")
@@ -130,7 +136,12 @@ def run_newsbot_kr():
                     print(f"⏩ [스킵] 내용 부족(또는 파싱 불가): {title}")
                     continue 
                 
-                content = f"<div class='news-body' style='line-height: 1.8; color: #374151;'>{full_text}</div><br><br><p><a href='{link}' target='_blank' style='color: #2563eb; font-weight: bold;'>📰 언론사 원문 보기</a></p>"
+                # ★ 추가됨: 이미지가 존재하면 본문 맨 위에 img 태그 삽입
+                content = ""
+                if image_url:
+                    content += f"<img src='{image_url}' alt='news image' style='max-width: 100%; border-radius: 8px; margin-bottom: 15px;'/><br>"
+                
+                content += f"<div class='news-body' style='line-height: 1.8; color: #374151;'>{full_text}</div><br><br><p><a href='{link}' target='_blank' style='color: #2563eb; font-weight: bold;'>📰 언론사 원문 보기</a></p>"
 
                 insert_post(bot_uuid, "news", "local", title, content)
                 print(f"✅ 기사 등록 완료: {title}")
