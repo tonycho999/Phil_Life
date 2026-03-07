@@ -96,5 +96,33 @@
     "category_main": "travel",
     "category_sub": "hotel",
     "status": "completed"
+  },
+  {
+    "target_name": "프라데라 베르데 골프 & 컨트리 클럽 (Pradera Verde Golf & Country Club)",
+    "region": "팜팡가",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "나이 팔라드 하이드어웨이 (Nay Palad Hideaway)",
+    "region": "시아르가오",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "이슬라스 데 기간테스 (Islas de Gigantes)",
+    "region": "일로일로",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "아포 리프 자연공원 (Apo Reef Natural Park)",
+    "region": "옥시덴탈 민도로",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
