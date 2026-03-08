@@ -126,7 +126,8 @@ def run_community_bot():
             # 타겟 게시글 찾기: 최근 3일 이내, 봇(운영자+유저 전체)이 작성한 글
             three_days_ago = (now - timedelta(days=3)).isoformat()
             try:
-                recent_posts_res = supabase.table("posts").select("id, author_id, category_main, title, content").gte("created_at", three_days_ago).execute()
+                # ★ 수정됨: view_count 컬럼 조회 추가
+                recent_posts_res = supabase.table("posts").select("id, author_id, category_main, title, content, view_count").gte("created_at", three_days_ago).execute()
                 # 봇이 쓴 글만 필터링 (진짜 유저 글 철저히 배제)
                 target_posts = [p for p in recent_posts_res.data if p['author_id'] in all_bot_ids]
                 
@@ -138,11 +139,20 @@ def run_community_bot():
                     
                     # 게시판 성격에 따른 프롬프트 분기
                     if target['category_main'] in ['news', 'info', 'travel']:
-                        # 정보/뉴스 게시판: 짧은 감사 인사
+                        # ★ 수정됨: 정보/뉴스 게시판에 맞춰 맥락을 파악하고 상황에 맞는 짧은 리액션
                         prompt = f"""
-                        너는 {bot['age']}세 {bot['job']}이야. 누군가 유용한 정보글(제목: {target['title']})을 올렸어.
-                        이 본문에 대해 "좋은 정보 감사합니다", "퍼가요", "유용하네요" 같은 짧은 1문장짜리 감사 댓글을 남겨. 
-                        문장 부호나 이모티콘을 살짝 섞어서 사람처럼 써. 다른 말은 절대 하지 마.
+                        너는 필리핀에 거주하는 {bot['age']}세 {bot['job']}이야. 
+                        아래 기사/정보글을 읽고, 그 '분위기'에 맞는 자연스러운 리액션 댓글을 딱 1문장(짧게) 작성해.
+
+                        - 만약 스포츠 경기 결과라면: 응원, 환호, 아쉬움 (예: 와 대박이네요!, 한국팀 화이팅!)
+                        - 만약 사건/사고/재난/날씨라면: 걱정, 안타까움, 주의 당부 (예: 아이고 다치신 분 없기를 ㅠㅠ, 다들 조심하세요)
+                        - 만약 유용한 생활/비자/여행 정보라면: 감사, 스크랩 (예: 오 꿀팁 감사합니다!, 좋은 정보 퍼가요~)
+                        - 정치나 일반 사회 뉴스라면: 짧은 감상평 (예: 세상이 참 각박하네요, 앞으로 더 좋아지길 바랍니다)
+
+                        [원문 제목]: {target['title']}
+                        [원문 내용]: {target['content'][:300]}
+                        
+                        절대 AI 티 내지 말고 친근하고 자연스러운 인터넷 말투를 써. 다른 인사말 없이 딱 댓글 내용만 출력해.
                         """
                     else:
                         # 자유게시판: 페르소나 기반 티키타카
@@ -165,9 +175,14 @@ def run_community_bot():
                         "content": comment_text
                     }
                     supabase.table("comments").insert(comment_insert).execute()
-                    print(f"✅ 댓글 작성 완료: {comment_text}")
+                    
+                    # ★ 추가됨: 댓글을 달았으니 해당 게시글의 조회수(view_count)도 1 올려줍니다.
+                    current_views = target.get('view_count') or 0
+                    supabase.table("posts").update({"view_count": current_views + 1}).eq("id", target['id']).execute()
+                    
+                    print(f"✅ 댓글 작성 및 조회수 증가 완료: {comment_text}")
             except Exception as e:
-                print(f"❌ 댓글 작성 에러: {e}")
+                print(f"❌ 댓글 작성/조회수 업데이트 에러: {e}")
 
     print("🏁 이번 시간 소통 봇 활동 종료.")
 
