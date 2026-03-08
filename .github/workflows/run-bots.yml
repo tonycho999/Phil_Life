@@ -41,6 +41,8 @@ jobs:
           # ★ 구글 검색 API 키
           GOOGLE_SEARCH_API_KEY: ${{ secrets.GOOGLE_SEARCH_API_KEY }}
           GOOGLE_SEARCH_CX: ${{ secrets.GOOGLE_SEARCH_CX }}
+          # ★ 추가됨: 프록시 우회를 위한 URL
+          PROXY_URL: ${{ secrets.PROXY_URL }}
         run: |
           python bot/main.py
           python bot/embassy_bot.py
