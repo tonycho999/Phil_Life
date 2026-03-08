@@ -74,6 +74,7 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
             // ★ 작성자 레벨 뱃지 가져오기
             const userLevel = post.profiles?.level ?? 1;
             const badge = getLevelBadgeInfo(userLevel);
+            const commentCount = post.comments?.[0]?.count || post.comment_count || 0;
 
             return (
               <Link
@@ -102,6 +103,12 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
                     [{subLabel}]
                   </span>
                   {post.title}
+                  {/* ★ 추가됨: 댓글이 1개 이상일 때만 빨간색으로 표시 */}
+                  {commentCount > 0 && (
+                    <span className="text-red-500 text-xs font-bold font-mono ml-1">
+                      [{commentCount}]
+                    </span>
+                  )}
                 </h3>
 
                 <div className="flex justify-between items-center text-xs text-gray-400">
