@@ -73,7 +73,7 @@ export default async function PostDetailPage({ params }: { params: any }) {
     .eq("category_sub", post.category_sub)
     .single();
 
-  const requiredReadLevel = boardInfo?.read_level || 1;
+  const requiredReadLevel = boardInfo?.read_level ?? 1;
 
   // 권한 미달 시 렌더링 중단 및 뒤로가기 버튼 제공
   if (myLevel < requiredReadLevel) {
