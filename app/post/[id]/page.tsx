@@ -90,9 +90,9 @@ export default async function PostDetailPage({ params }: { params: any }) {
               로그인하러 가기
             </Link>
           ) : (
-            <button onClick={() => history.back()} className="bg-gray-800 text-white px-8 py-3 rounded-lg font-bold hover:bg-gray-700 transition inline-block">
-              이전 페이지로
-            </button>
+            <Link href={`/${post.category_main}/${post.category_sub}`} className="bg-gray-800 text-white px-8 py-3 rounded-lg font-bold hover:bg-gray-700 transition inline-block">
+              목록으로 돌아가기
+            </Link>
           )}
         </div>
       </div>
