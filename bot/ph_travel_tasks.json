@@ -180,5 +180,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Pradera Verde Golf & Country Club (프라데라 베르데 골프 & 컨트리 클럽)",
+    "region": "팜팡가",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Nay Palad Hideaway (나이 팔라드 하이드어웨이)",
+    "region": "시아르가오",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Masungi Georeserve (마숭기 지오리저브)",
+    "region": "리잘",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Apo Reef Natural Park (아포 리프 자연공원)",
+    "region": "옥시덴탈 민도로",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
