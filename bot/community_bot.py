@@ -77,13 +77,23 @@ def run_community_bot():
     print(f"📊 현재 달성량: 글 {current_post_count}개 / 댓글 {current_comment_count}개")
 
     # -------------------------------------------------------------------
-    # [행동 1] 게시글 작성 로직 (자유게시판 한정)
+    # [행동 1] 게시글 작성 로직 (자유게시판 & QnA 교차 작성)
     # -------------------------------------------------------------------
     if current_post_count < TARGET_POSTS:
         # 1시간마다 실행되므로, 남은 개수에 비례해 이번 턴에 글을 쓸 확률 부여 (몰아서 쓰기 방지)
         if random.random() < 0.4: 
             bot = pick_random_bot(user_profiles, "post")
-            print(f"✍️ [글쓰기 당첨] {bot['nickname']} (나이:{bot['age']}, 직업:{bot['job']}, 지역:{bot['location']})")
+            
+            # ★ 수정됨: free(자유게시판)와 qna(질문답변) 중 랜덤 선택
+            target_sub = random.choice(["free", "qna"])
+            
+            # 카테고리에 맞춰 프롬프트 지시사항 다르게 설정
+            if target_sub == "free":
+                post_instruction = f"자유게시판에 올릴 짧은 일상 글을 작성해. {bot['location']}의 날씨나 풍경, 또는 {bot['job']}과 관련된 소소한 일상 이야기를 해."
+            else:
+                post_instruction = f"Q&A(질문답변) 게시판에 올릴 짧은 질문 글을 작성해. {bot['location']} 지역의 맛집, 여행 정보, 생활 꿀팁, 또는 {bot['job']} 관련해서 궁금한 점을 다른 유저들에게 물어봐."
+
+            print(f"✍️ [글쓰기 당첨] {bot['nickname']} -> [{target_sub}] 게시판 작성")
             
             prompt = f"""
             너는 필리핀 커뮤니티의 실제 회원이야. 아래 너의 프로필에 완벽하게 빙의해.
@@ -94,21 +104,20 @@ def run_community_bot():
             - 성향: {bot['activity_type']}
             
             [규칙]
-            1. 자유게시판에 올릴 짧은 일상 글을 작성해.
-            2. {bot['location']}의 날씨나 풍경, 또는 {bot['job']}과 관련된 소소한 일상 이야기를 해.
-            3. 절대 AI 티를 내지 말고, {bot['age']}대 나이에 맞는 자연스러운 인터넷 말투(ㅋㅋ, ㅎㅎ, ㅠㅠ 등)를 써.
-            4. JSON 형식으로만 응답해. 키 값은 "title"과 "content"야. content는 HTML 없이 순수 텍스트로 줘.
+            1. {post_instruction}
+            2. 절대 AI 티를 내지 말고, {bot['age']}대 나이에 맞는 자연스러운 인터넷 말투(ㅋㅋ, ㅎㅎ, ㅠㅠ 등)를 써.
+            3. JSON 형식으로만 응답해. 키 값은 "title"과 "content"야. content는 HTML 없이 순수 텍스트로 줘.
             """
             
             try:
                 res = model.generate_content(prompt)
                 post_data = json.loads(res.text)
                 
-                # DB 저장 (category_main은 커뮤니티/자유게시판에 맞게 수정 필요)
+                # DB 저장
                 post_insert = {
                     "author_id": bot['id'],
                     "category_main": "community", 
-                    "category_sub": "free",
+                    "category_sub": target_sub,
                     "title": post_data['title'],
                     "content": post_data['content']
                 }
@@ -118,7 +127,7 @@ def run_community_bot():
                 print(f"❌ 글 작성 에러: {e}")
 
     # -------------------------------------------------------------------
-    # [행동 2] 댓글 작성 로직 (오직 봇들이 쓴 글에만)
+    # [행동 2] 댓글 작성 로직 (조회수 +1 포함)
     # -------------------------------------------------------------------
     if current_comment_count < TARGET_COMMENTS:
         # 댓글은 1턴에 1~2개씩 달도록 함
@@ -126,8 +135,7 @@ def run_community_bot():
             # 타겟 게시글 찾기: 최근 3일 이내, 봇(운영자+유저 전체)이 작성한 글
             three_days_ago = (now - timedelta(days=3)).isoformat()
             try:
-                # ★ 수정됨: view_count 컬럼 조회 추가
-                recent_posts_res = supabase.table("posts").select("id, author_id, category_main, title, content, view_count").gte("created_at", three_days_ago).execute()
+                recent_posts_res = supabase.table("posts").select("id, author_id, category_main, category_sub, title, content, view_count").gte("created_at", three_days_ago).execute()
                 # 봇이 쓴 글만 필터링 (진짜 유저 글 철저히 배제)
                 target_posts = [p for p in recent_posts_res.data if p['author_id'] in all_bot_ids]
                 
@@ -135,11 +143,10 @@ def run_community_bot():
                     target = random.choice(target_posts)
                     bot = pick_random_bot(user_profiles, "comm")
                     
-                    print(f"💬 [댓글 당첨] {bot['nickname']} -> [{target['category_main']}] 게시글에 댓글 작성 시도")
+                    print(f"💬 [댓글 당첨] {bot['nickname']} -> [{target['category_main']}/{target['category_sub']}] 게시글에 댓글 작성 시도")
                     
                     # 게시판 성격에 따른 프롬프트 분기
                     if target['category_main'] in ['news', 'info', 'travel']:
-                        # ★ 수정됨: 정보/뉴스 게시판에 맞춰 맥락을 파악하고 상황에 맞는 짧은 리액션
                         prompt = f"""
                         너는 필리핀에 거주하는 {bot['age']}세 {bot['job']}이야. 
                         아래 기사/정보글을 읽고, 그 '분위기'에 맞는 자연스러운 리액션 댓글을 딱 1문장(짧게) 작성해.
@@ -155,11 +162,13 @@ def run_community_bot():
                         절대 AI 티 내지 말고 친근하고 자연스러운 인터넷 말투를 써. 다른 인사말 없이 딱 댓글 내용만 출력해.
                         """
                     else:
-                        # 자유게시판: 페르소나 기반 티키타카
+                        # ★ 수정됨: 커뮤니티(자유/질문답변) 게시판 대응 프롬프트
                         prompt = f"""
                         너는 {bot['location']}에 사는 {bot['age']}세 {bot['job']}이야. 성격은 {bot['mbti']}야.
                         아래 다른 유저가 쓴 글을 읽고, 너의 입장에서 1~2줄짜리 짧고 친근한 공감 댓글을 달아줘. 
-                        절대 AI 티 내지 말고 친근한 커뮤니티 유저처럼 써.
+                        
+                        만약 원문이 질문을 하는 내용이라면 아는 선에서 답변이나 조언을 해주고, 단순한 일상 글이라면 친근하게 맞장구를 쳐줘.
+                        절대 AI 티 내지 말고 사람 냄새 나는 커뮤니티 유저처럼 써.
                         
                         [원문 제목]: {target['title']}
                         [원문 내용]: {target['content'][:300]}
@@ -168,7 +177,7 @@ def run_community_bot():
                     res = text_model.generate_content(prompt)
                     comment_text = res.text.strip().replace('"', '')
                     
-                    # DB 저장 (댓글 테이블명과 컬럼 구조는 관리자님의 실제 DB에 맞춰주세요)
+                    # DB 저장 (댓글)
                     comment_insert = {
                         "post_id": target['id'],
                         "author_id": bot['id'],
@@ -176,13 +185,36 @@ def run_community_bot():
                     }
                     supabase.table("comments").insert(comment_insert).execute()
                     
-                    # ★ 추가됨: 댓글을 달았으니 해당 게시글의 조회수(view_count)도 1 올려줍니다.
+                    # 무조건 조회수(view_count) 1 추가
                     current_views = target.get('view_count') or 0
                     supabase.table("posts").update({"view_count": current_views + 1}).eq("id", target['id']).execute()
                     
-                    print(f"✅ 댓글 작성 및 조회수 증가 완료: {comment_text}")
+                    print(f"✅ 댓글 작성 및 조회수(+1) 증가 완료: {comment_text}")
             except Exception as e:
                 print(f"❌ 댓글 작성/조회수 업데이트 에러: {e}")
+
+    # -------------------------------------------------------------------
+    # [행동 3] 눈팅족 (조회수 펌핑) 로직 ★ 추가됨
+    # -------------------------------------------------------------------
+    print("👀 [눈팅족 활동] 가상 유저들의 게시글 눈팅(조회수 증가)을 시작합니다...")
+    try:
+        three_days_ago = (now - timedelta(days=3)).isoformat()
+        # 최근 3일 이내의 모든 글 (사람이 쓴 글 포함) 조회수 펌핑 대상
+        recent_all_posts_res = supabase.table("posts").select("id, title, view_count").gte("created_at", three_days_ago).execute()
+        
+        if recent_all_posts_res.data:
+            # 최대 10개의 게시글 랜덤 샘플링
+            sample_size = min(10, len(recent_all_posts_res.data))
+            lurker_targets = random.sample(recent_all_posts_res.data, sample_size)
+            
+            for t_post in lurker_targets:
+                c_views = t_post.get('view_count') or 0
+                # 눈팅족이 방문했으므로 조회수 2씩 추가
+                supabase.table("posts").update({"view_count": c_views + 2}).eq("id", t_post['id']).execute()
+                
+            print(f"✅ 눈팅족 활동 완료: 총 {sample_size}개 게시글 조회수 +2 증가 처리됨.")
+    except Exception as e:
+        print(f"❌ 눈팅족 활동 에러: {e}")
 
     print("🏁 이번 시간 소통 봇 활동 종료.")
 
