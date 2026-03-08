@@ -51,9 +51,9 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
         const seqNum = totalCount - ((currentPage - 1) * pageSize) - index;
         const dateStr = new Date(post.created_at).toLocaleDateString();
         
-        // ★ 작성자 레벨 뱃지 가져오기
         const userLevel = post.profiles?.level ?? 1;
         const badge = getLevelBadgeInfo(userLevel);
+        const commentCount = post.comments?.[0]?.count || post.comment_count || 0;
 
         return (
           <div key={post.id} className="group border-b border-gray-100 hover:bg-gray-50 transition">
@@ -85,9 +85,9 @@ export default function PostList({ posts, showSubCategory, totalCount, currentPa
                   <span className={`text-sm md:text-base ${post.is_pinned ? 'font-bold text-gray-900' : 'text-gray-800'} group-hover:text-blue-600 transition`}>
                     {post.title}
                   </span>
-                  {(post.comment_count || 0) > 0 && (
+                  {commentCount > 0 && (
                     <span className="text-red-500 text-xs font-bold font-mono ml-1">
-                      [{post.comment_count}]
+                      [{commentCount}]
                     </span>
                   )}
                   {new Date().getTime() - new Date(post.created_at).getTime() < 86400000 && (
