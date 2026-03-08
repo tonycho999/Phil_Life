@@ -1,4 +1,5 @@
 import os
+import time
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
@@ -9,14 +10,29 @@ from db import insert_post
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+# ★ 추가됨: GitHub Secrets에서 프록시 주소 불러오기
+PROXY_URL = os.getenv("PROXY_URL")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-# '필뉴스' 봇 고유 ID
 BOT_UUID = "7586917d-1c8e-46b9-80a9-1eba201d9a5f"
 
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1',
+}
+
+# ★ 프록시 세팅 준비
+PROXIES = None
+if PROXY_URL:
+    PROXIES = {
+        "http": PROXY_URL,
+        "https": PROXY_URL
+    }
+
 def get_recent_titles(prefix):
-    """DB에서 최근 작성된 제목을 가져와 중복을 방지합니다."""
     try:
         res = supabase.table("posts").select("title").eq("author_id", BOT_UUID).eq("category_sub", "notice").like("title", f"%{prefix}%").order("created_at", desc=True).limit(30).execute()
         return [item['title'] for item in res.data]
@@ -25,16 +41,15 @@ def get_recent_titles(prefix):
         return []
 
 def scrape_embassy():
-    """1. 주필리핀 대한민국 대사관 공지사항 원문 스크래핑"""
-    print("\n🏛️ [필뉴스] 주필리핀 대한민국 대사관 공지사항 확인 중...")
+    print(f"\n🏛️ [필뉴스] 주필리핀 대한민국 대사관 공지사항 확인 중... (프록시 사용: {'O' if PROXIES else 'X'})")
     recent_titles = get_recent_titles("[대사관 공지]")
     
     list_url = "https://overseas.mofa.go.kr/ph-ko/brd/m_3640/list.do"
     base_url = "https://overseas.mofa.go.kr"
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
     
     try:
-        res = requests.get(list_url, headers=headers, timeout=10)
+        # ★ 수정됨: proxies=PROXIES 를 추가하여 IPRoyal 프록시망을 통해 접속합니다.
+        res = requests.get(list_url, headers=HEADERS, proxies=PROXIES, timeout=30, verify=False)
         res.encoding = 'utf-8'
         soup = BeautifulSoup(res.text, 'html.parser')
         rows = soup.select('.board-list tbody tr, .board_list tbody tr')
@@ -52,17 +67,21 @@ def scrape_embassy():
             
             print(f"🔔 새 대사관 공지 발견: {final_title}")
             
-            c_res = requests.get(link, headers=headers, timeout=10)
+            try:
+                c_res = requests.get(link, headers=HEADERS, proxies=PROXIES, timeout=30, verify=False)
+            except Exception:
+                print("연결 지연... 3초 후 프록시 재시도합니다.")
+                time.sleep(3)
+                c_res = requests.get(link, headers=HEADERS, proxies=PROXIES, timeout=30, verify=False)
+                
             c_res.encoding = 'utf-8'
             c_soup = BeautifulSoup(c_res.text, 'html.parser')
             content_area = c_soup.select_one('.boardTxt, .cont_box, .board_view')
             
             html_content = ""
             if content_area:
-                # 사이트 깨짐 방지를 위해 스크립트 태그만 제거하고 원본 HTML 그대로 유지
                 for s in content_area(['script', 'style', 'meta', 'link']): 
                     s.decompose()
-                # 꾸밈없이 원본 태그(내용) 그대로 복사
                 html_content = content_area.decode_contents()
             
             if not html_content.strip():
@@ -71,6 +90,7 @@ def scrape_embassy():
             insert_post(BOT_UUID, "news", "notice", final_title, html_content)
             recent_titles.append(final_title)
             new_count += 1
+            time.sleep(2) # 프록시 사용 시 여유를 두기 위해 2초 대기
             
         if new_count == 0:
             print("💤 새로 올라온 대사관 공지가 없습니다.")
@@ -80,16 +100,15 @@ def scrape_embassy():
         print(f"❌ 대사관 스크래핑 에러: {e}")
 
 def scrape_hanin():
-    """2. 필리핀 한인총연합회 공지사항 원문 스크래핑"""
     print("\n🤝 [필뉴스] 필리핀 한인총연합회 소식 확인 중...")
     recent_titles = get_recent_titles("[한인회 소식]")
     
     list_url = "http://korea.com.ph/bbs/board.php?bo_table=notice"
     base_url = "http://korea.com.ph"
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
     
     try:
-        res = requests.get(list_url, headers=headers, timeout=10)
+        # 한인회도 동일하게 프록시 적용
+        res = requests.get(list_url, headers=HEADERS, proxies=PROXIES, timeout=30)
         res.encoding = 'utf-8'
         soup = BeautifulSoup(res.text, 'html.parser')
         
@@ -107,17 +126,15 @@ def scrape_hanin():
             
             print(f"🔔 새 한인회 소식 발견: {final_title}")
             
-            c_res = requests.get(link, headers=headers, timeout=10)
+            c_res = requests.get(link, headers=HEADERS, proxies=PROXIES, timeout=30)
             c_res.encoding = 'utf-8'
             c_soup = BeautifulSoup(c_res.text, 'html.parser')
             content_area = c_soup.select_one('#bo_v_con, .bo_v_con, .content')
             
             html_content = ""
             if content_area:
-                # 사이트 깨짐 방지를 위해 스크립트 태그만 제거하고 원본 HTML 그대로 유지
                 for s in content_area(['script', 'style', 'meta', 'link']): 
                     s.decompose()
-                # 꾸밈없이 원본 태그(내용) 그대로 복사
                 html_content = content_area.decode_contents()
             
             if not html_content.strip():
@@ -126,6 +143,7 @@ def scrape_hanin():
             insert_post(BOT_UUID, "news", "notice", final_title, html_content)
             recent_titles.append(final_title)
             new_count += 1
+            time.sleep(2)
             
         if new_count == 0:
             print("💤 새로 올라온 한인회 소식이 없습니다.")
@@ -135,6 +153,9 @@ def scrape_hanin():
         print(f"❌ 한인회 스크래핑 에러: {e}")
 
 def run_official_news_bot():
+    import urllib3
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    
     print("🚀 공식 교민 소식(대사관/한인회) 원문 복사를 시작합니다.")
     scrape_embassy()
     scrape_hanin()
