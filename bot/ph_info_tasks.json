@@ -117,5 +117,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "외국인 등록증 (ACR I-Card) 발급 및 비자 연장 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "학생 비자(9F) 전환 및 SSP(Special Study Permit) 발급 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필헬스(PhilHealth) 외국인 의무 가입 및 현지 병원 이용 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "SIM 카드 의무 등록법 및 가정용 광인터넷(Fiber) 설치 정보",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "주필리핀 대한민국 대사관 영사 확인 및 공증/여권 업무",
+    "region": "마닐라/세부",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
