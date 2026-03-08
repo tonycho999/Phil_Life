@@ -41,7 +41,7 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
   // profiles 테이블에서 nickname과 level을 함께 가져옵니다.
   let query = supabase
     .from("posts")
-    .select("*, profiles(nickname, level)", { count: "exact" })
+    .select("*, profiles(nickname, level), comments(count)", { count: "exact" }) // ✅ 추가!
     .eq("category_main", params.category)
     .neq("is_hidden", true)
     .order("is_pinned", { ascending: false })
