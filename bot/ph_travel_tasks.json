@@ -208,5 +208,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "프라데라 베르데 골프 & 컨트리 클럽 (Pradera Verde Golf & Country Club)",
+    "region": "팜팡가",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "모달라 비치 리조트 (Modala Beach Resort)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "마숭기 지오리저브 (Masungi Georeserve)",
+    "region": "리잘",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "안다 다이빙 포인트 (Anda Diving Point)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
