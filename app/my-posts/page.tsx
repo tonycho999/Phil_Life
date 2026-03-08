@@ -9,7 +9,8 @@ import Link from "next/link";
 import { MENUS } from "@/lib/constants";
 
 export default async function MyPostsPage() {
-  const cookieStore = cookies();
+  // ★ 수정 1: Next.js 최신 버전 에러 방지를 위해 await 추가!
+  const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -31,7 +32,8 @@ export default async function MyPostsPage() {
   // 2. 내가 쓴 글 조회 (최신순 50개)
   const { data: posts } = await supabase
     .from("posts")
-    .select("*")
+    // ★ 수정 2: 댓글 개수(comments(count))를 함께 가져옵니다.
+    .select("*, comments(count)")
     .eq("author_id", user.id)
     .order("created_at", { ascending: false })
     .limit(50);
@@ -58,31 +60,42 @@ export default async function MyPostsPage() {
             작성한 글이 없습니다.
           </div>
         ) : (
-          posts.map((post: any) => (
-            <Link 
-              key={post.id} 
-              href={`/post/${post.id}`} 
-              className="block p-4 hover:bg-gray-50 transition"
-            >
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="bg-blue-50 text-blue-600 text-[10px] px-2 py-0.5 rounded font-bold border border-blue-100">
-                  {getCategoryLabel(post.category_main, post.category_sub)}
-                </span>
-                <span className="text-xs text-gray-400">
-                  {new Date(post.created_at).toLocaleDateString()}
-                </span>
-              </div>
-              
-              <h3 className="text-md font-medium text-gray-800 mb-1.5 line-clamp-1">
-                {post.title}
-              </h3>
-              
-              <div className="flex justify-between items-center text-xs text-gray-400">
-                <span>조회 {post.view_count || 0}</span>
-                {post.is_hidden && <span className="text-red-500 font-bold">숨김 처리됨</span>}
-              </div>
-            </Link>
-          ))
+          posts.map((post: any) => {
+            // ★ 수정 3-1: 댓글 개수 안전하게 추출
+            const commentCount = post.comments?.[0]?.count || post.comment_count || 0;
+
+            return (
+              <Link 
+                key={post.id} 
+                href={`/post/${post.id}`} 
+                className="block p-4 hover:bg-gray-50 transition"
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="bg-blue-50 text-blue-600 text-[10px] px-2 py-0.5 rounded font-bold border border-blue-100">
+                    {getCategoryLabel(post.category_main, post.category_sub)}
+                  </span>
+                  <span className="text-xs text-gray-400">
+                    {new Date(post.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+                
+                {/* ★ 수정 3-2: 제목 옆에 빨간색 댓글 개수 표시 */}
+                <h3 className="text-md font-medium text-gray-800 mb-1.5 line-clamp-1">
+                  {post.title}
+                  {commentCount > 0 && (
+                    <span className="text-red-500 text-xs font-bold font-mono ml-1">
+                      [{commentCount}]
+                    </span>
+                  )}
+                </h3>
+                
+                <div className="flex justify-between items-center text-xs text-gray-400">
+                  <span>조회 {post.view_count || 0}</span>
+                  {post.is_hidden && <span className="text-red-500 font-bold">숨김 처리됨</span>}
+                </div>
+              </Link>
+            );
+          })
         )}
       </div>
     </div>
