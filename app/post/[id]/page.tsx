@@ -58,7 +58,7 @@ export default async function PostDetailPage({ params }: { params: any }) {
   // 2. 게시글 데이터 가져오기
   const { data: post, error } = await supabase
     .from("posts")
-    .select("*, profiles(nickname, grade, level)")
+    .select("*, profiles(nickname, grade, level), comments(count)")
     .eq("id", postId)
     .single();
 
