@@ -152,5 +152,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 외국인 등록증 (ACR I-Card) 발급 및 연장 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 국제학교/로컬학교 입학 및 특별 학업 허가증 (SSP) 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 의료보험 (PhilHealth) 외국인 가입 및 주요 병원 응급 체계",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 SIM 카드 의무 등록제 및 가정용 광인터넷 (PLDT/Globe) 설치",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "주필리핀 대한민국 대사관 영사 서비스 및 재외국민 등록 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
