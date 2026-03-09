@@ -1,15 +1,13 @@
 import os
 import time
-import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from dotenv import load_dotenv
 from supabase import create_client
 from db import insert_post
-import urllib3
 
-# SSL 경고 숨기기
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+# ★ 핵심: 일반 requests 대신, 크롬 지문(TLS)을 완벽하게 위장하는 curl_cffi 사용
+from curl_cffi import requests
 
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -38,19 +36,21 @@ def get_recent_titles(prefix):
         return []
 
 def fetch_with_retry(url, max_retries=3):
-    """타임아웃 발생 시 끈질기게 재시도하는 전용 함수"""
+    """크롬 위장 및 타임아웃 재시도 전용 함수"""
     for attempt in range(max_retries):
         try:
-            # 타임아웃을 60초로 넉넉하게 늘림
-            response = requests.get(url, headers=HEADERS, proxies=PROXIES, timeout=60, verify=False)
-            response.raise_for_status() # 상태 코드가 200 정상인지 확인
+            # ★ 핵심: impersonate="chrome110" 을 통해 대사관 방화벽을 완벽하게 속임
+            response = requests.get(
+                url, 
+                headers=HEADERS, 
+                proxies=PROXIES, 
+                timeout=60, 
+                impersonate="chrome110" 
+            )
             response.encoding = 'utf-8'
             return response
-        except requests.exceptions.Timeout:
-            print(f"⏳ 대사관 서버 응답 지연 (시도 {attempt + 1}/{max_retries})... 5초 후 다시 두드립니다.")
-            time.sleep(5)
         except Exception as e:
-            print(f"⚠️ 연결 오류 발생 (시도 {attempt + 1}/{max_retries})... 재시도 중.")
+            print(f"⏳ 대사관 서버 연결 지연 (시도 {attempt + 1}/{max_retries})... 5초 후 재시도.")
             time.sleep(5)
     return None
 
@@ -92,7 +92,7 @@ def scrape_embassy():
                 content_area = c_soup.select_one('.boardTxt, .cont_box, .board_view')
                 
                 if content_area:
-                    # 스크립트 등 불순물 제거 후 원본 HTML 복사
+                    # 스크립트 제거 및 원문 유지
                     for s in content_area(['script', 'style', 'meta', 'link']): 
                         s.decompose()
                     html_content = content_area.decode_contents()
@@ -104,7 +104,7 @@ def scrape_embassy():
             recent_titles.append(final_title)
             new_count += 1
             
-            # 프록시 및 서버 과부하 방지를 위해 글 하나당 3초 휴식
+            # 차단 방지를 위해 3초 대기
             time.sleep(3)
             
         if new_count == 0:
