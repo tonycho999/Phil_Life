@@ -28,7 +28,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: 🚀 메인 봇 및 대사관 공지 봇 실행
+      # ★ 수정됨: 이름 변경 및 python bot/embassy_bot.py 실행 줄 삭제
+      - name: 🚀 통합 메인 봇 자동 실행
         env:
           NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
@@ -38,14 +39,11 @@ jobs:
           GROQ_API_KEY_2: ${{ secrets.GROQ_API_KEY_2 }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-          # ★ 구글 검색 API 키
           GOOGLE_SEARCH_API_KEY: ${{ secrets.GOOGLE_SEARCH_API_KEY }}
           GOOGLE_SEARCH_CX: ${{ secrets.GOOGLE_SEARCH_CX }}
-          # ★ 추가됨: 프록시 우회를 위한 URL
           PROXY_URL: ${{ secrets.PROXY_URL }}
         run: |
           python bot/main.py
-          python bot/embassy_bot.py
 
       - name: 📝 변경된 JSON 파일 GitHub에 자동 반영
         run: |
