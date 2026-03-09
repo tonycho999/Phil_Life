@@ -19,7 +19,7 @@ GOOGLE_SEARCH_CX = os.getenv("GOOGLE_SEARCH_CX")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # 봇 계정의 UID 고정
-AUTHOR_ID = "451341d5-6bf9-4579-9eb2-4533514f17f7"
+AUTHOR_ID = "7ceb52e2-28a9-422d-b932-2f95952b771c"
 
 # 강력한 시스템 프롬프트: 마크다운 금지, 오직 HTML만
 SYSTEM_PROMPT = """
