@@ -5,3 +5,4 @@ groq
 python-dotenv
 beautifulsoup4
 google-generativeai
+curl_cffi
