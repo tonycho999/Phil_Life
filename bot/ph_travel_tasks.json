@@ -264,5 +264,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "프라데라 베르데 골프 & 컨트리 클럽 (Pradera Verde Golf & Country Club)",
+    "region": "팜팡가 (Pampanga)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "더 팜 앳 산 베니토 (The Farm at San Benito)",
+    "region": "바탕가스 (Batangas)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "마숭기 지오리저브 (Masungi Georeserve)",
+    "region": "리잘 (Rizal)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "다우인 머크 다이빙 포인트 (Dauin Muck Diving Point)",
+    "region": "두마게티 (Dumaguete)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
