@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from supabase import create_client
 from db import insert_post
 
-# ★ 핵심: 일반 requests 대신, 크롬 지문(TLS)을 완벽하게 위장하는 curl_cffi 사용
+# 크롬 브라우저 완벽 위장 라이브러리
 from curl_cffi import requests
 
 load_dotenv()
@@ -27,9 +27,9 @@ HEADERS = {
 
 PROXIES = {"http": PROXY_URL, "https": PROXY_URL} if PROXY_URL else None
 
-def get_recent_titles(prefix):
+def get_recent_titles(prefix, category_main, category_sub):
     try:
-        res = supabase.table("posts").select("title").eq("author_id", BOT_UUID).eq("category_sub", "notice").like("title", f"%{prefix}%").order("created_at", desc=True).limit(30).execute()
+        res = supabase.table("posts").select("title").eq("author_id", BOT_UUID).eq("category_main", category_main).eq("category_sub", category_sub).like("title", f"%{prefix}%").order("created_at", desc=True).limit(30).execute()
         return [item['title'] for item in res.data]
     except Exception as e:
         print(f"❌ DB 조회 에러 ({prefix}): {e}")
@@ -39,7 +39,6 @@ def fetch_with_retry(url, max_retries=3):
     """크롬 위장 및 타임아웃 재시도 전용 함수"""
     for attempt in range(max_retries):
         try:
-            # ★ 핵심: impersonate="chrome110" 을 통해 대사관 방화벽을 완벽하게 속임
             response = requests.get(
                 url, 
                 headers=HEADERS, 
@@ -50,69 +49,134 @@ def fetch_with_retry(url, max_retries=3):
             response.encoding = 'utf-8'
             return response
         except Exception as e:
-            print(f"⏳ 대사관 서버 연결 지연 (시도 {attempt + 1}/{max_retries})... 5초 후 재시도.")
+            print(f"⏳ 서버 연결 지연 (시도 {attempt + 1}/{max_retries})... 5초 후 재시도.")
             time.sleep(5)
     return None
 
+def extract_and_insert(recent_titles, base_url, rows, prefix, category_main, category_sub, content_selector):
+    """중복되는 파싱 및 DB 저장 로직을 하나로 묶은 함수"""
+    new_count = 0
+    for row in rows:
+        # a 태그 찾기 (제목 및 링크)
+        title_tag = row.find('a')
+        if not title_tag: continue
+        
+        raw_title = title_tag.get_text(strip=True)
+        if not raw_title: continue
+            
+        link = urljoin(base_url, title_tag['href'])
+        final_title = f"{prefix} {raw_title}"
+        
+        if final_title in recent_titles: continue
+        
+        print(f"🔔 새 게시물 발견: {final_title}")
+        
+        # 본문 가져오기
+        c_res = fetch_with_retry(link)
+        html_content = ""
+        
+        if c_res:
+            c_soup = BeautifulSoup(c_res.text, 'html.parser')
+            content_area = c_soup.select_one(content_selector)
+            
+            if content_area:
+                for s in content_area(['script', 'style', 'meta', 'link']): 
+                    s.decompose()
+                html_content = content_area.decode_contents()
+        
+        if not html_content or not html_content.strip():
+            html_content = f"본문 내용을 불러올 수 없습니다. 원문 링크: <a href='{link}' target='_blank'>{link}</a>"
+            
+        insert_post(BOT_UUID, category_main, category_sub, final_title, html_content)
+        recent_titles.append(final_title)
+        new_count += 1
+        time.sleep(3) # 서버 차단 방지용 대기
+        
+    return new_count
+
+# 1. 🏛️ 대사관 공지사항
 def scrape_embassy():
-    print(f"\n🏛️ [필뉴스] 주필리핀 대한민국 대사관 공지사항 확인 중... (프록시: {'O' if PROXIES else 'X'})")
-    recent_titles = get_recent_titles("[대사관 공지]")
+    print(f"\n🏛️ [대사관] 주필리핀 대한민국 대사관 공지사항 확인 중...")
+    prefix = "[대사관 공지]"
+    recent_titles = get_recent_titles(prefix, "news", "notice")
     
     list_url = "https://overseas.mofa.go.kr/ph-ko/brd/m_3640/list.do"
     base_url = "https://overseas.mofa.go.kr"
     
     res = fetch_with_retry(list_url)
-    if not res:
-        print("❌ 대사관 목록 페이지 접속에 최종 실패했습니다. 나중에 다시 시도합니다.")
-        return
+    if not res: return
+    
+    soup = BeautifulSoup(res.text, 'html.parser')
+    rows = soup.select('.board-list tbody tr td.title, .board_list tbody tr td.tit')
+    
+    count = extract_and_insert(recent_titles, base_url, rows, prefix, "news", "notice", '.boardTxt, .cont_box, .board_view')
+    print(f"🎉 대사관 공지 {count}개 복사 완료!" if count else "💤 새 대사관 공지 없음.")
 
-    try:
-        soup = BeautifulSoup(res.text, 'html.parser')
-        rows = soup.select('.board-list tbody tr, .board_list tbody tr')
-        
-        new_count = 0
-        for row in rows:
-            title_tag = row.select_one('td.title a, td.tit a')
-            if not title_tag: continue
-            
-            raw_title = title_tag.get_text(strip=True)
-            link = urljoin(base_url, title_tag['href'])
-            final_title = f"[대사관 공지] {raw_title}"
-            
-            if final_title in recent_titles: continue
-            
-            print(f"🔔 새 대사관 공지 발견: {final_title}")
-            
-            # 본문 가져오기
-            c_res = fetch_with_retry(link)
-            html_content = ""
-            
-            if c_res:
-                c_soup = BeautifulSoup(c_res.text, 'html.parser')
-                content_area = c_soup.select_one('.boardTxt, .cont_box, .board_view')
-                
-                if content_area:
-                    # 스크립트 제거 및 원문 유지
-                    for s in content_area(['script', 'style', 'meta', 'link']): 
-                        s.decompose()
-                    html_content = content_area.decode_contents()
-            
-            if not html_content or not html_content.strip():
-                html_content = f"본문 내용을 불러올 수 없습니다. 원문 링크: <a href='{link}' target='_blank'>{link}</a>"
-                
-            insert_post(BOT_UUID, "news", "notice", final_title, html_content)
-            recent_titles.append(final_title)
-            new_count += 1
-            
-            # 차단 방지를 위해 3초 대기
-            time.sleep(3)
-            
-        if new_count == 0:
-            print("💤 새로 올라온 대사관 공지가 없습니다.")
-        else:
-            print(f"🎉 대사관 공지 {new_count}개 복사 완료!")
-    except Exception as e:
-        print(f"❌ 대사관 데이터 파싱 에러: {e}")
+# 2. 🎭 한국문화원(KCC) 공지사항
+def scrape_kcc():
+    print(f"\n🎭 [문화원] 주필리핀 한국문화원(KCC) 소식 확인 중...")
+    prefix = "[한국문화원]"
+    # 문화/행사 소식이므로 적합한 카테고리 지정 (예: info/edu 또는 news/notice)
+    recent_titles = get_recent_titles(prefix, "news", "notice")
+    
+    list_url = "https://phil.korean-culture.org/ko/1065/board/428/list"
+    base_url = "https://phil.korean-culture.org"
+    
+    res = fetch_with_retry(list_url)
+    if not res: return
+    
+    soup = BeautifulSoup(res.text, 'html.parser')
+    rows = soup.select('table.board_list tbody tr td.title')
+    
+    count = extract_and_insert(recent_titles, base_url, rows, prefix, "news", "notice", '.board_view, .txt_area, #print_area')
+    print(f"🎉 한국문화원 소식 {count}개 복사 완료!" if count else "💤 새 한국문화원 소식 없음.")
+
+# 3. 💼 KOTRA 마닐라 무역관 뉴스
+def scrape_kotra():
+    print(f"\n💼 [KOTRA] 필리핀 경제/무역 동향 확인 중...")
+    prefix = "[경제 동향]"
+    recent_titles = get_recent_titles(prefix, "info", "tip") # 정보 게시판으로 매핑
+    
+    # KOTRA 해외시장뉴스 필리핀 게시판 URL
+    list_url = "https://dream.kotra.or.kr/kotranews/cms/biz/news/1/actionKotraBoardList.do?MENU_CD=F0138&p_nsCd=254"
+    base_url = "https://dream.kotra.or.kr"
+    
+    res = fetch_with_retry(list_url)
+    if not res: return
+    
+    soup = BeautifulSoup(res.text, 'html.parser')
+    rows = soup.select('.board_list tbody tr td.al')
+    
+    count = extract_and_insert(recent_titles, base_url, rows, prefix, "info", "tip", '.cont, .board_view_cont')
+    print(f"🎉 KOTRA 경제 뉴스 {count}개 복사 완료!" if count else "💤 새 KOTRA 뉴스 없음.")
+
+# 4. ✈️ 항공사 특가 프로모션 (필리핀항공 베이스)
+def scrape_airlines():
+    print(f"\n✈️ [항공권] 특가 및 프로모션 소식 확인 중...")
+    prefix = "[특가 프로모션]"
+    recent_titles = get_recent_titles(prefix, "travel", "review") # 여행 카테고리로 매핑 (게시판 이름에 맞게 수정 필요)
+    
+    # 필리핀항공 프로모션 게시판 예시 (항공사는 사이트 개편이 잦아 클래스명이 변동될 수 있습니다)
+    list_url = "https://www.philippineairlines.com/en/promotions"
+    base_url = "https://www.philippineairlines.com"
+    
+    res = fetch_with_retry(list_url)
+    if not res: return
+    
+    soup = BeautifulSoup(res.text, 'html.parser')
+    # 보통 항공사 프로모션은 카드 형태의 리스트업입니다.
+    rows = soup.select('.promo-card, .promo-item, h3.title')
+    
+    count = extract_and_insert(recent_titles, base_url, rows, prefix, "travel", "review", '.promo-details, .content, .main-content')
+    print(f"🎉 프로모션 소식 {count}개 복사 완료!" if count else "💤 새 특가 프로모션 없음.")
+
+def run_official_news_bot():
+    print("🚀 다채널 교민 소식 통합 봇 업데이트를 시작합니다.")
+    scrape_embassy()
+    scrape_kcc()
+    scrape_kotra()
+    scrape_airlines()
+    print("\n🏁 모든 수집 활동을 마쳤습니다.")
 
 if __name__ == "__main__":
-    scrape_embassy()
+    run_official_news_bot()
