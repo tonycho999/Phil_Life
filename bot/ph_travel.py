@@ -67,20 +67,28 @@ def generate_new_tasks_if_empty(tasks, json_path):
         
     print("\n🔄 [시스템 알림] 모든 타겟 작성이 완료되었습니다! AI가 새로운 필리핀 여행지를 발굴합니다...")
     
-    auto_prompt = """
+    # ★ 방어선 1: 이미 다뤘던 장소들의 이름을 뽑아서 AI에게 알려주고 금지시킵니다.
+    existing_targets = [t.get('target_name') for t in tasks]
+    existing_str = ", ".join(existing_targets)
+    
+    auto_prompt = f"""
     당신은 필리핀 현지 여행 전문가입니다.
     기존에 잘 알려진 대형 리조트나 명소 외에도, 사람들이 좋아할 만한 필리핀의 새로운 타겟 4곳을 추천해주세요.
     (골프장 1곳, 호텔/리조트 1곳, 관광지 1곳, 다이빙 포인트 1곳)
     
+    [매우 중요한 규칙]
+    아래 목록에 있는 장소들은 이미 글을 작성했으므로 **절대로 다시 추천하지 말고 완전히 새로운 곳을 찾아주세요.**
+    제외할 장소 목록: {existing_str}
+    
     반드시 아래의 순수 JSON 배열 형식으로만 대답하세요.
     [
-      {
+      {{
         "target_name": "새로운 장소 이름 (영문명 포함)",
         "region": "지역명 (예: 세부, 보홀, 팔라완, 바탕가스 등)",
         "category_main": "travel",
         "category_sub": "golf",
         "status": "pending"
-      },
+      }},
       ... (hotel, attraction, diving 도 동일한 형식으로 총 4개 작성)
     ]
     """
@@ -94,7 +102,7 @@ def generate_new_tasks_if_empty(tasks, json_path):
             tasks.extend(new_tasks)
             with open(json_path, 'w', encoding='utf-8') as f:
                 json.dump(tasks, f, ensure_ascii=False, indent=2)
-            print(f"✨ 성공! AI가 {len(new_tasks)}개의 새로운 타겟을 JSON 파일에 추가했습니다!\n")
+            print(f"✨ 성공! AI가 중복되지 않은 {len(new_tasks)}개의 새로운 타겟을 추가했습니다!\n")
             return tasks
     except Exception as e:
         print(f"❌ AI 새로운 리스트 자동 생성 실패: {e}")
@@ -106,7 +114,6 @@ def get_prompt_for_target(task, search_context):
     region = task['region']
     cat_sub = task['category_sub']
     
-    # 공통 검색 결과 주입 텍스트
     context_text = f"""
     [구글 최신 검색 결과 (참고용)]
     {search_context}
@@ -387,6 +394,17 @@ def process_tasks():
         target = task['target_name']
         print(f"\n⏳ [{target}] 정보 및 최신 팩트 수집 시작...")
         
+        # ★ 방어선 2: DB 중복 게시물 사전 검사 (글쓰기 전에 DB를 뒤져서 중복을 원천 차단합니다!)
+        try:
+            res = supabase.table('posts').select('id').eq('category_sub', cat_sub).like('title', f"%{target}%").limit(1).execute()
+            if len(res.data) > 0:
+                print(f"⚠️ 이미 DB에 [{target}] 포스팅이 존재합니다! 구글 검색 및 작성을 건너뜁니다.")
+                task['status'] = 'completed'  # 더 이상 이 타겟을 쳐다보지 않도록 완료 처리
+                is_updated = True
+                continue
+        except Exception as e:
+            print(f"DB 중복 검사 중 에러: {e}")
+
         # 1. 작성 전 구글 검색 실행 (요금/규정 확인)
         search_query = f"필리핀 {target} 가격 요금 후기"
         search_context = search_google(search_query)
