@@ -19,14 +19,7 @@ PROXY_URL = os.getenv("PROXY_URL")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 BOT_UUID = "7586917d-1c8e-46b9-80a9-1eba201d9a5f"
 
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-    'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-    'Connection': 'keep-alive',
-    'Upgrade-Insecure-Requests': '1',
-}
-
+# ★ 수정됨: curl_cffi의 자체 위장 기능을 100% 활용하기 위해 수동 HEADERS 삭제
 PROXIES = {"http": PROXY_URL, "https": PROXY_URL} if PROXY_URL else None
 
 # 🇵🇭 [핵심] 필리핀 시간(PST, UTC+8) 세팅 및 오늘/어제 날짜 계산
@@ -56,14 +49,25 @@ def get_recent_titles(prefix, category_main, category_sub):
         return []
 
 def fetch_with_retry(url, max_retries=3):
+    """★ 수정됨: 헤더 충돌 방지 및 프록시 고장 대비 폴백(Fallback) 기능 추가"""
     for attempt in range(max_retries):
         try:
-            response = requests.get(url, headers=HEADERS, proxies=PROXIES, timeout=60, impersonate="chrome110")
+            # 시도 1, 2번은 프록시 사용 / 마지막 3번째 시도는 프록시 없이 직접 접속 시도
+            use_proxy = PROXIES if attempt < 2 else None
+            if attempt == 2 and PROXIES:
+                print("  ⚠️ 프록시 서버 응답이 없어, 프록시 없이 직접 접속을 시도합니다.")
+
+            # headers 인자 삭제 (curl_cffi가 알아서 완벽한 크롬 헤더를 세팅함)
+            response = requests.get(url, proxies=use_proxy, timeout=60, impersonate="chrome110")
             response.encoding = 'utf-8'
             return response
+            
         except Exception as e:
-            print(f"⏳ 서버 연결 지연 (시도 {attempt + 1}/{max_retries})... 5초 후 재시도.")
+            # ★ 수정됨: 서버가 안 열리는 '진짜 이유(e)'를 로그에 함께 출력
+            error_msg = str(e).split('\n')[0][:100] # 에러 메시지가 너무 길면 자름
+            print(f"  ⏳ 연결 지연 (시도 {attempt + 1}/{max_retries}) | 에러: {error_msg}")
             time.sleep(5)
+            
     return None
 
 def extract_and_insert(recent_titles, base_url, rows, prefix, category_main, category_sub, content_selector, enforce_date=False):
@@ -80,16 +84,14 @@ def extract_and_insert(recent_titles, base_url, rows, prefix, category_main, cat
         
         if final_title in recent_titles: continue
 
-        # ⏰ [핵심] 날짜 필터링 (enforce_date가 True일 때 작동)
+        # ⏰ 날짜 필터링
         if enforce_date:
             row_text = row.get_text(separator=' ')
             post_date = extract_date_from_text(row_text)
             
-            # 날짜를 발견했는데 오늘/어제가 아니라면? 가차 없이 버림!
             if post_date and post_date not in ALLOWED_DATES:
-                print(f"  ↪ 🚫 패스됨 (오래된 글): {post_date} | {raw_title[:20]}...")
+                print(f"  ↪ 🚫 패스 (오래된 글): {post_date} | {raw_title[:20]}...")
                 continue
-            # (만약 항공권 프로모션처럼 목록에 날짜 자체가 안 적혀있는 디자인이라면, 일단 통과시킵니다)
         
         print(f"🔔 새 게시물 통과: {final_title}")
         
@@ -126,9 +128,8 @@ def scrape_embassy():
     res = fetch_with_retry(list_url)
     if not res: return
     soup = BeautifulSoup(res.text, 'html.parser')
-    rows = soup.select('.board-list tbody tr, .board_list tbody tr') # 날짜 포함된 전체 row를 넘김
+    rows = soup.select('.board-list tbody tr, .board_list tbody tr') 
     
-    # enforce_date=True 를 켜서 날짜 검사 실시
     count = extract_and_insert(recent_titles, base_url, rows, prefix, "news", "notice", '.boardTxt, .cont_box, .board_view', enforce_date=True)
     print(f"🎉 대사관 공지 {count}개 복사 완료!" if count else "💤 오늘/어제 올라온 새 대사관 공지 없음.")
 
@@ -177,7 +178,6 @@ def scrape_airlines():
     soup = BeautifulSoup(res.text, 'html.parser')
     rows = soup.select('.promo-card, .promo-item')
     
-    # 항공사 프로모션 목록에는 작성일이 표기되지 않는 경우가 많으므로 enforce_date=False 유지 또는 상황에 맞게 유동적 적용
     count = extract_and_insert(recent_titles, base_url, rows, prefix, "travel", "review", '.promo-details, .content, .main-content', enforce_date=True)
     print(f"🎉 프로모션 소식 {count}개 복사 완료!" if count else "💤 새 특가 프로모션 없음.")
 
