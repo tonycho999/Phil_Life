@@ -292,5 +292,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "안바야 코브 골프 & 네이처 클럽 (Anvaya Cove Golf & Nature Club)",
+    "region": "바탄",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "엘니도 리조트 팡굴라시안 아일랜드 (El Nido Resorts Pangulasian Island)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "바타네스 제도 (Batanes Islands)",
+    "region": "바타네스",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "투바타하 리프 자연공원 (Tubbataha Reefs Natural Park)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
