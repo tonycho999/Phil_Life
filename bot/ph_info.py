@@ -30,13 +30,13 @@ SYSTEM_PROMPT = """
 3. 주어진 [구글 검색 결과]에서 수치(가격, 요금), 연락처, 운영시간 등 팩트만 발췌해서 괄호() 안에 채우세요. 검색 결과에 없는 내용은 "현지 확인 필요"라고 적으세요.
 """
 
-# ★ 신규: 구글 실시간 검색 함수
+# ★ 실시간 구글 검색 함수
 def search_google(query):
     if not GOOGLE_SEARCH_API_KEY or not GOOGLE_SEARCH_CX:
         print("⚠️ 구글 API 키가 없습니다. 검색 없이 진행합니다.")
         return "검색 결과 없음."
         
-    url = "https://www.googleapis.com/customsearch/v1"
+    url = "[https://www.googleapis.com/customsearch/v1](https://www.googleapis.com/customsearch/v1)"
     params = {
         "key": GOOGLE_SEARCH_API_KEY,
         "cx": GOOGLE_SEARCH_CX,
@@ -59,7 +59,7 @@ def search_google(query):
         print(f"❌ 구글 검색 에러: {e}")
         return "검색 중 오류 발생."
 
-# ★ 신규: JSON이 비었을 때 필정보(Info) 타겟 자동 생성
+# JSON이 비었을 때 필정보(Info) 타겟 자동 생성
 def generate_new_info_tasks_if_empty(tasks, json_path):
     pending_tasks = [t for t in tasks if t.get('status') != 'completed']
     if len(pending_tasks) > 0:
@@ -67,19 +67,27 @@ def generate_new_info_tasks_if_empty(tasks, json_path):
         
     print("\n🔄 [시스템 알림] 모든 정보 작성이 완료되었습니다! AI가 새로운 필리핀 생활/행정 정보를 발굴합니다...")
     
-    auto_prompt = """
+    # ★ 방어선 1: 이미 다뤘던 주제들의 이름을 뽑아서 AI에게 알려주고 금지시킵니다.
+    existing_targets = [t.get('target_name') for t in tasks]
+    existing_str = ", ".join(existing_targets)
+    
+    auto_prompt = f"""
     당신은 필리핀 현지 전문가입니다. 필리핀 교민이나 장기 체류자가 꼭 알아야 할 생활/행정/의료/통신 정보 타겟 5개를 추천해주세요.
     (비자/이민국 1개, 학교/교육 1개, 병원/의료 1개, 통신사/인터넷 1개, 대사관/관공서 1개)
     
+    [매우 중요한 규칙]
+    아래 목록에 있는 주제들은 이미 글을 작성했으므로 **절대로 다시 추천하지 말고 완전히 새로운 주제를 찾아주세요.**
+    제외할 주제 목록: {existing_str}
+    
     반드시 아래의 순수 JSON 배열 형식으로만 대답하세요.
     [
-      {
+      {{
         "target_name": "예: 필리핀 운전면허증 (LTO) 발급 및 갱신",
         "region": "필리핀 전역",
         "category_main": "info",
         "category_sub": "law",
         "status": "pending"
-      },
+      }},
       ... (visa, edu, medical, comm 등 총 5개 작성)
     ]
     """
@@ -93,7 +101,7 @@ def generate_new_info_tasks_if_empty(tasks, json_path):
             tasks.extend(new_tasks)
             with open(json_path, 'w', encoding='utf-8') as f:
                 json.dump(tasks, f, ensure_ascii=False, indent=2)
-            print(f"✨ 성공! AI가 {len(new_tasks)}개의 새로운 정보 타겟을 JSON에 추가했습니다!\n")
+            print(f"✨ 성공! AI가 중복되지 않은 {len(new_tasks)}개의 새로운 정보 타겟을 JSON에 추가했습니다!\n")
             return tasks
     except Exception as e:
         print(f"❌ AI 정보 리스트 자동 생성 실패: {e}")
@@ -177,7 +185,19 @@ def process_tasks():
             continue
 
         target = task['target_name']
+        cat_sub = task['category_sub']
         print(f"\n⏳ [{target}] 팩트 수집 및 생성 시작...")
+        
+        # ★ 방어선 2: DB 중복 게시물 사전 검사 (글쓰기 전에 DB를 뒤져서 중복을 원천 차단합니다!)
+        try:
+            res = supabase.table('posts').select('id').eq('category_sub', cat_sub).like('title', f"%{target}%").limit(1).execute()
+            if len(res.data) > 0:
+                print(f"⚠️ 이미 DB에 [{target}] 포스팅이 존재합니다! 구글 검색 및 작성을 건너뜁니다.")
+                task['status'] = 'completed'  # 더 이상 이 타겟을 쳐다보지 않도록 완료 처리
+                is_updated = True
+                continue
+        except Exception as e:
+            print(f"DB 중복 검사 중 에러: {e}")
         
         # 1. 구글 검색으로 최신 데이터 가져오기
         search_query = f"필리핀 {target} 최신 요금 서류 시간"
