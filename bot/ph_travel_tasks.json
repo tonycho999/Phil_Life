@@ -320,5 +320,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "마닐라 사우스우즈 골프 & 컨트리 클럽 (Manila Southwoods Golf & Country Club)",
+    "region": "카비테",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "에스카야 비치 리조트 & 스파 (Eskaya Beach Resort & Spa)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "칼랑가만 섬 (Kalanggaman Island)",
+    "region": "레이테",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "말라파스쿠아 모나드 숄 (Malapascua Monad Shoal)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

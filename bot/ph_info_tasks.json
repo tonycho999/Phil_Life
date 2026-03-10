@@ -187,5 +187,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 ECC (Emigration Clearance Certificate) 발급 및 출국 절차 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 한국국제학교 (KISM) 입학 및 학제 전학 가이드",
+    "region": "메트로 마닐라",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "에이시안 병원 (Asian Hospital and Medical Center) 이용 및 사설 보험 청구",
+    "region": "문틴루파 알라방",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "컨버지 (Converge ICT) 초고속 광인터넷 설치 및 요금제 비교",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 운전면허증 (LTO) 발급 및 한국 면허 교환 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
