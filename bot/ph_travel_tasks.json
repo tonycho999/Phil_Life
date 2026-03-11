@@ -376,5 +376,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "포레스트 힐즈 골프 & 컨트리 클럽 (Forest Hills Golf and Country Club)",
+    "region": "안티폴로",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "카우아얀 아일랜드 리조트 (Cauayan Island Resort)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "시퀴호르 섬 (Siquijor Island)",
+    "region": "시퀴호르",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "아닐라오 다이빙 포인트 (Anilao Diving Point)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
