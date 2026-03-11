@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
-// ★ 추가됨: z-index 감옥을 탈출하기 위한 리액트 포탈(순간이동) 기능
-import { createPortal } from "react-dom"; 
+import { createPortal } from "react-dom";
 
 interface Props {
   userId: string;
@@ -13,13 +12,12 @@ interface Props {
 export default function NicknameModal({ userId, onComplete }: Props) {
   const [nickname, setNickname] = useState("");
   const [loading, setLoading] = useState(false);
-  // ★ 추가됨: 서버 에러 방지를 위한 마운트 상태 관리
-  const [mounted, setMounted] = useState(false); 
+  const [mounted, setMounted] = useState(false);
   const supabase = createClient();
 
-  // 모달이 떴을 때 뒤에 스크롤 막기 + 마운트 확인
+  // 모달이 떴을 때 뒤에 스크롤 막기 (배경 고정)
   useEffect(() => {
-    setMounted(true); // 클라이언트에서 화면이 그려졌음을 확인
+    setMounted(true);
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "unset";
@@ -61,20 +59,19 @@ export default function NicknameModal({ userId, onComplete }: Props) {
     setLoading(false);
   };
 
-  // ★ 클라이언트가 아니면(서버 렌더링 중이면) 아무것도 그리지 않음 (에러 방지)
   if (!mounted) return null;
 
-  // ★ 핵심: createPortal을 사용하여 모달창을 부모 요소 밖(document.body)으로 강제 순간이동!
+  // ★ 진짜 팝업 디자인: 배경은 반투명 검은색(bg-black/60), 내용물은 둥근 하얀 상자(bg-white rounded-2xl)
   return createPortal(
-    <div className="fixed inset-0 z- bg-white flex flex-col items-center justify-center p-4">
+    <div className="fixed inset-0 z- bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
       
-      <div className="max-w-md w-full text-center animate-in zoom-in duration-300">
-        {/* ★ 수정됨: 로고와 동일한 짙은 파란색(#1d4ed8) 적용 */}
-        <h1 className="text-4xl font-black text-[#1d4ed8] mb-6 tracking-tighter">필카페24</h1>
+      {/* 팝업 상자 본체 */}
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-8 text-center animate-in zoom-in-95 duration-200">
         
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">닉네임 설정</h2>
-        <p className="text-gray-500 mb-8">
-          서비스 이용을 위해<br/>사용하실 닉네임을 입력해주세요.
+        <h1 className="text-2xl font-black text-[#1d4ed8] mb-2 tracking-tighter">필카페24</h1>
+        <h2 className="text-lg font-bold text-gray-800 mb-2">닉네임 설정</h2>
+        <p className="text-sm text-gray-500 mb-6">
+          커뮤니티에서 활동할<br/>멋진 닉네임을 만들어주세요.
         </p>
 
         <div className="space-y-4">
@@ -83,7 +80,7 @@ export default function NicknameModal({ userId, onComplete }: Props) {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             placeholder="한글/영문 2~10자"
-            className="w-full border-b-2 border-gray-300 px-4 py-4 text-center text-xl font-bold focus:outline-none focus:border-[#1d4ed8] transition placeholder:font-normal placeholder:text-gray-300"
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-center text-lg font-bold focus:outline-none focus:border-[#1d4ed8] focus:ring-2 focus:ring-blue-100 transition placeholder:font-normal placeholder:text-gray-300 placeholder:text-sm"
             maxLength={10}
             autoFocus
           />
@@ -91,13 +88,14 @@ export default function NicknameModal({ userId, onComplete }: Props) {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-lg transition shadow-lg mt-4 disabled:bg-gray-300"
+            className="w-full bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-3.5 rounded-lg text-md transition shadow-md disabled:bg-gray-300 flex justify-center items-center"
           >
             {loading ? "저장 중..." : "시작하기"}
           </button>
         </div>
       </div>
+      
     </div>,
-    document.body // 순간이동 도착지: 화면의 제일 근본(바닥)
+    document.body
   );
 }
