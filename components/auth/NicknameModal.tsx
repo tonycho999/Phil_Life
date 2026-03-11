@@ -57,12 +57,13 @@ export default function NicknameModal({ userId, onComplete }: Props) {
   };
 
   return (
-    // ★ 핵심 수정: z- 오타를 z-로 고쳐서 무조건 최상단에 뜨도록 수정!
+    // ★ 핵심 수정 1: z- 오타를 완전히 지우고, z- 로 상향!
+    // 사이트의 그 어떤 요소도 이 VIP 창 위로 올라오지 못합니다.
     <div className="fixed inset-0 z- bg-white flex flex-col items-center justify-center p-4">
       
       <div className="max-w-md w-full text-center animate-in zoom-in duration-300">
-        {/* ★ 수정됨: 요청하신 "필카페24" 로고 텍스트 변경 */}
-        <h1 className="text-4xl font-black text-blue-600 mb-6 tracking-tighter">필카페24</h1>
+        {/* ★ 핵심 수정 2: 로고 타이틀 색상을 더 어두운 로고 블루로 변경 */}
+        <h1 className="text-4xl font-black text-blue-800 mb-6 tracking-tighter">필카페24</h1>
         
         <h2 className="text-2xl font-bold text-gray-800 mb-2">닉네임 설정</h2>
         <p className="text-gray-500 mb-8">
