@@ -60,30 +60,34 @@ export default function SidebarLeft() {
         .select("*", { count: "exact", head: true })
         .eq("receiver_id", user.id)
         .eq("is_read", false);
-      if (count) setUnreadCount(count);
+      if (count !== null) setUnreadCount(count);
     };
 
     fetchUnreadCount();
 
-    // 2. 실시간으로 새 쪽지가 오는지 감시
+    // 2. ★ 수정됨: 실시간 감시 (INSERT, UPDATE, DELETE 모두 감지)
     const channel = supabase
       .channel("realtime-messages")
       .on(
         "postgres_changes",
         {
-          event: "INSERT",
+          event: "*", // ★ 핵심: INSERT 뿐만 아니라 UPDATE(읽음), DELETE(삭제)까지 모두 감지
           schema: "public",
           table: "messages",
           filter: `receiver_id=eq.${user.id}`,
         },
         (payload) => {
-          setUnreadCount((prev) => prev + 1);
-          // 알림음 재생 (※ public 폴더 안에 alert.mp3 파일이 있어야 소리가 납니다!)
-          try {
-            const audio = new Audio('/alert.mp3');
-            audio.play();
-          } catch (error) {
-            console.error("오디오 재생 실패:", error);
+          // 쪽지 상태가 변하면 안 읽은 개수를 다시 가져옵니다
+          fetchUnreadCount();
+
+          // 새 쪽지가 도착(INSERT)했을 때만 알림음을 울립니다
+          if (payload.eventType === 'INSERT') {
+            try {
+              const audio = new Audio('/alert.mp3');
+              audio.play();
+            } catch (error) {
+              console.error("오디오 재생 실패:", error);
+            }
           }
         }
       )
@@ -207,7 +211,7 @@ export default function SidebarLeft() {
         if (typeof window !== "undefined") {
             savedMenuId = sessionStorage.getItem("lastVisitedMenu");
         }
-        activeMenu = MENUS.find((m: any) => m.id === savedMenuId) || MENUS[0];
+        activeMenu = MENUS.find((m: any) => m.id === savedMenuId) || MENUS;
     }
 
     if (activeMenu && activeMenu.sub && activeMenu.sub.length > 0) {
