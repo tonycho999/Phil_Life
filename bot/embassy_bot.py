@@ -19,22 +19,18 @@ PROXY_URL = os.getenv("PROXY_URL")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 BOT_UUID = "7586917d-1c8e-46b9-80a9-1eba201d9a5f"
 
-# ★ 수정됨: curl_cffi의 자체 위장 기능을 100% 활용하기 위해 수동 HEADERS 삭제
 PROXIES = {"http": PROXY_URL, "https": PROXY_URL} if PROXY_URL else None
 
-# 🇵🇭 [핵심] 필리핀 시간(PST, UTC+8) 세팅 및 오늘/어제 날짜 계산
 ph_tz = timezone(timedelta(hours=8))
 ph_now = datetime.now(ph_tz)
 
-# 허용되는 날짜 목록 (예: ['2026-03-09', '2026-03-08'])
 ALLOWED_DATES = [
     ph_now.strftime("%Y-%m-%d"),
     (ph_now - timedelta(days=1)).strftime("%Y-%m-%d")
 ]
 
 def extract_date_from_text(text):
-    """게시판 텍스트에서 날짜(202X.X.X 또는 202X-X-X 등)를 찾아내 YYYY-MM-DD 형식으로 변환"""
-    match = re.search(r'\b(202\d)[-./년\s]+(0?[1-9]|1[0-2])[-./월\s]+(0?[1-9]|[12]\d|3[01])[일]?\b', text)
+    match = re.search(r'\b(202\d)[-./년\s]+(0?[1-9]|1[0-2])[-./월\s]+(0?[1-9]|\d|3)[일]?\b', text)
     if match:
         y, m, d = match.groups()
         return f"{y}-{int(m):02d}-{int(d):02d}"
@@ -49,22 +45,25 @@ def get_recent_titles(prefix, category_main, category_sub):
         return []
 
 def fetch_with_retry(url, max_retries=3):
-    """★ 수정됨: 헤더 충돌 방지 및 프록시 고장 대비 폴백(Fallback) 기능 추가"""
     for attempt in range(max_retries):
         try:
-            # 시도 1, 2번은 프록시 사용 / 마지막 3번째 시도는 프록시 없이 직접 접속 시도
             use_proxy = PROXIES if attempt < 2 else None
             if attempt == 2 and PROXIES:
-                print("  ⚠️ 프록시 서버 응답이 없어, 프록시 없이 직접 접속을 시도합니다.")
+                print("  ⚠️ 프록시 서버 고장 대비, 프록시 없이 직접 접속을 시도합니다.")
 
-            # headers 인자 삭제 (curl_cffi가 알아서 완벽한 크롬 헤더를 세팅함)
-            response = requests.get(url, proxies=use_proxy, timeout=60, impersonate="chrome110")
+            # ★ 해결됨: verify=False 속성을 추가하여 프록시의 SSL 인증서 에러(60)를 강제 무시합니다!
+            response = requests.get(
+                url, 
+                proxies=use_proxy, 
+                timeout=60, 
+                impersonate="chrome110", 
+                verify=False
+            )
             response.encoding = 'utf-8'
             return response
             
         except Exception as e:
-            # ★ 수정됨: 서버가 안 열리는 '진짜 이유(e)'를 로그에 함께 출력
-            error_msg = str(e).split('\n')[0][:100] # 에러 메시지가 너무 길면 자름
+            error_msg = str(e).split('\n')[:100] 
             print(f"  ⏳ 연결 지연 (시도 {attempt + 1}/{max_retries}) | 에러: {error_msg}")
             time.sleep(5)
             
@@ -84,7 +83,6 @@ def extract_and_insert(recent_titles, base_url, rows, prefix, category_main, cat
         
         if final_title in recent_titles: continue
 
-        # ⏰ 날짜 필터링
         if enforce_date:
             row_text = row.get_text(separator=' ')
             post_date = extract_date_from_text(row_text)
