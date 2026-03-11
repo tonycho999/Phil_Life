@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
-import { X, Send } from "lucide-react";
+import { X, Send, Reply } from "lucide-react"; // ★ 수정됨: Reply 아이콘 추가
 
-export default function SendMessageModal({ isOpen, onClose, receiverId, receiverNickname }: any) {
+// ★ 수정됨: isReply 프롭(옵션) 추가
+export default function SendMessageModal({ isOpen, onClose, receiverId, receiverNickname, isReply = false }: any) {
   const [content, setContent] = useState("");
   const [isSending, setIsSending] = useState(false);
   const supabase = createClient();
@@ -31,7 +32,7 @@ export default function SendMessageModal({ isOpen, onClose, receiverId, receiver
     if (error) {
       alert("쪽지 전송에 실패했습니다.");
     } else {
-      alert(`${receiverNickname}님에게 쪽지를 보냈습니다!`);
+      alert(`${receiverNickname}님에게 ${isReply ? '답장' : '쪽지'}를 보냈습니다!`); // ★ 수정됨: 알림창 문구 변경
       setContent("");
       onClose();
     }
@@ -39,13 +40,14 @@ export default function SendMessageModal({ isOpen, onClose, receiverId, receiver
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 z- flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
         {/* 헤더 */}
         <div className="bg-gray-50 px-5 py-4 border-b flex justify-between items-center">
           <h3 className="font-bold text-gray-800 flex items-center gap-2">
-            <Send size={18} className="text-blue-600" />
-            쪽지 보내기
+            {/* ★ 수정됨: isReply가 true면 답장 아이콘과 텍스트를 보여줌 */}
+            {isReply ? <Reply size={18} className="text-green-600" /> : <Send size={18} className="text-blue-600" />}
+            {isReply ? "답장 보내기" : "쪽지 보내기"}
           </h3>
           <button onClick={onClose} className="text-gray-400 hover:text-red-500 transition">
             <X size={20} />
@@ -76,7 +78,7 @@ export default function SendMessageModal({ isOpen, onClose, receiverId, receiver
           <button 
             onClick={handleSend}
             disabled={isSending}
-            className="px-6 py-2 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2"
+            className={`px-6 py-2 text-sm font-bold text-white rounded-lg transition disabled:opacity-50 flex items-center gap-2 ${isReply ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}`} // ★ 수정됨: 답장일 때 버튼 색상 변경
           >
             {isSending ? "전송 중..." : "보내기"}
           </button>
