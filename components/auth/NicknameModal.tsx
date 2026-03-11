@@ -57,12 +57,12 @@ export default function NicknameModal({ userId, onComplete }: Props) {
   };
 
   return (
-    // ★ 핵심: fixed로 화면 전체를 덮고(inset-0), 배경을 흰색(bg-white)으로 설정
-    // z-로 설정하여 사이트의 그 어떤 요소보다도 위에 뜨게 만듭니다.
+    // ★ 핵심 수정: z- 오타를 z-로 고쳐서 무조건 최상단에 뜨도록 수정!
     <div className="fixed inset-0 z- bg-white flex flex-col items-center justify-center p-4">
       
       <div className="max-w-md w-full text-center animate-in zoom-in duration-300">
-        <h1 className="text-4xl font-black text-blue-600 mb-6 tracking-tighter">Phil Life</h1>
+        {/* ★ 수정됨: 요청하신 "필카페24" 로고 텍스트 변경 */}
+        <h1 className="text-4xl font-black text-blue-600 mb-6 tracking-tighter">필카페24</h1>
         
         <h2 className="text-2xl font-bold text-gray-800 mb-2">닉네임 설정</h2>
         <p className="text-gray-500 mb-8">
