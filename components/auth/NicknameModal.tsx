@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
+// ★ 추가됨: z-index 감옥을 탈출하기 위한 리액트 포탈(순간이동) 기능
+import { createPortal } from "react-dom"; 
 
 interface Props {
   userId: string;
@@ -11,10 +13,13 @@ interface Props {
 export default function NicknameModal({ userId, onComplete }: Props) {
   const [nickname, setNickname] = useState("");
   const [loading, setLoading] = useState(false);
+  // ★ 추가됨: 서버 에러 방지를 위한 마운트 상태 관리
+  const [mounted, setMounted] = useState(false); 
   const supabase = createClient();
 
-  // 모달이 떴을 때 뒤에 스크롤 막기
+  // 모달이 떴을 때 뒤에 스크롤 막기 + 마운트 확인
   useEffect(() => {
+    setMounted(true); // 클라이언트에서 화면이 그려졌음을 확인
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "unset";
@@ -56,14 +61,16 @@ export default function NicknameModal({ userId, onComplete }: Props) {
     setLoading(false);
   };
 
-  return (
-    // ★ 핵심 수정 1: z- 오타를 완전히 지우고, z- 로 상향!
-    // 사이트의 그 어떤 요소도 이 VIP 창 위로 올라오지 못합니다.
+  // ★ 클라이언트가 아니면(서버 렌더링 중이면) 아무것도 그리지 않음 (에러 방지)
+  if (!mounted) return null;
+
+  // ★ 핵심: createPortal을 사용하여 모달창을 부모 요소 밖(document.body)으로 강제 순간이동!
+  return createPortal(
     <div className="fixed inset-0 z- bg-white flex flex-col items-center justify-center p-4">
       
       <div className="max-w-md w-full text-center animate-in zoom-in duration-300">
-        {/* ★ 핵심 수정 2: 로고 타이틀 색상을 더 어두운 로고 블루로 변경 */}
-        <h1 className="text-4xl font-black text-blue-800 mb-6 tracking-tighter">필카페24</h1>
+        {/* ★ 수정됨: 로고와 동일한 짙은 파란색(#1d4ed8) 적용 */}
+        <h1 className="text-4xl font-black text-[#1d4ed8] mb-6 tracking-tighter">필카페24</h1>
         
         <h2 className="text-2xl font-bold text-gray-800 mb-2">닉네임 설정</h2>
         <p className="text-gray-500 mb-8">
@@ -76,7 +83,7 @@ export default function NicknameModal({ userId, onComplete }: Props) {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             placeholder="한글/영문 2~10자"
-            className="w-full border-b-2 border-gray-300 px-4 py-4 text-center text-xl font-bold focus:outline-none focus:border-blue-600 transition placeholder:font-normal placeholder:text-gray-300"
+            className="w-full border-b-2 border-gray-300 px-4 py-4 text-center text-xl font-bold focus:outline-none focus:border-[#1d4ed8] transition placeholder:font-normal placeholder:text-gray-300"
             maxLength={10}
             autoFocus
           />
@@ -84,12 +91,13 @@ export default function NicknameModal({ userId, onComplete }: Props) {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-lg transition shadow-lg mt-4 disabled:bg-gray-300"
+            className="w-full bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-lg transition shadow-lg mt-4 disabled:bg-gray-300"
           >
             {loading ? "저장 중..." : "시작하기"}
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body // 순간이동 도착지: 화면의 제일 근본(바닥)
   );
 }
