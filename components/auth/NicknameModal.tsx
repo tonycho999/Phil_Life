@@ -61,14 +61,17 @@ export default function NicknameModal({ userId, onComplete }: Props) {
 
   if (!mounted) return null;
 
-  // ★ 진짜 팝업 디자인: 배경은 반투명 검은색(bg-black/60), 내용물은 둥근 하얀 상자(bg-white rounded-2xl)
   return createPortal(
     <div className="fixed inset-0 z- bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
       
       {/* 팝업 상자 본체 */}
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-8 text-center animate-in zoom-in-95 duration-200">
         
-        <h1 className="text-2xl font-black text-[#1d4ed8] mb-2 tracking-tighter">필카페24</h1>
+        {/* ★ 로고 타이틀 수정: "필카페"는 파란색(#1d4ed8), "24"는 강렬한 레드(#ef4444) 적용 */}
+        <h1 className="text-2xl font-black text-[#1d4ed8] mb-2 tracking-tighter">
+          필카페<span className="text-[#ef4444]">24</span>
+        </h1>
+        
         <h2 className="text-lg font-bold text-gray-800 mb-2">닉네임 설정</h2>
         <p className="text-sm text-gray-500 mb-6">
           커뮤니티에서 활동할<br/>멋진 닉네임을 만들어주세요.
