@@ -90,9 +90,9 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
                       {post.pinned_reason || "공지"}
                     </span>
                   )}
-                  <span className="text-xs text-gray-400">
-                    {new Date(post.created_at).toLocaleDateString()}
-                  </span>
+                <span suppressHydrationWarning className="text-xs text-gray-400">
+                  {new Date(post.created_at).toLocaleDateString('ko-KR', { timeZone: 'Asia/Manila' })}
+                </span>
                 </div>
 
                 {/* 제목 앞 [소분류] 표시 */}
