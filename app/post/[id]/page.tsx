@@ -49,7 +49,7 @@ export default async function PostDetailPage({ params }: { params: any }) {
   
   // 1. 현재 유저 레벨 확인 (이제 서버가 쿠키를 읽으므로 관리자/회원을 정상 인식합니다)
   const { data: { user } } = await supabase.auth.getUser();
-  let myLevel = -1; 
+  let myLevel = 0; 
   if (user) {
     const { data: myProfile } = await supabase.from("profiles").select("level").eq("id", user.id).single();
     if (myProfile) myLevel = myProfile.level;
