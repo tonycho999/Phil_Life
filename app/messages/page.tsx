@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 // ★ 수정됨: Reply 아이콘 추가
 import { Trash2, MailOpen, Mail, ChevronDown, ChevronUp, Reply } from "lucide-react";
 // ★ 수정됨: 방금 수정한 모달 컴포넌트 불러오기 (경로는 실제 파일 위치에 맞게 수정해주세요)
-import SendMessageModal from "@/components/post/SendMessageModal"; 
+import SendMessageModal from "@/components/SendMessageModal";
 
 export default function MessagesPage() {
   const { user, loading: authLoading } = useAuth();
