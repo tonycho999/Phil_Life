@@ -6,6 +6,35 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { MENUS } from "@/lib/constants";
 import { useAuth } from "@/components/auth/AuthProvider";
 
+// ★ 추가됨: 구인구직 게시판 자동 템플릿 내용 정의
+const JOB_TEMPLATE = `▶ 제목 양식(권장): [지역] 직무명 / 경력여부 / 회사명
+(예시: [마닐라] 마케팅 담당자 구함 / 경력무관 / 필카페상사)
+
+🏢 1. 기업 정보
+회사명: [정확한 업체명을 입력해 주세요]
+근무지 주소: [실제 근무할 지역 및 상세 주소를 입력해 주세요]
+업종 및 직무: [어떤 일을 하는 회사인지, 담당할 주요 업무는 무엇인지 적어주세요]
+
+👨‍💼 2. 모집 요강
+모집 인원: [ 00 명 / 성별 무관 등 ]
+
+지원 자격: [나이 제한, 필요 비자, 필수 자격증 등 지원 가능한 조건을 적어주세요]
+우대 사항: [관련 경력, 외국어 능력, 거주 지역 등 우대하는 조건이 있다면 적어주세요]
+
+💼 3. 근무 조건 및 보상
+근무 형태: [정규직 / 계약직 / 아르바이트 / 수습 기간 유무 등]
+근무 일시: [주 몇 일 근무인지, 출퇴근 시간 및 휴무일을 적어주세요]
+급여 조건: [면접 후 결정 / 월 00,000 페소 / 인센티브 여부 등을 명시해 주세요]
+복리 후생 (직원 복지): [숙식 제공, 13먼스, 비자 지원, 통근 버스 등 제공되는 복지를 적어주세요]
+
+📝 4. 지원 방법 및 문의
+제출 서류: [이력서(사진 첨부), 자기소개서, 포트폴리오 등 필요한 서류를 적어주세요]
+접수 방법: [이메일 접수 / 문자 지원 / 카카오톡 연락 등]
+인사 담당자 연락처:
+전화번호: [ ]
+이메일: [ ]
+카카오톡/기타 메신저: [ ]`;
+
 function WriteForm() {
   const supabase = createClient();
   const router = useRouter();
@@ -44,7 +73,7 @@ function WriteForm() {
     const isSubValid = targetMenu?.sub.some((s: any) => s.id === categorySub);
     
     if (targetMenu && !isSubValid) {
-       setCategorySub(targetMenu.sub.id);
+       setCategorySub(targetMenu.sub[0]?.id || "");
     }
   }, [categoryMain, categorySub]);
 
@@ -73,6 +102,13 @@ function WriteForm() {
     
     if (user) checkPermission();
   }, [categoryMain, categorySub, user, profile, authLoading, router, supabase]);
+
+  // ★ 추가됨: 마켓(market) - 구인구직(job) 선택 시 템플릿 자동 삽입
+  useEffect(() => {
+    if (categoryMain === "market" && categorySub === "job" && content === "") {
+      setContent(JOB_TEMPLATE);
+    }
+  }, [categoryMain, categorySub, content]);
 
 
   const handleSubmit = async () => {
