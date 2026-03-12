@@ -242,14 +242,14 @@
     "region": "메트로 마닐라",
     "category_main": "info",
     "category_sub": "medical",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "디토 텔레커뮤니티 (DITO Telecommunity) 5G 데이터 요금제 및 신규 통신망 커버리지 확인",
     "region": "필리핀 전역",
     "category_main": "info",
     "category_sub": "comm",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 국세청 (BIR) 납세자 식별 번호 (TIN) 발급 및 외국인 근로자 세무 의무 가이드",

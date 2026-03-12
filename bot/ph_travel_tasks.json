@@ -432,5 +432,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Mimosa Plus Golf Course (미모사 플러스 골프 코스)",
+    "region": "클락 (Clark)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Two Seasons Coron Island Resort (투 시즌스 코론 아일랜드 리조트)",
+    "region": "코론 (Coron)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Hinatuan Enchanted River (히나투안 인챈티드 리버)",
+    "region": "수리가오 델 수르 (Surigao del Sur)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Moalboal Pescador Island (모알보알 페스카도르 섬)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
