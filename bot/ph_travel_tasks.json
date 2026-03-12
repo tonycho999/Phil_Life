@@ -404,5 +404,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "The Orchard Golf & Country Club (디 오차드 골프 & 컨트리 클럽)",
+    "region": "카비테",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Amanpulo (아만풀로)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Caramoan Islands (카라모안 제도)",
+    "region": "카마리네스 수르",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Coron Shipwrecks (코론 쉽렉)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
