@@ -203,14 +203,13 @@ def run_community_bot():
         recent_all_posts_res = supabase.table("posts").select("id, title, view_count").gte("created_at", three_days_ago).execute()
         
         if recent_all_posts_res.data:
-            # 최대 10개의 게시글 랜덤 샘플링
-            sample_size = min(10, len(recent_all_posts_res.data))
-            lurker_targets = random.sample(recent_all_posts_res.data, sample_size)
+            # ★ 수정됨: 10개 랜덤 샘플링 제한을 삭제하고, 가져온 모든 게시글을 대상으로 지정
+            lurker_targets = recent_all_posts_res.data
             
             for t_post in lurker_targets:
                 c_views = t_post.get('view_count') or 0
-                # 눈팅족이 방문했으므로 조회수 2씩 추가
-                supabase.table("posts").update({"view_count": c_views + 2}).eq("id", t_post['id']).execute()
+                # ★ 수정됨: 모든 글에 조회수 3씩 추가
+                supabase.table("posts").update({"view_count": c_views + 3}).eq("id", t_post['id']).execute()
                 
             print(f"✅ 눈팅족 활동 완료: 총 {sample_size}개 게시글 조회수 +2 증가 처리됨.")
     except Exception as e:
