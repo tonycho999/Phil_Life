@@ -113,7 +113,60 @@ export default function PartnershipPage() {
         </div>
       </div>
 
-      {/* 4. 제작 팁 & 프로세스 */}
+      {/* ★ 4. 추가 할인 풀패키지 (새로 추가됨) */}
+      <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl p-6 md:p-8 border border-yellow-200 shadow-sm relative overflow-hidden">
+        <h2 className="text-xl md:text-2xl font-black text-amber-900 mb-3 flex items-center gap-2">
+          👑 [강력 추천] 창립 파트너 전용 "추가 할인 풀패키지"
+        </h2>
+        <p className="text-amber-800 text-sm md:text-base mb-6 leading-relaxed">
+          단일 광고도 저렴하지만, <strong>"배너 노출 + 타겟 게시판 상위 고정"</strong>을 동시에 진행하시면 시너지 효과가 극대화됩니다.<br className="hidden md:block" />
+          런칭 기간에만 제공하는 특별 결합 추가 할인 패키지를 확인해 보세요. (마찬가지로 결제 시 4개월 보장)
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* 패키지 1: 프리미엄 올인원 */}
+          <div className="bg-white rounded-xl p-6 border-2 border-amber-400 shadow-md relative hover:-translate-y-1 transition duration-300">
+            <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-bl-lg rounded-tr-lg shadow-sm">
+              2,000₱ 추가 할인!
+            </div>
+            <h3 className="font-black text-lg text-gray-800 mb-4">[프리미엄 올인원 패키지]</h3>
+            <ul className="text-sm text-gray-600 space-y-2 mb-6">
+              <li className="flex justify-between border-b border-gray-100 pb-2">
+                <span>메인 탑 배너</span><span>22,500 ₱</span>
+              </li>
+              <li className="flex justify-between border-b border-gray-100 pb-2">
+                <span>타겟 게시판 상단 고정</span><span>3,000 ₱</span>
+              </li>
+            </ul>
+            <div className="flex justify-between items-end mt-4">
+              <div className="text-xs text-gray-400">정상 프로모션가: <span className="line-through">25,500 ₱</span></div>
+              <div className="text-2xl font-black text-red-600">🔥 23,500 <span className="text-base font-bold text-gray-800">₱</span></div>
+            </div>
+          </div>
+
+          {/* 패키지 2: 실속 타겟팅 */}
+          <div className="bg-white rounded-xl p-6 border border-amber-200 shadow-sm relative hover:-translate-y-1 transition duration-300">
+            <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-bl-lg rounded-tr-lg shadow-sm">
+              1,500₱ 추가 할인!
+            </div>
+            <h3 className="font-bold text-lg text-gray-800 mb-4">[실속 타겟팅 패키지]</h3>
+            <ul className="text-sm text-gray-600 space-y-2 mb-6">
+              <li className="flex justify-between border-b border-gray-100 pb-2">
+                <span>윙 배너</span><span>15,000 ₱</span>
+              </li>
+              <li className="flex justify-between border-b border-gray-100 pb-2">
+                <span>타겟 게시판 상단 고정</span><span>3,000 ₱</span>
+              </li>
+            </ul>
+            <div className="flex justify-between items-end mt-4">
+              <div className="text-xs text-gray-400">정상 프로모션가: <span className="line-through">18,000 ₱</span></div>
+              <div className="text-2xl font-black text-red-600">🔥 16,500 <span className="text-base font-bold text-gray-800">₱</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. 제작 팁 & 프로세스 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
           <h3 className="font-black text-gray-800 mb-4 border-b pb-2">💡 배너 제작 및 노출 팁</h3>
@@ -139,7 +192,7 @@ export default function PartnershipPage() {
         </div>
       </div>
 
-      {/* 5. 연락처 및 결제 정보 */}
+      {/* 6. 연락처 및 결제 정보 */}
       <div className="bg-gray-900 rounded-2xl p-8 text-white shadow-xl">
         <h2 className="text-xl font-black mb-6 text-center text-yellow-400">📞 공식 광고 및 제휴 문의 창구</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
