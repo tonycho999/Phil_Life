@@ -81,7 +81,7 @@ def run_community_bot():
     # -------------------------------------------------------------------
     if current_post_count < TARGET_POSTS:
         # 1시간마다 실행되므로, 남은 개수에 비례해 이번 턴에 글을 쓸 확률 부여 (몰아서 쓰기 방지)
-        if random.random() < 0.5: 
+        if random.random() < 0.7: 
             bot = pick_random_bot(user_profiles, "post")
             
             # ★ 수정됨: free(자유), qna(질문), couple(연애/커플) 중 랜덤 선택
