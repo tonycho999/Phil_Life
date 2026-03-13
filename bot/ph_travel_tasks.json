@@ -460,5 +460,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "란초 팔로스 베르데스 골프 & 컨트리 클럽 (Rancho Palos Verdes Golf & Country Club)",
+    "region": "다바오",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "펄 파름 비치 리조트 (Pearl Farm Beach Resort)",
+    "region": "사말 아일랜드",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "사가다 (Sagada)",
+    "region": "마운틴 프로빈스",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "소고드 베이 (Sogod Bay)",
+    "region": "남레이테",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
