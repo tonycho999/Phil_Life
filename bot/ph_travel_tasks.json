@@ -488,5 +488,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "칼라타간 골프 클럽 (Calatagan Golf Club)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "도나텔라 리조트 & 생추어리 (Donatela Resort & Sanctuary)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "피나투보 화산 (Mount Pinatubo)",
+    "region": "잠발레스",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "베르데 아일랜드 패시지 (Verde Island Passage)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

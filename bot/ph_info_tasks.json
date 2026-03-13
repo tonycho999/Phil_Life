@@ -257,5 +257,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 13A 영주 비자 (결혼 비자) 신청 및 자격 유지 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "브리티시 스쿨 마닐라 (British School Manila) 입학 절차 및 영국식 커리큘럼 안내",
+    "region": "마닐라 (BGC)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "마닐라 닥터스 병원 (Manila Doctors Hospital) 진료 예약 및 외국인 환자 서비스",
+    "region": "마닐라 (에르미타)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "스타링크 (Starlink) 필리핀 위성 인터넷 설치 및 오지/도서 지역 활용 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 NBI 클리어런스 (범죄경력증명서) 외국인 발급 및 온라인 예약 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
