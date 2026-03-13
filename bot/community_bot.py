@@ -77,21 +77,24 @@ def run_community_bot():
     print(f"📊 현재 달성량: 글 {current_post_count}개 / 댓글 {current_comment_count}개")
 
     # -------------------------------------------------------------------
-    # [행동 1] 게시글 작성 로직 (자유게시판 & QnA 교차 작성)
+    # [행동 1] 게시글 작성 로직 (자유, QnA, 커플 교차 작성)
     # -------------------------------------------------------------------
     if current_post_count < TARGET_POSTS:
         # 1시간마다 실행되므로, 남은 개수에 비례해 이번 턴에 글을 쓸 확률 부여 (몰아서 쓰기 방지)
         if random.random() < 0.5: 
             bot = pick_random_bot(user_profiles, "post")
             
-            # ★ 수정됨: free(자유게시판)와 qna(질문답변) 중 랜덤 선택
-            target_sub = random.choice(["free", "qna"])
+            # ★ 수정됨: free(자유), qna(질문), couple(연애/커플) 중 랜덤 선택
+            target_sub = random.choice(["free", "qna", "couple"])
             
             # 카테고리에 맞춰 프롬프트 지시사항 다르게 설정
             if target_sub == "free":
                 post_instruction = f"자유게시판에 올릴 짧은 일상 글을 작성해. {bot['location']}의 날씨나 풍경, 또는 {bot['job']}과 관련된 소소한 일상 이야기를 해."
-            else:
+            elif target_sub == "qna":
                 post_instruction = f"Q&A(질문답변) 게시판에 올릴 짧은 질문 글을 작성해. {bot['location']} 지역의 맛집, 여행 정보, 생활 꿀팁, 또는 {bot['job']} 관련해서 궁금한 점을 다른 유저들에게 물어봐."
+            else:
+                # ★ 추가됨: couple 게시판 전용 프롬프트
+                post_instruction = f"연애/커플 게시판에 올릴 짧은 글을 작성해. {bot['age']}세 {bot['job']}의 입장에서 필리핀에서의 연애 썰, 데이트 장소 추천, 국제 연애에 대한 고민이나 호기심, 또는 가벼운 이상형 이야기를 해줘."
 
             print(f"✍️ [글쓰기 당첨] {bot['nickname']} -> [{target_sub}] 게시판 작성")
             
