@@ -516,5 +516,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Camp John Hay Golf Club (캠프 존 헤이 골프 클럽)",
+    "region": "Baguio (바기오)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Crimson Resort and Spa Boracay (크림슨 리조트 & 스파 보라카이)",
+    "region": "Boracay (보라카이)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Banaue Rice Terraces (바나우에 라이스 테라스)",
+    "region": "Ifugao (이푸가오)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Ticao Island Manta Bowl (티카오 아일랜드 만타 볼)",
+    "region": "Masbate (마스바테)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
