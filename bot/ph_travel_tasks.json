@@ -544,5 +544,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Sherwood Hills Golf Club (셔우드 힐스 골프 클럽)",
+    "region": "Cavite",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Banwa Private Island (반와 프라이빗 아일랜드)",
+    "region": "Palawan",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Hundred Islands National Park (헌드레드 아일랜드 국립공원)",
+    "region": "Pangasinan",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Puerto Galera (푸에르토 갈레라)",
+    "region": "Mindoro",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
