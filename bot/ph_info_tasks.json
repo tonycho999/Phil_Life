@@ -292,5 +292,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 SM 아우라 분소 (SM Aura Satellite Office) 비자 연장 및 행정 서비스",
+    "region": "메트로 마닐라 (타기그/BGC)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "페이스 아카데미 (Faith Academy) 입학 절차 및 선교사 자녀/일반 외국인 교육 과정",
+    "region": "리잘 (안티폴로/카인타)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "청화 병원 (Chong Hua Hospital) 세부 지역 주요 의료 서비스 및 외국인 진료 예약",
+    "region": "세부 (Cebu)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "GOMO 필리핀 (No Expiry 데이터) 유심 발급 및 장기 체류자 효율적 데이터 활용법",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 통계청 (PSA) 증명서 발급 및 외교부(DFA) 아포스티유(Apostille) 공증 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
