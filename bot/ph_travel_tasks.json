@@ -600,5 +600,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "산타 엘레나 골프 & 컨트리 에스테이트 (Sta. Elena Golf & Country Estate)",
+    "region": "라구나 (Laguna)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "두짓 타니 루비 플랜테이션 리조트 (Dusit Thani Lubi Plantation Resort)",
+    "region": "다바오 (Davao)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "비간 헤리티지 빌리지 (Vigan Heritage Village)",
+    "region": "일로코스 수르 (Ilocos Sur)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "파밀라칸 아일랜드 다이빙 포인트 (Pamilacan Island)",
+    "region": "보홀 (Bohol)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
