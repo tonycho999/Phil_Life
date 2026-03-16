@@ -656,5 +656,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Canlubang Golf & Country Club (칸루방 골프 & 컨트리 클럽)",
+    "region": "Laguna",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Anya Resort Tagaytay (아냐 리조트 타가이타이)",
+    "region": "Tagaytay",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Sambawan Island (삼바완 섬)",
+    "region": "Biliran",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Liloan Diving Point (릴로안 다이빙 포인트)",
+    "region": "Cebu",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

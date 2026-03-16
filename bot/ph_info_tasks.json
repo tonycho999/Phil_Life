@@ -327,5 +327,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 마카티 분소 (BI Makati Extension Office) 비자 연장 및 행정 서비스 안내",
+    "region": "마닐라 마카티",
+    "category_main": "visa",
+    "category_sub": "immigration",
+    "status": "completed"
+  },
+  {
+    "target_name": "싱가포르 국제학교 마닐라 (Singapore School Manila) 입학 절차 및 학비 정보",
+    "region": "마닐라 파라냐케",
+    "category_main": "edu",
+    "category_sub": "school",
+    "status": "completed"
+  },
+  {
+    "target_name": "세부 닥터스 병원 (Cebu Doctors' University Hospital) 외국인 환자 진료 및 응급실 이용 가이드",
+    "region": "세부",
+    "category_main": "medical",
+    "category_sub": "hospital",
+    "status": "pending"
+  },
+  {
+    "target_name": "스카이 파이버 (Sky Fiber) 가정용 광인터넷 및 케이블 TV 결합 요금제 정보",
+    "region": "필리핀 전역",
+    "category_main": "comm",
+    "category_sub": "internet",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 노동고용부 (DOLE) 외국인 고용 허가증 (AEP) 신청 및 구비 서류 가이드",
+    "region": "필리핀 전역",
+    "category_main": "gov",
+    "category_sub": "labor",
+    "status": "pending"
   }
 ]
