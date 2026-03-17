@@ -712,5 +712,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Ayala Greenfield Golf & Leisure Club (아얄라 그린필드 골프 & 레저 클럽)",
+    "region": "Laguna (라구나)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Atmosphere Resorts & Spa (애트모스피어 리조트 & 스파)",
+    "region": "Negros Oriental (네그로스 오리엔탈)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Mayon Volcano Natural Park (마욘 화산 자연공원)",
+    "region": "Albay (알바이)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Napaling Point (나팔링 포인트)",
+    "region": "Bohol (보홀)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
