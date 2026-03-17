@@ -684,5 +684,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Wack Wack Golf & Country Club (왁왁 골프 & 컨트리 클럽)",
+    "region": "메트로 마닐라",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Lagen Island Resort (라겐 아일랜드 리조트)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Fortune Island (포춘 아일랜드)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Barracuda Lake (바라쿠다 레이크)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
