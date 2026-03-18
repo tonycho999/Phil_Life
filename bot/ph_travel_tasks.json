@@ -768,5 +768,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Pueblo de Oro Golf & Country Club (푸에블로 데 오로 골프 & 컨트리 클럽)",
+    "region": "카가얀 데 오로 (Cagayan de Oro)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Kandaya Resort (칸다야 리조트)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Tinuy-an Falls (티누이안 폭포)",
+    "region": "수리가오 델 수르 (Surigao del Sur)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Danjugan Island (단주간 섬)",
+    "region": "네그로스 옥시덴탈 (Negros Occidental)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
