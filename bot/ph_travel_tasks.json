@@ -740,5 +740,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Cebu Country Club (세부 컨트리 클럽)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Plantation Bay Resort and Spa (플랜테이션 베이 리조트 & 스파)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Chocolate Hills (초콜릿 힐)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Donsol Whale Shark Point (돈솔 고래상어 포인트)",
+    "region": "소르소곤",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

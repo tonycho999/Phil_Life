@@ -362,5 +362,40 @@
     "category_main": "gov",
     "category_sub": "labor",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 비자 연장 및 이민국 로빈슨 갤러리아 분소 (Robinsons Galleria Satellite Office) 이용 안내",
+    "region": "메트로 마닐라 케손 시티",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 명문 대학교 (UP, 아테네오, 라살) 외국인 학부 입학 절차 및 영어 성적 요건",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "마닐라 어드벤티스트 메디컬 센터 (Manila Adventist Medical Center) 진료 및 응급 의료 서비스",
+    "region": "메트로 마닐라 파사이",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 기업 전용 전용선 (Leased Line) 신청 및 오피스 네트워크 구축 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 주택개발기금 (Pag-IBIG Fund) 외국인 가입 및 대출 자격 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "pending"
   }
 ]
