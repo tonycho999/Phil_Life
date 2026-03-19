@@ -824,5 +824,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Alta Vista Golf & Country Club (알타 비스타 골프 & 컨트리 클럽)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Huni Sicogon (후니 시코곤)",
+    "region": "일로일로",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Kapurpurawan Rock Formation (카푸르푸라완 락 포메이션)",
+    "region": "일로코스 노르테",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Limasawa Island (리마사와 섬)",
+    "region": "남부 레이테",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
