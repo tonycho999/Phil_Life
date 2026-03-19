@@ -796,5 +796,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Apo Golf and Country Club (아포 골프 & 컨트리 클럽)",
+    "region": "다바오 (Davao)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Amun Ini Beach Resort & Spa (아문 이니 비치 리조트 & 스파)",
+    "region": "보홀 (Bohol)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Kawasan Falls (가와산 폭포)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Padre Burgos (파드레 부르고스)",
+    "region": "서던 레이테 (Southern Leyte)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
