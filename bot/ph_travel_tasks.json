@@ -880,5 +880,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Bacolod Golf and Country Club (Binitin) (바콜로드 골프 앤 컨트리 클럽)",
+    "region": "네그로스 옥시덴탈",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "The Bellevue Resort Bohol (더 벨뷰 리조트 보홀)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Bantayan Island (반타얀 섬)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Gato Island Diving Point (가토 섬 다이빙 포인트)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
