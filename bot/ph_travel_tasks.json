@@ -852,5 +852,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Iloilo Golf and Country Club (일로일로 골프 앤 컨트리 클럽)",
+    "region": "Iloilo",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "The Lind Boracay (더 린드 보라카이)",
+    "region": "Boracay",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Mount Pulag National Park (마운트 풀락 국립공원)",
+    "region": "Benguet",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Talikud Island (탈리쿠드 아일랜드)",
+    "region": "Davao",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
