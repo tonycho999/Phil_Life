@@ -432,5 +432,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 아얄라몰 마닐라베이 분소 (BI Ayala Malls Manila Bay Satellite Office) 비자 서비스",
+    "region": "파사이 (Pasay)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "MIT 국제학교 (MIT International School) 입학 절차 및 교육 과정",
+    "region": "알라방 (Alabang)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "중국 종합병원 (Chinese General Hospital and Medical Center) 진료 및 외국인 의료 서비스",
+    "region": "마닐라 (Manila)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "이스턴 커뮤니케이션즈 (Eastern Communications) 가정용 및 기업용 인터넷 서비스",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 우체국 ID (Postal ID) 발급 절차 및 외국인 보조 신분증 활용",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "pending"
   }
 ]
