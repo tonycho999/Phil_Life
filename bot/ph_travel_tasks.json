@@ -936,5 +936,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Summit Point Golf & Country Club (서밋 포인트 골프 & 컨트리 클럽)",
+    "region": "Batangas (바탕가스)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Las Casas Filipinas de Acuzar (라스 카사스 필리피나스 데 아쿠사르)",
+    "region": "Bataan (바탄)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Pagsanjan Falls (팍상한 폭포)",
+    "region": "Laguna (라구나)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Subic Bay Wreck Diving (수빅만 난파선 다이빙)",
+    "region": "Subic (수빅)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

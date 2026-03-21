@@ -452,14 +452,14 @@
     "region": "마닐라 (Manila)",
     "category_main": "info",
     "category_sub": "medical",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "이스턴 커뮤니케이션즈 (Eastern Communications) 가정용 및 기업용 인터넷 서비스",
     "region": "필리핀 전역",
     "category_main": "info",
     "category_sub": "comm",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 우체국 ID (Postal ID) 발급 절차 및 외국인 보조 신분증 활용",
