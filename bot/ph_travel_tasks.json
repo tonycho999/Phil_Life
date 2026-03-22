@@ -992,5 +992,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "트윈 레이크스 골프 클럽 (Twin Lakes Golf Club)",
+    "region": "타가이타이",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "세다 리오 (Seda Lio)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "카니가오 섬 (Canigao Island)",
+    "region": "레이테",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "아르코 포인트 (Arco Point)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
