@@ -964,5 +964,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "South Pacific Golf & Leisure Estate (사우스 퍼시픽 골프 & 레저 에스테이트)",
+    "region": "Davao (다바오)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Club Paradise Palawan (클럽 파라다이스 팔라완)",
+    "region": "Coron (코론)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Biri Island Rock Formations (비리 아일랜드 락 포메이션)",
+    "region": "Northern Samar (북사마르)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Napantao Marine Sanctuary (나판타오 해양 보호구역)",
+    "region": "Southern Leyte (남레이테)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
