@@ -1048,5 +1048,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Valley Golf & Country Club (벨리 골프 & 컨트리 클럽)",
+    "region": "안티폴로 (Antipolo)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Escala Tagaytay (에스칼라 타가이타이)",
+    "region": "타가이타이 (Tagaytay)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Calaguas Islands (칼라구아스 제도)",
+    "region": "카마리네스 노르테 (Camarines Norte)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Hilutungan Island Marine Sanctuary (힐루뚱안 아일랜드 해양 보호구역)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
