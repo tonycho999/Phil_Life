@@ -1020,5 +1020,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "클럽 인트라무로스 골프 코스 (Club Intramuros Golf Course)",
+    "region": "마닐라 (Manila)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "오카다 마닐라 (Okada Manila)",
+    "region": "마닐라 (Manila)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "오스메냐 픽 (Osmeña Peak)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "날루수안 아일랜드 해양 보호구역 (Nalusuan Island Marine Sanctuary)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
