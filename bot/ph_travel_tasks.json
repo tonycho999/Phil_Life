@@ -1076,5 +1076,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Manila Golf and Country Club (마닐라 골프 & 컨트리 클럽)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Discovery Shores Boracay (디스커버리 쇼어 보라카이)",
+    "region": "보라카이",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Binurong Point (비누롱 포인트)",
+    "region": "카탄두아네스",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Blue Cathedral Diving Point (블루 카테드랄 다이빙 포인트)",
+    "region": "샤르가오",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

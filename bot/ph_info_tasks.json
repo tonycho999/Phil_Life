@@ -502,5 +502,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 SM 마닐라 분소 (BI SM Manila Satellite Office) 비자 연장 및 행정 서비스",
+    "region": "마닐라",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 PAREF Woodrose School (여학생 명문 사립학교) 입학 절차 및 교육 과정",
+    "region": "메트로 마닐라 (문틴루파)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "데 로스 산토스 메디컬 센터 (De Los Santos Medical Center) 퀘존 지역 의료 서비스 및 진료 안내",
+    "region": "퀘존 시티",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 프리덤 인터넷 (Freedom Internet) 콘도 전용 광인터넷 가입 및 서비스 특징",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 바랑가이 클리어런스 (Barangay Clearance) 및 거주 확인증 (Cedula) 발급 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
