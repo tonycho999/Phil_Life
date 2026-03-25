@@ -7,8 +7,9 @@ import { useRouter } from "next/navigation";
 import { MENUS, SITE_NAME } from "@/lib/constants";
 import { useAuth } from "@/components/auth/AuthProvider";
 import NicknameModal from "@/components/auth/NicknameModal";
-// ★ User, LogIn 아이콘이 추가되었습니다.
-import { Search, Sun, Cloud, CloudRain, CloudLightning, Snowflake, DollarSign, Coins, RefreshCcw, Loader2, Menu, X, ChevronRight, User, LogIn } from "lucide-react";
+// ★ 추가됨: Supabase 연동 (쪽지 개수 가져오기용) 및 Mail 아이콘 추가
+import { createClient } from "@/lib/supabase";
+import { Search, Sun, Cloud, CloudRain, CloudLightning, Snowflake, DollarSign, Coins, RefreshCcw, Loader2, Menu, X, ChevronRight, User, LogIn, Mail } from "lucide-react";
 
 const WEATHER_API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY || "";
 
@@ -35,6 +36,8 @@ export default function MainHeader() {
   const [weatherLoading, setWeatherLoading] = useState(true);
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // ★ 추가됨: 안 읽은 쪽지 개수 상태
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const getWeatherIcon = (main: string) => {
     switch (main) {
@@ -96,10 +99,32 @@ export default function MainHeader() {
     fetchWeather();
   }, []);
 
+  // ★ 추가됨: 모바일 메뉴창이 열릴 때마다 안 읽은 쪽지 개수 새로고침
+  useEffect(() => {
+    if (user && isMobileMenuOpen) {
+      const fetchUnread = async () => {
+        try {
+          const supabase = createClient();
+          const { count, error } = await supabase
+            .from("messages")
+            .select("*", { count: "exact", head: true })
+            .eq("receiver_id", user.id)
+            .is("read_at", null); // 읽지 않은 쪽지만 카운트
+
+          if (!error && count !== null) {
+            setUnreadCount(count);
+          }
+        } catch (e) {
+          console.error("쪽지 카운트 에러:", e);
+        }
+      };
+      fetchUnread();
+    }
+  }, [user, isMobileMenuOpen]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!keyword.trim()) return;
-    // ★ 수정된 부분: 홈(/?q=)이 아닌 검색 전용 페이지(/search?q=)로 이동합니다.
     router.push(`/search?q=${keyword}`);
   };
 
@@ -174,14 +199,12 @@ export default function MainHeader() {
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                 />
-                {/* ★ 추가됨: Search 아이콘을 button으로 감싸서 마우스 클릭 시에도 제출되게 수정 */}
                 <button type="submit" className="absolute left-4 top-3.5 outline-none">
                   <Search className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition hover:text-blue-600" />
                 </button>
               </div>
             </form>
             
-            {/* ★ 수정된 우측 상단 퀵 메뉴: PC에서는 숨기고(md:hidden), 쓸데없는 코드 제거! */}
             <div className="flex items-center gap-3 shrink-0">
               {user ? (
                 <Link href="/profile" className="md:hidden flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600 transition">
@@ -236,25 +259,46 @@ export default function MainHeader() {
           />
           <div className="relative w-[80%] max-w-[320px] bg-white h-full shadow-2xl flex flex-col ml-auto">
             <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-blue-50/50">
+              
+              {/* ★ 핵심 수정: 모바일 메뉴 상단 프로필 영역 */}
               {user ? (
-                <Link href="/profile" className="flex items-center gap-3" onClick={() => setIsMobileMenuOpen(false)}>
-                  {profile?.avatar_url ? (
-                    <img src={profile.avatar_url} alt="avatar" className="w-10 h-10 rounded-full object-cover border border-gray-200" />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                      <User size={20} />
-                    </div>
-                  )}
-                  <div className="flex flex-col">
-                    <span className="font-bold text-gray-800 text-sm">{profile?.nickname || '회원'}님</span>
-                    <span className="text-xs text-blue-600 font-medium">마이페이지 관리 〉</span>
+                <div className="flex items-center gap-3">
+                  {/* 프사는 누르면 여전히 프로필 관리로 감 */}
+                  <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)}>
+                    {profile?.avatar_url ? (
+                      <img src={profile.avatar_url} alt="avatar" className="w-10 h-10 rounded-full object-cover border border-gray-200" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                        <User size={20} />
+                      </div>
+                    )}
+                  </Link>
+                  <div className="flex flex-col items-start">
+                    <Link href="/profile" className="font-bold text-gray-800 text-sm mb-1 hover:text-blue-600 transition" onClick={() => setIsMobileMenuOpen(false)}>
+                      {profile?.nickname || '회원'}님
+                    </Link>
+                    
+                    {/* [마이페이지 관리] 텍스트 대신 화려한 [쪽지함] 버튼으로 완벽 교체! */}
+                    <Link 
+                      href="/messages" 
+                      className="flex items-center gap-1.5 text-xs font-bold text-white bg-blue-600 px-2.5 py-1 rounded-md hover:bg-blue-700 transition shadow-sm" 
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Mail size={12} /> 쪽지 확인
+                      {unreadCount > 0 && (
+                        <span className="flex items-center justify-center bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-black animate-pulse shadow-sm">
+                          {unreadCount > 99 ? '99+' : unreadCount}
+                        </span>
+                      )}
+                    </Link>
                   </div>
-                </Link>
+                </div>
               ) : (
                 <Link href="/login" className="font-bold text-base text-blue-800 flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
                   <LogIn size={18} /> 로그인 해주세요
                 </Link>
               )}
+
               <button 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-2 text-gray-500 hover:bg-gray-200 hover:text-gray-800 rounded-lg transition"
