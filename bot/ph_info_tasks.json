@@ -537,5 +537,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 파사이 분소 (BI Pasay/SM Mall of Asia Satellite Office) 비자 연장 및 행정 서비스",
+    "region": "메트로 마닐라 파사이",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "빅토리 크리스천 인터내셔널 스쿨 (Victory Christian International School) 입학 절차 및 교육 과정",
+    "region": "메트로 마닐라 파시그",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "캐피톨 메디컬 센터 (Capitol Medical Center) 퀘존 지역 진료 및 외국인 환자 서비스 안내",
+    "region": "메트로 마닐라 퀘존",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "래디우스 텔레콤 (Radius Telecoms - GameChanger) 광인터넷 서비스 및 거주 지역별 설치 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 이주노동자부 (DMW) 가사도우미 (Kasambahay) 표준 고용 계약 및 등록 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "pending"
   }
 ]

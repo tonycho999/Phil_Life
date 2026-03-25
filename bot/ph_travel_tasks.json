@@ -1160,5 +1160,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Baguio Country Club (바기오 컨트리 클럽)",
+    "region": "Baguio",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "South Palms Resort Panglao (사우스 팜 리조트 팡글라오)",
+    "region": "Bohol",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Maria Cristina Falls (마리아 크리스티나 폭포)",
+    "region": "Iligan",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Marigondon Cave (마리곤돈 케이브)",
+    "region": "Cebu",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
