@@ -54,7 +54,7 @@ def run_community_bot():
     
     random.seed(today_str)
     TARGET_POSTS = random.randint(6, 8)
-    TARGET_COMMENTS = 30
+    TARGET_COMMENTS = 150
     random.seed() # 이후 랜덤은 다시 무작위로 복구
     
     print(f"🎯 오늘의 커뮤니티 목표: 글 {TARGET_POSTS}개 / 댓글 {TARGET_COMMENTS}개")
@@ -141,7 +141,7 @@ def run_community_bot():
 
             if target_posts_all:
                 # 하루 30개를 채우기 위해 1시간마다 랜덤으로 1~3번씩 댓글 작성
-                for _ in range(random.randint(1, 3)):
+                for _ in range(random.randint(5, 8)):
                     if current_comment_count >= TARGET_COMMENTS: break
                     
                     target = random.choice(target_posts_all)
