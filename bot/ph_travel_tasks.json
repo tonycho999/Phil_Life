@@ -1188,5 +1188,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Negros Occidental Golf and Country Club (네그로스 옥시덴탈 골프 & 컨트리 클럽)",
+    "region": "네그로스 옥시덴탈",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Manami Resort (마나미 리조트)",
+    "region": "네그로스 옥시덴탈",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "The Ruins (더 루인스)",
+    "region": "네그로스 옥시덴탈",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Campomanes Bay (캄포마네스 베이)",
+    "region": "네그로스 옥시덴탈",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
