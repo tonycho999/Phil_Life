@@ -1216,5 +1216,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Puerto Azul Golf & Country Club (푸에르토 아줄 골프 & 컨트리 클럽)",
+    "region": "카비테",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Abaca Boutique Resort (아바카 부티크 리조트)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Aliwagwag Falls (알리왁왁 폭포)",
+    "region": "다바오 오리엔탈",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Sombrero Island (솜브레로 섬)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
