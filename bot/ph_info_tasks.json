@@ -572,5 +572,40 @@
     "category_main": "info",
     "category_sub": "law",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 세부 분소 (BI Cebu District Office - J Centre Mall) 비자 연장 및 거주 행정 서비스",
+    "region": "세부 및 비사야 지역",
+    "category_main": "visa",
+    "category_sub": "immigration",
+    "status": "completed"
+  },
+  {
+    "target_name": "드 라 살 산티아고 조벨 스쿨 (De La Salle Santiago Zobel School) 입학 절차 및 알라방 지역 교육 환경 안내",
+    "region": "메트로 마닐라 (문틴루파)",
+    "category_main": "edu",
+    "category_sub": "school",
+    "status": "completed"
+  },
+  {
+    "target_name": "UST 대학 병원 (University of Santo Tomas Hospital) 진료 예약 및 전문의 상담 가이드",
+    "region": "메트로 마닐라 (마닐라 시티)",
+    "category_main": "medical",
+    "category_sub": "hospital",
+    "status": "pending"
+  },
+  {
+    "target_name": "라이즈 ICT (Rise ICT) 고성능 기업형 및 주거용 광인터넷 서비스 신청 안내",
+    "region": "필리핀 주요 도시",
+    "category_main": "comm",
+    "category_sub": "internet",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 토지등록청 (LRA) 부동산 등기부 등본 발급 및 소유권 확인 행정 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "government",
+    "status": "pending"
   }
 ]

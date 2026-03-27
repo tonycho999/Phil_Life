@@ -1244,5 +1244,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Mount Malindang Golf and Country Club (마운트 말린다랑 골프 & 컨트리 클럽)",
+    "region": "Misamis Occidental (미사미스 옥시덴탈)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Vivere Azure (비베레 아주르)",
+    "region": "Batangas (바탕가스)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Mount Hamiguitan Range Wildlife Sanctuary (마운트 하미구이탄 자연 보호구역)",
+    "region": "Davao Oriental (다바오 오리엔탈)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Capitancillo Islet Diving Point (카피탄칠로 아일랜드 다이빙 포인트)",
+    "region": "Cebu (세부)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
