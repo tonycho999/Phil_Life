@@ -592,14 +592,14 @@
     "region": "메트로 마닐라 (마닐라 시티)",
     "category_main": "medical",
     "category_sub": "hospital",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "라이즈 ICT (Rise ICT) 고성능 기업형 및 주거용 광인터넷 서비스 신청 안내",
     "region": "필리핀 주요 도시",
     "category_main": "comm",
     "category_sub": "internet",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 토지등록청 (LRA) 부동산 등기부 등본 발급 및 소유권 확인 행정 절차",

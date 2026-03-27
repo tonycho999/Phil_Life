@@ -1272,5 +1272,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Royal Northwoods Golf Club (로열 노스우즈 골프 클럽)",
+    "region": "불라칸 (Bulacan)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Siargao Bleu Resort and Spa (샤르가오 블루 리조트 & 스파)",
+    "region": "샤르가오 (Siargao)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Kayangan Lake (카양안 호수)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Kimud Shoal (키무드 숄)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
