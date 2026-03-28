@@ -1300,5 +1300,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Zamboanga Golf and Country Club (잠보앙가 골프 & 컨트리 클럽)",
+    "region": "잠보앙가",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Sheraton Cebu Mactan Resort (쉐라톤 세부 막탄 리조트)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Anguib Beach (앙구입 비치)",
+    "region": "카가얀",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Shark Fin Rock Diving Point (샤크 핀 락 다이빙 포인트)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
