@@ -1328,5 +1328,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Leyte Golf and Country Club (레이테 골프 앤 컨트리 클럽)",
+    "region": "레이테 (Leyte)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Badian Island Wellness Resort (바디안 아일랜드 웰니스 리조트)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Animasola Island (아니마솔라 섬)",
+    "region": "마스바테 (Masbate)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Kontiki Wall (콘티키 월)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
