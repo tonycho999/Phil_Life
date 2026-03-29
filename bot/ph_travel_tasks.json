@@ -1384,5 +1384,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Beverly Place Golf & Country Club (베벌리 플레이스 골프 & 컨트리 클럽)",
+    "region": "팜팡가",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Pulchra Resort Cebu (풀크라 리조트 세부)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Sugba Lagoon (수그바 라군)",
+    "region": "샤르가오",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Doljo Point (돌호 포인트)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
