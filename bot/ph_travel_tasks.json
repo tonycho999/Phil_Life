@@ -1356,5 +1356,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Canyon Woods Residential Resort (캐년 우즈 레지덴셜 리조트)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Fili Hotel NUSTAR Cebu (필리 호텔 누스타 세부)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Dahilayan Adventure Park (다힐라얀 어드벤처 파크)",
+    "region": "부키드논",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Habagat Shipwreck (하바갓 쉽렉)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
