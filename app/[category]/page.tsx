@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
 import Link from "next/link";
 import { Suspense } from "react";
+// ★ 추가됨: 메타데이터 타입을 가져옵니다.
+import { Metadata } from "next";
 
 // ★ 글 썼을 때 바로 보이게 하는 설정 & Cloudflare Edge 런타임 설정
 export const dynamic = "force-dynamic";
@@ -11,6 +13,38 @@ type PageProps = {
   params: { category: string };
   searchParams: { page?: string; q?: string };
 };
+
+// ─────────────────────────────────────────────────────────
+// ★ 수정됨: 구글 검색 노출용 동적 SEO 메타데이터 생성기 (타이틀 커스텀 추가)
+// ─────────────────────────────────────────────────────────
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const currentMenu = MENUS.find((m: any) => m.id === params.category);
+  const menuName = currentMenu?.label || params.category;
+
+  // 1. 기본 타이틀 및 소개글 세팅
+  let customTitle = `${menuName} - 필카페24`;
+  let customDescription = `필카페24 ${menuName} 게시판입니다. 필리핀 교민과 여행객을 위한 다양한 정보를 확인하세요.`;
+
+  // 2. 검색에 자주 노출되는 핵심 게시판만 아주 매력적인 문구로 수동 지정!
+  if (params.category === 'travel') {
+    // ★ 관리자님이 요청하신 여행/맛집 전용 완벽한 SEO 문구 적용!
+    customTitle = "필리핀 여행/맛집 리얼 후기 및 꿀팁 - 필카페24";
+    customDescription = "마닐라, 세부, 보라카이, 클락 등 필리핀 자유여행의 모든 것! 현지 교민이 강력 추천하는 숨은 로컬 맛집, 가성비 숙소, 안전한 렌터카 예약 꿀팁을 가장 빠르게 확인하세요.";
+  } else if (params.category === 'market') {
+    customDescription = "필리핀 한인 벼룩시장, 중고거래, 구인구직, 부동산 임대 및 매매 등 안전하고 빠른 교민 직거래 장터입니다.";
+  } else if (params.category === 'news') {
+    customDescription = "필리핀 현지 실시간 뉴스, 사건사고, 환율, 날씨 등 교민 생활에 꼭 필요한 필수 정보를 가장 빠르게 전달합니다.";
+  }
+
+  return {
+    title: customTitle,
+    description: customDescription,
+    openGraph: {
+      title: customTitle,
+      description: customDescription,
+    }
+  };
+}
 
 // ★ 수정됨: 최신 0~10레벨, S등급(99), M(10레벨) 색상 함수 적용
 function getLevelBadgeInfo(level: any) {
