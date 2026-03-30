@@ -642,5 +642,40 @@
     "category_main": "info",
     "category_sub": "admin",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 바기오 분소 (BI Baguio District Office) 비자 연장 및 행정 서비스",
+    "region": "바기오 및 루손 북부",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "도미니칸 인터내셔널 스쿨 (Dominican International School Manila) 입학 절차 및 교육 과정",
+    "region": "메트로 마닐라",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "루르드 병원 (Our Lady of Lourdes Hospital) 마닐라 지역 의료 서비스 및 진료 안내",
+    "region": "메트로 마닐라",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "인피니반 (InfiniVAN) 초고속 광인터넷 서비스 특징 및 신청 가이드",
+    "region": "필리핀 주요 도시",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 보건부 (DOH) 국제 예방접종 증명서 (ICV/Yellow Card) 발급 및 온라인 예약 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]

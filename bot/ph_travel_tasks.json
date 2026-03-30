@@ -1412,5 +1412,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "이스트릿지 골프 & 컨트리 클럽 (Eastridge Golf & Country Club)",
+    "region": "리잘 (Rizal)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "보홀 비치 클럽 (Bohol Beach Club)",
+    "region": "보홀 (Bohol)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "푸에르토 프린세사 지하강 국립공원 (Puerto Princesa Subterranean River National Park)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "올랑고 아일랜드 해양 보호구역 (Olango Island Marine Sanctuary)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
