@@ -1440,5 +1440,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "The Cliffs Golf & Beach Club (더 클리프 골프 & 비치 클럽)",
+    "region": "La Union (라 우니온)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Costa Pacifica (코스타 파시피카)",
+    "region": "Baler (발레르)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Cape Bojeador Lighthouse (카보 보헤아도르 등대)",
+    "region": "Ilocos Norte (일로코스 노르테)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Apo Island Marine Sanctuary (아포 섬 해양 보호구역)",
+    "region": "Negros Oriental (네그로스 오리엔탈)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
