@@ -173,4 +173,3 @@ export default async function Home({ searchParams }: any) {
   );
 }
 
-여기 수정하면 되는건가?
