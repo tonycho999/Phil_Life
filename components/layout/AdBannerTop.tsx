@@ -17,7 +17,7 @@ export default function AdBannerTop() {
       href="https://invl.me/clnd1iv" 
       target="_blank" 
       rel="noopener noreferrer"
-      className="block w-full h-[90px] mb-6 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden border border-orange-600 bg-gradient-to-r from-orange-500 to-red-500 shrink-0"
+      className="block w-full min-w-full h-[90px] mb-6 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden border border-orange-600 bg-gradient-to-r from-orange-500 to-red-500 shrink-0"
     >
       <div className="flex items-center justify-between px-6 h-full">
         <div className="flex flex-col justify-center text-white min-w-0 h-full">
