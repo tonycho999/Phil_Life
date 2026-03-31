@@ -83,7 +83,7 @@ export default function RootLayout({
           <MainHeader />
           
           {/* 3. 5단 Grid 레이아웃 (좌측광고 - 좌 - 중앙 - 우 - 우측광고) */}
-          <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_220px_minmax(auto,800px)_220px_1fr] gap-6 pt-6 px-4 lg:px-0 min-h-screen">
+          <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_220px_minmax(0,800px)_220px_1fr] gap-6 pt-6 px-4 lg:px-0 min-h-screen">
             
             {/* 첫 번째 칸: 좌측 날개 배너 */}
             <AdBannerLeft />
