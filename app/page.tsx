@@ -126,6 +126,32 @@ export default async function Home({ searchParams }: any) {
 
   return (
     <div className="space-y-6">
+      
+      {/* ★ 추가됨: 쇼피 제휴 마케팅 메인 프리미엄 배너 */}
+      <a 
+        href="https://invl.me/clnd1iv" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="block w-full bg-gradient-to-r from-orange-500 to-red-500 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 overflow-hidden border border-orange-600 mb-6"
+      >
+        <div className="flex items-center justify-between px-6 py-4 md:py-6">
+          <div className="flex flex-col text-white">
+            <span className="text-xs md:text-sm font-bold text-orange-200 mb-1 animate-pulse">
+              🛒 필리핀 교민 쇼핑 필수 코스
+            </span>
+            <h3 className="text-lg md:text-2xl font-black tracking-tight">
+              쇼피(Shopee) 오늘만 이 가격, 타임세일 즉시 확인!
+            </h3>
+            <p className="text-sm md:text-base text-white/90 mt-1 hidden md:block">
+              무료배송 바우처 & 생필품 초특가 할인을 놓치지 마세요 👉
+            </p>
+          </div>
+          <div className="shrink-0 bg-white text-red-500 font-black px-4 py-2 md:px-6 md:py-3 rounded-full text-sm md:text-base whitespace-nowrap shadow-inner hover:bg-gray-50 transition">
+            할인받기 〉
+          </div>
+        </div>
+      </a>
+
       {/* 메인 타이틀 */}
       <div className="flex items-center gap-2 px-1">
           <h2 className="text-lg font-bold text-gray-800">
