@@ -74,25 +74,36 @@ export default function RootLayout({
           <NicknameGuard />
           <MainHeader />
           
-          <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_220px_minmax(auto,800px)_220px_1fr] gap-6 pt-6 px-4 lg:px-0 min-h-screen">
-            <AdBannerLeft />
+          {/* ★ 핵심 수정: 오류를 내던 Grid를 완전히 버리고, 절대 찌그러지지 않는 Flexbox 5단 레이아웃으로 교체했습니다! */}
+          <div className="w-full max-w-[1600px] mx-auto flex flex-col lg:flex-row lg:justify-center lg:items-start gap-6 pt-6 px-4 lg:px-0 min-h-screen overflow-x-hidden">
+            
+            {/* 1. 좌측 날개 배너 (남는 공간을 유연하게 채움) */}
+            <div className="hidden lg:block flex-1 min-w-[50px] max-w-[250px]">
+              <AdBannerLeft />
+            </div>
 
-            <aside className="hidden md:block w-[220px]">
+            {/* 2. 좌측 사이드바 (220px 단단하게 고정) */}
+            <aside className="hidden lg:block w-[220px] shrink-0">
               <SidebarLeft />
             </aside>
 
-            {/* ★ 핵심 수정: block과 w-full을 강제 주입하여 스스로 쪼그라드는 현상을 영구 차단합니다! */}
-            <main className="block w-full max-w-[800px] min-w-0 mx-auto">
+            {/* 3. 메인 컨텐츠 (800px로 완벽 고정, 브라우저가 절대 줄이지 못함) */}
+            <main className="w-full lg:w-[800px] shrink-0 min-w-0">
               <AdBannerTop />
               <MobileAdSlider />
               {children}
             </main>
 
-            <aside className="hidden md:block w-[220px]">
+            {/* 4. 우측 사이드바 (220px 단단하게 고정) */}
+            <aside className="hidden lg:block w-[220px] shrink-0">
               <SidebarRight />
             </aside>
 
-            <AdBannerRight />
+            {/* 5. 우측 날개 배너 (남는 공간을 유연하게 채움) */}
+            <div className="hidden lg:block flex-1 min-w-[50px] max-w-[250px]">
+              <AdBannerRight />
+            </div>
+
           </div>
 
           <Footer />
