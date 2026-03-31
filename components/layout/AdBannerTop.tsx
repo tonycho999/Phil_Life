@@ -7,22 +7,47 @@ import Link from "next/link";
 export default function AdBannerTop() {
   const pathname = usePathname();
 
-  // 1. 🎯 광고 데이터 관리 (나중에 광고가 들어오면 여기만 수정하시면 됩니다!)
-  // 각 카테고리별로 표시할 텍스트나 색상을 다르게 설정해 두었습니다.
-  const adData = {
-    main: { text: "🔥 메인 홈 스폰서 프리미엄 배너", color: "bg-blue-100 text-blue-800" },
+  // 1. 🎯 메인 홈 화면("/")일 경우: 화려한 쇼피 제휴 배너 렌더링
+  if (pathname === "/") {
+    return (
+      <a 
+        href="https://invl.me/clnd1iv" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="block w-full bg-gradient-to-r from-orange-500 to-red-500 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 overflow-hidden border border-orange-600 mb-6"
+      >
+        <div className="flex items-center justify-between px-6 py-4 md:py-6">
+          <div className="flex flex-col text-white">
+            <span className="text-xs md:text-sm font-bold text-orange-200 mb-1 animate-pulse">
+              🛒 필리핀 교민 쇼핑 필수 코스
+            </span>
+            <h3 className="text-lg md:text-2xl font-black tracking-tight">
+              쇼피(Shopee) 오늘만 이 가격, 타임세일 즉시 확인!
+            </h3>
+            <p className="text-sm md:text-base text-white/90 mt-1 hidden md:block">
+              무료배송 바우처 & 생필품 초특가 할인을 놓치지 마세요 👉
+            </p>
+          </div>
+          <div className="shrink-0 bg-white text-red-500 font-black px-4 py-2 md:px-6 md:py-3 rounded-full text-sm md:text-base whitespace-nowrap shadow-inner hover:bg-gray-50 transition">
+            할인받기 〉
+          </div>
+        </div>
+      </a>
+    );
+  }
+
+  // 2. 다른 게시판일 경우: 기존 임시 배너 데이터
+  const adData: any = {
     news: { text: "📰 뉴스/이슈 게시판 전용 배너", color: "bg-green-100 text-green-800" },
     info: { text: "💡 정보/팁 게시판 전용 배너", color: "bg-yellow-100 text-yellow-800" },
     community: { text: "💬 커뮤니티 자유게시판 전용 배너", color: "bg-purple-100 text-purple-800" },
     default: { text: "✨ 필카페24 통합 상단 배너", color: "bg-gray-100 text-gray-800" },
   };
 
-  // 2. 현재 주소(pathname)를 분석해서 어떤 광고를 띄울지 결정합니다.
+  // 3. 현재 주소(pathname)를 분석해서 어떤 광고를 띄울지 결정
   let currentAd = adData.default;
   
-  if (pathname === "/") {
-    currentAd = adData.main; // 메인 홈화면일 때
-  } else if (pathname.startsWith("/news")) {
+  if (pathname.startsWith("/news")) {
     currentAd = adData.news; // 뉴스 카테고리일 때
   } else if (pathname.startsWith("/info")) {
     currentAd = adData.info; // 정보 카테고리일 때
@@ -30,16 +55,11 @@ export default function AdBannerTop() {
     currentAd = adData.community; // 커뮤니티 카테고리일 때
   }
 
-  // 3. 실제 화면에 그려지는 부분
+  // 4. 서브 페이지용 임시 배너 렌더링
   return (
     <div className={`w-full h-[90px] mb-6 rounded-lg flex items-center justify-center font-bold border border-gray-200 shadow-sm transition-all ${currentAd.color}`}>
       
-      {/* 💡 나중에 실제 광고 이미지로 교체하실 때는 위 div 안의 내용을 지우고 아래처럼 작성하세요!
-        <Link href="광고주사이트URL" target="_blank" className="relative w-full h-full block">
-          <Image src="/images/ads/top-banner-news.jpg" alt="광고" fill className="object-cover rounded-lg" />
-        </Link>
-      */}
-      
+      {/* 💡 나중에 서브페이지도 실제 배너로 교체하실 때는 이 부분을 수정하세요! */}
       <span>
         {currentAd.text} 
         <span className="text-xs font-normal ml-2 text-gray-500">(예: 800x90 사이즈)</span>
