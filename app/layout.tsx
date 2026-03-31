@@ -84,7 +84,7 @@ export default function RootLayout({
           <MainHeader />
           
           {/* 3. 5단 Grid 레이아웃 (좌측광고 - 좌 - 중앙 - 우 - 우측광고) */}
-          <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[auto_220px_minmax(400px,800px)_220px_auto] justify-center gap-6 pt-6 px-4 lg:px-0 min-h-screen">
+          <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_220px_minmax(auto,800px)_220px_1fr] gap-6 pt-6 px-4 lg:px-0 min-h-screen">
             
             {/* 첫 번째 칸: 좌측 날개 배너 */}
             <AdBannerLeft />
@@ -95,7 +95,8 @@ export default function RootLayout({
             </aside>
 
             {/* 세 번째 칸 (Center): 메인 컨텐츠 */}
-            <main className="w-full min-w-0">
+            {/* ★ 핵심 수정: 알맹이 자체가 800px의 힘을 갖도록 w-[800px] max-w-full 부여! */}
+            <main className="w-[800px] max-w-full">
               {/* ★ 추가된 부분: 실시간 인기 게시글(children) 바로 위에 상단 배너 추가 */}
               <AdBannerTop />
               {/* ★ 추가됨: 모바일에서만 보이는 3초 간격 2열 광고 슬라이더 */}
