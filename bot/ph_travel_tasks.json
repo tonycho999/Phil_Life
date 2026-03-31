@@ -1496,5 +1496,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Pinewoods Golf & Country Club (파인우즈 골프 & 컨트리 클럽)",
+    "region": "Baguio",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Dusit Thani Mactan Cebu Resort (두짓타니 막탄 세부 리조트)",
+    "region": "Cebu",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Maniwaya Island (마니와야 섬)",
+    "region": "Marinduque",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Linapacan Island Diving Point (리나파칸 섬 다이빙 포인트)",
+    "region": "Palawan",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

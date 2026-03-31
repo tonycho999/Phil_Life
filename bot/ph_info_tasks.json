@@ -677,5 +677,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 일로일로 분소 (BI Iloilo District Office) 비자 연장 및 행정 서비스",
+    "region": "일로일로 및 웨스턴 비사야",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "PAREF 사우스리지 학교 (PAREF Southridge School) 입학 절차 및 남학생 교육 과정 안내",
+    "region": "문틴루파 알라방",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "하이-프레시전 진단 센터 (Hi-Precision Diagnostics) 혈액 검사 및 종합 건강검진 이용 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "시그널 TV (Cignal TV) 위성 방송 가입 및 선불형 요금제 충전 방법",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 토지교통심의위원회 (LTFRB) 택시 및 그랩(Grab) 부당 요금 신고 및 민원 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
