@@ -95,7 +95,7 @@ export default function RootLayout({
             </aside>
 
             {/* 세 번째 칸 (Center): 메인 컨텐츠 */}
-            <main className="w-full">
+            <main className="w-full min-w-0">
               {/* ★ 추가된 부분: 실시간 인기 게시글(children) 바로 위에 상단 배너 추가 */}
               <AdBannerTop />
               {/* ★ 추가됨: 모바일에서만 보이는 3초 간격 2열 광고 슬라이더 */}
