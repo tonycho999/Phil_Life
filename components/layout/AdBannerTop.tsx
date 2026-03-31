@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-// import Image from "next/image"; // 나중에 실제 이미지 넣을 때 주석 해제하세요!
 
 export default function AdBannerTop() {
   const pathname = usePathname();
@@ -36,7 +35,7 @@ export default function AdBannerTop() {
     );
   }
 
-  // 2. 다른 게시판일 경우: 기존 임시 배너 데이터
+  // 2. 다른 게시판일 경우: 기존 서브페이지용 배너 데이터
   const adData: any = {
     news: { text: "📰 뉴스/이슈 게시판 전용 배너", color: "bg-green-100 text-green-800" },
     info: { text: "💡 정보/팁 게시판 전용 배너", color: "bg-yellow-100 text-yellow-800" },
@@ -48,23 +47,20 @@ export default function AdBannerTop() {
   let currentAd = adData.default;
   
   if (pathname.startsWith("/news")) {
-    currentAd = adData.news; // 뉴스 카테고리일 때
+    currentAd = adData.news;
   } else if (pathname.startsWith("/info")) {
-    currentAd = adData.info; // 정보 카테고리일 때
+    currentAd = adData.info;
   } else if (pathname.startsWith("/community")) {
-    currentAd = adData.community; // 커뮤니티 카테고리일 때
+    currentAd = adData.community;
   }
 
   // 4. 서브 페이지용 임시 배너 렌더링
   return (
     <div className={`w-full h-[90px] mb-6 rounded-lg flex items-center justify-center font-bold border border-gray-200 shadow-sm transition-all ${currentAd.color}`}>
-      
-      {/* 💡 나중에 서브페이지도 실제 배너로 교체하실 때는 이 부분을 수정하세요! */}
       <span>
         {currentAd.text} 
         <span className="text-xs font-normal ml-2 text-gray-500">(예: 800x90 사이즈)</span>
       </span>
-      
     </div>
   );
 }
