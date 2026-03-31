@@ -28,8 +28,8 @@ function HomeBoardWidget({ title, subtitle, posts, link, color = "blue", icon: I
     orange: "border-t-orange-500 text-orange-600 bg-orange-50"
   };
 
+  // ★ 핵심 수정: w-full을 추가하여 게시판 위젯이 절대 쪼그라들지 않게 만듭니다!
   return (
-    {/* ★ 핵심 수정: w-full을 추가하여 게시판 위젯이 절대 쪼그라들지 않게 만듭니다! */}
     <div className={`w-full bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full border-t-4 ${colorStyles[color]?.split(" ")[0] || "border-t-gray-500"}`}>
       <div className="flex justify-between items-center px-5 py-4 border-b border-gray-100">
         <div className="flex items-center gap-2">
@@ -115,8 +115,8 @@ export default async function Home({ searchParams }: any) {
     qnaQuery,
   ]);
 
+  // ★ 핵심 수정: w-full과 min-w-0을 추가하여 내부 컨텐츠가 800px 끝까지 쫙 펴지도록 강제합니다!
   return (
-    {/* ★ 핵심 수정: w-full과 min-w-0을 추가하여 내부 컨텐츠가 800px 끝까지 쫙 펴지도록 강제합니다! */}
     <div className="w-full min-w-0 space-y-6">
       <div className="flex items-center gap-2 px-1">
           <h2 className="text-lg font-bold text-gray-800">
