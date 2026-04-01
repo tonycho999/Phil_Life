@@ -1524,5 +1524,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Victorias Golf and Country Club (빅토리아스 골프 앤 컨트리 클럽)",
+    "region": "네그로스 옥시덴탈 (Negros Occidental)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Flower Island Resort (플라워 아일랜드 리조트)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Asik-Asik Falls (아식아식 폭포)",
+    "region": "북코타바토 (North Cotabato)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Cuyo Island Diving Point (쿠요 제도 다이빙 포인트)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
