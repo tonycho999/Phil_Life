@@ -1,16 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom"; // ★ 1. 팝업을 맨 앞으로 빼낼 포탈(Portal) 소환!
 import { createClient } from "@/lib/supabase";
-import { X, Send, Reply } from "lucide-react"; // ★ 수정됨: Reply 아이콘 추가
+import { X, Send, Reply } from "lucide-react";
 
-// ★ 수정됨: isReply 프롭(옵션) 추가
 export default function SendMessageModal({ isOpen, onClose, receiverId, receiverNickname, isReply = false }: any) {
   const [content, setContent] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [mounted, setMounted] = useState(false); // ★ 2. 브라우저 렌더링 확인용 상태 추가
   const supabase = createClient();
 
-  if (!isOpen) return null;
+  // ★ 3. 에러 방지: 컴포넌트가 브라우저에 마운트된 후에만 팝업을 띄우도록 설정
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // isOpen이 false거나, 아직 마운트되지 않았으면 렌더링하지 않음
+  if (!isOpen || !mounted) return null;
 
   const handleSend = async () => {
     if (!content.trim()) return alert("내용을 입력해주세요.");
@@ -32,20 +39,22 @@ export default function SendMessageModal({ isOpen, onClose, receiverId, receiver
     if (error) {
       alert("쪽지 전송에 실패했습니다.");
     } else {
-      alert(`${receiverNickname}님에게 ${isReply ? '답장' : '쪽지'}를 보냈습니다!`); // ★ 수정됨: 알림창 문구 변경
+      alert(`${receiverNickname}님에게 ${isReply ? '답장' : '쪽지'}를 보냈습니다!`);
       setContent("");
       onClose();
     }
     setIsSending(false);
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/50 z- flex items-center justify-center p-4">
+  // ★ 4. createPortal을 사용해 팝업창 전체를 document.body(화면 최상단)로 순간이동!
+  return createPortal(
+    // (기존 오타였던 'z- flex' 부분을 'flex'로 깔끔하게 수정했습니다.)
+    <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+        
         {/* 헤더 */}
         <div className="bg-gray-50 px-5 py-4 border-b flex justify-between items-center">
           <h3 className="font-bold text-gray-800 flex items-center gap-2">
-            {/* ★ 수정됨: isReply가 true면 답장 아이콘과 텍스트를 보여줌 */}
             {isReply ? <Reply size={18} className="text-green-600" /> : <Send size={18} className="text-blue-600" />}
             {isReply ? "답장 보내기" : "쪽지 보내기"}
           </h3>
@@ -78,12 +87,14 @@ export default function SendMessageModal({ isOpen, onClose, receiverId, receiver
           <button 
             onClick={handleSend}
             disabled={isSending}
-            className={`px-6 py-2 text-sm font-bold text-white rounded-lg transition disabled:opacity-50 flex items-center gap-2 ${isReply ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}`} // ★ 수정됨: 답장일 때 버튼 색상 변경
+            className={`px-6 py-2 text-sm font-bold text-white rounded-lg transition disabled:opacity-50 flex items-center gap-2 ${isReply ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}`}
           >
             {isSending ? "전송 중..." : "보내기"}
           </button>
         </div>
+        
       </div>
-    </div>
+    </div>,
+    document.body // ★ 포탈의 도착지: HTML의 최상위 body 태그!
   );
 }
