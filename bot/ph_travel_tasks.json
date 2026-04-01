@@ -1552,5 +1552,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "다바오 시티 골프 클럽 (Davao City Golf Club)",
+    "region": "다바오",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "디스커버리 프리메아 (Discovery Primea)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "크레스타 데 가요 섬 (Cresta de Gallo Island)",
+    "region": "롬블론",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "칼리파얀 리프 (Kalipayan Reef)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
