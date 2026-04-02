@@ -712,5 +712,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 수빅 분소 (BI Subic Bay Field Office) 비자 연장 및 외국인 거주 행정 서비스",
+    "region": "수빅/올롱가포",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "세부 인터내셔널 스쿨 (Cebu International School) 입학 절차 및 IB 프로그램 안내",
+    "region": "세부",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "메디컬 센터 마닐라 (Medical Center Manila - ManilaMed) 진료 예약 및 전문의 상담 가이드",
+    "region": "마닐라",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "로열 케이블 (Royal Cable) 가정용 광인터넷 및 지역 케이블 TV 서비스 가입 안내",
+    "region": "라구나/카비테",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 관세청 (BOC) 외국인 이사화물 통관 및 발릭바얀 박스 면세 규정 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
