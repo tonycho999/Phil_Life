@@ -1664,5 +1664,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Philippine Navy Golf Club (필리핀 네이비 골프 클럽)",
+    "region": "마닐라 (Taguig)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Acuaverde Beach Resort (아쿠아베르데 비치 리조트)",
+    "region": "바탕가스 (Laiya)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Seven Lakes of San Pablo (산파블로 7개 호수)",
+    "region": "라구나 (Laguna)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Medina Underwater Park (메디나 수중 공원)",
+    "region": "미사미스 오리엔탈 (Misamis Oriental)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

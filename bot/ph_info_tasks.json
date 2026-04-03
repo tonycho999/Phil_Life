@@ -747,5 +747,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 보라카이 분소 (BI Boracay Field Office) 비자 연장 및 행정 서비스",
+    "region": "보라카이/아클란",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "미리암 칼리지 (Miriam College) 입학 절차 및 카톨릭 명문 사립 교육 과정",
+    "region": "퀘존/라구나",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "파라냐케 메디컬 센터 (Parañaque Medical Center) 진료 예약 및 주요 전문의 상담 안내",
+    "region": "메트로 마닐라",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "서프2사와 (Surf2Sawa) 선불형 광인터넷 가입 및 저비용 데이터 활용 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 지적재산권청 (IPOPHL) 상표권 및 저작권 등록 행정 절차 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "pending"
   }
 ]
