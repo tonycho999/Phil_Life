@@ -1636,5 +1636,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Club Filipino Inc. de Cebu (클럽 필리피노 인크 데 세부)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Admiral Hotel Manila - MGallery (애드미럴 호텔 마닐라 - 엠갤러리)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Mount Apo (마운트 아포)",
+    "region": "다바오",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Nogas Island Diving Point (노가스 섬 다이빙 포인트)",
+    "region": "안티케",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
