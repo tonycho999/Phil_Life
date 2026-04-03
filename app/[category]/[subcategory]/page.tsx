@@ -2,7 +2,9 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
 import WriteButton from "@/components/ui/WriteButton";
-import PostList from "@/components/board/PostList"; // ★ 만든 컴포넌트 import
+import PostList from "@/components/board/PostList"; 
+// ★ 추가됨: 방금 만든 똑똑한 페이지네이션 컴포넌트 불러오기!
+import Pagination from "@/components/common/Pagination";
 
 export const dynamic = "force-dynamic";
 export const runtime = 'edge';
@@ -66,7 +68,7 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
         />
       </div>
 
-      {/* ★ 게시글 리스트 (이제 이 한 줄이 디자인을 책임집니다) */}
+      {/* 게시글 리스트 */}
       <PostList 
         posts={posts || []} 
         showSubCategory={false} // 소분류 화면이니까 제목 옆 [카테고리] 숨김
@@ -75,20 +77,9 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
         pageSize={pageSize}
       />
 
-      {/* 페이지네이션 */}
-      <div className="flex justify-center mt-6 gap-2 pb-8">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-          <Link
-            key={p}
-            href={`/${params.category}/${params.subcategory}?page=${p}${searchParams.q ? `&q=${searchParams.q}` : ''}`}
-            className={`px-3 py-1 rounded border text-sm ${
-              p === page ? "bg-blue-600 text-white border-blue-600 font-bold" : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
-            }`}
-          >
-            {p}
-          </Link>
-        ))}
-      </div>
+      {/* ★ 핵심 수정: 무식하게 1부터 끝까지 찍어내던 코드를 지우고, 방금 만든 스마트한 페이지네이션으로 교체! */}
+      <Pagination totalPages={totalPages} currentPage={page} />
+      
     </div>
   );
 }
