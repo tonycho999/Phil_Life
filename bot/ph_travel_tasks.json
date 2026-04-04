@@ -1720,5 +1720,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Mactan Island Golf Club (막탄 아일랜드 골프 클럽)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "The Henry Hotel Manila (더 헨리 호텔 마닐라)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Tibiao Eco-Adventure (티비아오 에코 어드벤처)",
+    "region": "안티케",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Casulian Island Diving Point (카술리안 섬 다이빙 포인트)",
+    "region": "샤르가오",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
