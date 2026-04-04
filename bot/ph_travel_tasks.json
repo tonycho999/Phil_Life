@@ -1692,5 +1692,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Villamor Air Base Golf Course (빌라모어 에어베이스 골프 코스)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Mövenpick Resort & Spa Boracay (모벤픽 리조트 & 스파 보라카이)",
+    "region": "보라카이",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Inambakan Falls (이남바칸 폭포)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Zamboanguita Diving Point (잠보앙기타 다이빙 포인트)",
+    "region": "네그로스 오리엔탈",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
