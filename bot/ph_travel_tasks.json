@@ -1776,5 +1776,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Caliraya Highlands Golf and Country Club (칼리라야 하이랜드 골프 & 컨트리 클럽)",
+    "region": "Laguna (라구나)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Eskaya Beach Resort & Spa (에스카야 비치 리조트 & 스파)",
+    "region": "Bohol (보홀)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Taytay Fort and Santa Monica Parish (타이타이 요새 및 산타 모니카 성당)",
+    "region": "Palawan (팔라완)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Dauin Marine Sanctuary (다우인 해양 보호구역)",
+    "region": "Dumaguete (두마게티)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
