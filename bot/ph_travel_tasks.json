@@ -1748,5 +1748,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "사랑가니 골프 & 컨트리 클럽 (Sarangani Golf and Country Club)",
+    "region": "제너럴 산토스 (General Santos)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "란초 베르나르도 럭셔리 빌라 (Rancho Bernardo Luxury Villas)",
+    "region": "바탄 (Bataan)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "세코 아일랜드 (Seco Island)",
+    "region": "안티케 (Antique)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "발링가삭 해양 보호구역 (Balingasag Marine Sanctuary)",
+    "region": "미사미스 오리엔탈 (Misamis Oriental)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

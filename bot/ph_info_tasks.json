@@ -782,5 +782,40 @@
     "category_main": "info",
     "category_sub": "law",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 온라인 비자 연장 시스템 (BI e-Services) 이용 및 신청 절차 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "노블레스 국제학교 (Noblesse International School) 클락 지역 입학 절차 및 학제 정보",
+    "region": "클락/판팡가",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 폐 센터 (Lung Center of the Philippines) 호흡기 질환 전문 진료 및 예약 가이드",
+    "region": "퀘존 시티",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "PT&T (Philippine Telegraph and Telephone) 가정용 및 기업용 광인터넷 서비스 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 중앙은행 (Bangko Sentral ng Pilipinas) 훼손 권종 교환 및 외환 거래 규정",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "admin",
+    "status": "pending"
   }
 ]
