@@ -817,5 +817,40 @@
     "category_main": "info",
     "category_sub": "admin",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 쿼터 비자 (Quota Visa - Section 13) 신청 자격 및 영주권 취득 절차 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "멀티플 인텔리전스 국제학교 (MIIS) 입학 절차 및 다중 지능 교육 커리큘럼 정보",
+    "region": "퀘존 시티 (Quezon City)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 국립 신장병 및 이식 연구소 (NKTI) 전문의 진료 예약 및 신장 질환 의료 서비스 안내",
+    "region": "퀘존 시티 (Quezon City)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 선불형 포켓 와이파이 (Pocket WiFi) 효율적인 데이터 요금제 선택 및 충전 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 화재방지국 (BFP) 소방 안전 점검 필증 (FSIC) 발급 및 사업장 소방 규정 준수 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]

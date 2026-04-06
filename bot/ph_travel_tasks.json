@@ -1832,5 +1832,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Kalsangi Golf Club (칼상기 골프 클럽)",
+    "region": "South Cotabato",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Matinloc Resort (마틴록 리조트)",
+    "region": "Palawan",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Lake Holon (레이크 홀론)",
+    "region": "South Cotabato",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Agutayan Reef (아구타얀 리프)",
+    "region": "Misamis Oriental",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
