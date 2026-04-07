@@ -1888,5 +1888,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Princesa Golf and Country Club (프린세사 골프 앤 컨트리 클럽)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "The Peninsula Manila (더 페닌슐라 마닐라)",
+    "region": "마닐라 (Manila)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Callao Cave (칼라오 동굴)",
+    "region": "카가얀 (Cagayan)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Tres Reyes Islands Diving Points (트레스 레예스 제도 다이빙 포인트)",
+    "region": "마린두케 (Marinduque)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
