@@ -852,5 +852,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 산타 로사 분소 (BI Santa Rosa Field Office) 비자 연장 및 행정 서비스",
+    "region": "필리핀 라구나 (Laguna)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "웨스트필드 국제학교 (Westfields International School) 입학 절차 및 앙헬레스 지역 교육 환경 안내",
+    "region": "필리핀 팜팡가 (Pampanga)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 국립 심장 센터 (Philippine Heart Center) 전문의 진료 예약 및 외국인 환자 의료 서비스 가이드",
+    "region": "필리핀 퀘존 (Quezon City)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "GSat (Global Satellite) 위성 TV 및 인터넷 결합 상품 가입 및 선불 요금제 충전 방법",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 국가통신위원회 (NTC) 통신 서비스 불편 신고 및 불법 스팸/보이스피싱 민원 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "public",
+    "status": "pending"
   }
 ]
