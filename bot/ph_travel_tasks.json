@@ -1944,5 +1944,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Air Force City Golf Course (에어포스 시티 골프 코스)",
+    "region": "클락",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Pico Sands Hotel (피코 샌즈 호텔)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Cabongaoan Beach and Death Pool (카봉아오안 비치 및 데스 풀)",
+    "region": "팡가시난",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Kopiat Island Diving Point (코피아트 아일랜드 다이빙 포인트)",
+    "region": "다바오",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
