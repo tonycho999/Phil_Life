@@ -2000,5 +2000,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "베테랑스 메모리얼 골프 클럽 (Veterans Memorial Golf Club)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "라디슨 블루 세부 (Radisson Blu Cebu)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "푸닝 온천 (Puning Hot Spring)",
+    "region": "팜팡가",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "탐불리 에어플레인 렉 (Tambuli Airplane Wreck)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
