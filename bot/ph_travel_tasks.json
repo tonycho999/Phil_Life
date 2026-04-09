@@ -1972,5 +1972,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Mercedes Plantation Golf and Country Club (메르세데스 플랜테이션 골프 앤 컨트리 클럽)",
+    "region": "Quezon (퀘존)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Club Punta Fuego (클럽 푼타 푸에고)",
+    "region": "Batangas (바탕가스)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Palaui Island - Cape Engaño Lighthouse (팔라우이 섬 - 카보 엔가뇨 등대)",
+    "region": "Cagayan (카가얀)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Mantigue Island Nature Park (만티구에 아일랜드 네이처 파크)",
+    "region": "Camiguin (카미구인)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
