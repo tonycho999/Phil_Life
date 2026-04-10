@@ -2056,5 +2056,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Cagayan de Oro Country Club (Lumbia) (카가얀 데 오로 컨트리 클럽)",
+    "region": "카가얀 데 오로",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Crimson Resort and Spa Mactan (크림슨 리조트 & 스파 막탄)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Mount Kitanglad Range Natural Park (마운트 키탕라드 산맥 자연공원)",
+    "region": "부키드논",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Lanuza Marine Sanctuary (라누자 해양 보호구역)",
+    "region": "수리가오 델 수르",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
