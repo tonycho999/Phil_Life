@@ -2112,5 +2112,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Akle Golf Club (아클레 골프 클럽)",
+    "region": "Bulacan",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "The Westin Manila (더 웨스틴 마닐라)",
+    "region": "Manila",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Mount Kanlaon National Park (마운트 칸라온 국립공원)",
+    "region": "Negros",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Taklong Island Marine Reserve (탁롱 아일랜드 해양 보호구역)",
+    "region": "Guimaras",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
