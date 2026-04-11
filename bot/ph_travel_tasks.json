@@ -2084,5 +2084,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Paoay Golf Course (파오아이 골프 코스)",
+    "region": "일로코스 노르테",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Solaire Resort Entertainment City (솔레어 리조트 엔터테인먼트 시티)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Great Santa Cruz Island (그레이트 산타 크루즈 아일랜드)",
+    "region": "잠보앙가",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Pujada Bay Diving Point (푸자다 베이 다이빙 포인트)",
+    "region": "다바오 오리엔탈",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

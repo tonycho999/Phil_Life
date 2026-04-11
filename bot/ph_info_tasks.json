@@ -922,5 +922,40 @@
     "category_main": "info",
     "category_sub": "admin",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 47(a)(2) 특별 비자 (PEZA 입주 기업 외국인 직원 및 가족 대상)",
+    "region": "필리핀 전역 (경제특구)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "성 바오로 대학교 (St. Paul University Manila) 외국인 입학 및 학위 과정 안내",
+    "region": "마닐라",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "UERM 메모리얼 메디컬 센터 (UERM Memorial Medical Center) 전문 진료 및 예약 안내",
+    "region": "퀘존/산후안",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "스마트 브로 5G 홈 와이파이 (Smart Bro Home WiFi 5G) 무약정 무선 인터넷 사용 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 부동산세 (Amilyar) 납부 및 시청(City Hall) 세무국 행정 절차 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
