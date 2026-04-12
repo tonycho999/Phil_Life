@@ -2140,5 +2140,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Davao Golf and Country Club (Matina)",
+    "region": "다바오 (Davao)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Qi Palawan (Qi 팔라완)",
+    "region": "팔라완 엘니도 (El Nido, Palawan)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Bulusan Volcano Natural Park (불루산 화산 자연공원)",
+    "region": "소르소곤 (Sorsogon)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Capones Island Diving Point (카포네스 아일랜드 다이빙 포인트)",
+    "region": "잠발레스 (Zambales)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
