@@ -957,5 +957,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 카비테 분소 (BI Cavite District Office) 비자 연장 및 행정 서비스",
+    "region": "카비테(Cavite)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "라살 그린힐즈 (La Salle Green Hills) 입학 절차 및 남학생 특화 교육 과정 안내",
+    "region": "메트로 마닐라(San Juan)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 어린이 의료 센터 (Philippine Children's Medical Center) 소아 전문 진료 및 응급 의료 서비스",
+    "region": "메트로 마닐라(Quezon City)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "다스카 비전 (Dasca Vision) 카비테 지역 특화 광인터넷 및 케이블 TV 서비스 안내",
+    "region": "카비테(Cavite)",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 선거관리위원회 (COMELEC) 재외선거인 등록 및 국회의원/대통령 선거 투표 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]

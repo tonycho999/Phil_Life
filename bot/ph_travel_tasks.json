@@ -2168,5 +2168,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "San Juanico Golf and Country Club (산 후아니코 골프 앤 컨트리 클럽)",
+    "region": "타클로반 (Tacloban)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Raffles Makati (래플스 마카티)",
+    "region": "마닐라 (Manila)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Big Lagoon (빅 라군)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Carbin Reef (카빈 리프)",
+    "region": "네그로스 옥시덴탈 (Negros Occidental)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
