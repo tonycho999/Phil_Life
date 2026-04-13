@@ -2224,5 +2224,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "오르목 골프 앤 컨트리 클럽 (Ormoc Golf and Country Club)",
+    "region": "레이테",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "마닐라 호텔 (The Manila Hotel)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "말룸파티 콜드 스프링 (Malumpati Cold Spring)",
+    "region": "안티케",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "투카 마린 파크 (Tuka Marine Park)",
+    "region": "사랑가니",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
