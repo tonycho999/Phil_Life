@@ -2196,5 +2196,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Club Morocco Golf & Country Club (클럽 모로코 골프 & 컨트리 클럽)",
+    "region": "잠발레스 (Zambales)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Hue Hotels and Resorts Boracay (휴 호텔 앤 리조트 보라카이)",
+    "region": "보라카이 (Boracay)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Bojo River Eco-Cultural Tour (보조 리버 에코 컬처 투어)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Agus Wall Diving Point (아구스 월 다이빙 포인트)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
