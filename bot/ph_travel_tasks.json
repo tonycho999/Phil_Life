@@ -2252,5 +2252,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "타가이타이 미들랜드 골프 클럽 (Tagaytay Midlands Golf Club)",
+    "region": "타가이타이",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "반얀트리 마닐라 베이 (Banyan Tree Manila Bay)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "디잉 라군 (Diying Lagoon)",
+    "region": "시어가오",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "카빌라오 섬 라이트하우스 포인트 (Cabilao Island Lighthouse Point)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

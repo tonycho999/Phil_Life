@@ -992,5 +992,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 바콜로드 분소 (BI Bacolod District Office) 비자 연장 및 행정 서비스",
+    "region": "네그로스 옥시덴탈 바콜로드",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "이튼 인터내셔널 스쿨 (Eton International School) 입학 절차 및 영국/미국 혼합 커리큘럼 안내",
+    "region": "마닐라 말라테/보니파시오",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "FEU-NRMF 메디컬 센터 (FEU-NRMF Medical Center) 퀘존 지역 전문의 진료 및 응급실 이용 가이드",
+    "region": "퀘존 시티",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "넷원 필리핀 (Net1 Philippines) 외곽 지역 무선 광대역 인터넷 서비스 가입 및 요금제",
+    "region": "필리핀 전역 (농어촌 및 외곽 중심)",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 시청 비즈니스 퍼밋 (Mayor's Permit) 발급 및 매년 영업 허가 갱신 행정 절차",
+    "region": "필리핀 전역 (각 지방자치단체)",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
