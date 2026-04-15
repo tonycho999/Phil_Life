@@ -2308,5 +2308,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Mount Isarog Golf and Country Club (마운트 이사로그 골프 & 컨트리 클럽)",
+    "region": "카마리네스 수르",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Sangat Island Dive Resort (상갓 아일랜드 다이브 리조트)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Buntod Reef Marine Sanctuary (분토드 리프 해양 보호구역)",
+    "region": "마스바테",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Jigdup Reef (직둡 리프)",
+    "region": "카미구인",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
