@@ -2336,5 +2336,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Queen's Island Golf and Resort (퀸즈 아일랜드 골프 앤 리조트)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Dusit Thani Residence Davao (두짓타니 레지던스 다바오)",
+    "region": "다바오",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Balabac Islands (발라박 제도)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Panaon Island (파나온 섬)",
+    "region": "남레이테",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
