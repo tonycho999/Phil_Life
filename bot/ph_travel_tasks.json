@@ -2364,5 +2364,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Lantawan Golf and Country Club (란타완 골프 앤 컨트리 클럽)",
+    "region": "카가얀 데 오로",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Nuwa Manila (누와 마닐라)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Hinagdanan Cave (히낙다난 동굴)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Sunken Cemetery Diving Point (침몰한 공동묘지 다이빙 포인트)",
+    "region": "카미구인",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
