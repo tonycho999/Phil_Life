@@ -2392,5 +2392,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Silliman University Golf Course (실리만 대학교 골프 코스)",
+    "region": "Dumaguete",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Grand Hyatt Manila (그랜드 하얏트 마닐라)",
+    "region": "Manila",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Britania Group of Islands (브리타니아 제도)",
+    "region": "Surigao del Sur",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Dona Marilyn Wreck (도냐 마릴린 렉)",
+    "region": "Cebu",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
