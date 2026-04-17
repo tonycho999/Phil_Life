@@ -2448,5 +2448,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 아미 골프 클럽 (Philippine Army Golf Club)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "더 디스트릭트 보라카이 (The District Boracay)",
+    "region": "보라카이",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "말카푸야 아일랜드 (Malcapuya Island)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "파낙사마 비치 (Panagsama Beach)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
