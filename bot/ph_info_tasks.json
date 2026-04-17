@@ -1062,5 +1062,40 @@
     "category_main": "info",
     "category_sub": "law",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 카가얀 데 오로 분소 (BI Cagayan de Oro District Office) 비자 연장 및 민다나오 지역 행정 서비스",
+    "region": "민다나오 북부",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "키즈 스쿨 마닐라 (Keys School Manila) 입학 절차 및 프로젝트 기반 진보적 교육 과정 안내",
+    "region": "메트로 마닐라 (산후안)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "더 메디컬 시티 사우스 루손 (The Medical City South Luzon) 라구나 지역 전문의 진료 및 종합 건강검진 서비스",
+    "region": "라구나 (산타 로사)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "컴클락 (Comclark) 팜팡가 및 중부 루손 지역 특화 광인터넷 서비스 신청 및 요금제 안내",
+    "region": "팜팡가/중부 루손",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 축산국 (BAI) 반려동물 동반 입국을 위한 수입 허가(SPSIC) 및 검역 절차 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "pending"
   }
 ]

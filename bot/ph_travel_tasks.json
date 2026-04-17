@@ -2420,5 +2420,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "에드윈 앤드류스 에어베이스 골프 코스 (Edwin Andrews Air Base Golf Course)",
+    "region": "잠보앙가",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "더 매너 앳 캠프 존 헤이 (The Manor at Camp John Hay)",
+    "region": "바기오",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "세부 사파리 앤 어드벤처 파크 (Cebu Safari and Adventure Park)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "세븐 매머드 (Seven Mammoths)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
