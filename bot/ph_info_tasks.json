@@ -1097,5 +1097,40 @@
     "category_main": "info",
     "category_sub": "law",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 푸에르토 프린세사 분소 (BI Puerto Princesa Field Office) 비자 연장 및 행정 서비스",
+    "region": "팔라완",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "마닐라 왈도프 학교 (Manila Waldorf School) 입학 절차 및 발도르프 대안 교육 과정 안내",
+    "region": "메트로 마닐라",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "퀄리메드 병원 (QualiMed Hospital) 진료 예약 및 지역별 네트워크 의료 서비스 이용 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "티투지 (T2G Network Computing) 기업용 및 고정 IP 인터넷 서비스 신청 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 사회복지개발부 (DSWD) 미성년자 해외여행 허가서 (Travel Clearance) 발급 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]

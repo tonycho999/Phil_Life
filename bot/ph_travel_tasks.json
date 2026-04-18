@@ -2504,5 +2504,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Antipolo Golf & Country Club (안티폴로 골프 & 컨트리 클럽)",
+    "region": "안티폴로 (Antipolo)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Discovery Boracay (디스커버리 보라카이)",
+    "region": "보라카이 (Boracay)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Calle Crisologo (칼레 크리솔로고)",
+    "region": "비간 (Vigan)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Manta Ray Wall (만타 레이 월)",
+    "region": "티카오 섬 (Ticao Island)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
