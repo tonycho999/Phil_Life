@@ -2476,5 +2476,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Camp Phillips Golf Course (캠프 필립스 골프 코스)",
+    "region": "부키드논 (Bukidnon)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Duka Bay Resort (두카 베이 리조트)",
+    "region": "미사미스 오리엔탈 (Misamis Oriental)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Buntot Palos Falls (분톳 팔로스 폭포)",
+    "region": "라구나 (Laguna)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Mactan Airplane Wreck - Brgy. Marigondon (막탄 에어플레인 렉 - 마리곤돈)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
