@@ -2616,5 +2616,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Fernando Air Base Golf Club (페르난도 에어 베이스 골프 클럽)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Lihim Resorts (리힘 리조트)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Eden Nature Park (에덴 네이처 파크)",
+    "region": "다바오",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Siete Pecados Marine Park (시에테 페카도스 해양 공원)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
