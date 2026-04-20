@@ -1132,5 +1132,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 발릭바얀(Balikbayan) 비자 면제 프로그램 및 가족 동반 입국 혜택",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 홈스쿨링(Homeschooling) 합법적 절차 및 교육부(DepEd) 인증 주요 기관 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 사립 병원 전문의 진료비(Professional Fee) 체계 및 입원 시 보증금(Deposit) 납부 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 GCash 및 Maya를 통한 선불형 통신 요금(Load) 충전 및 데이터 패키지 관리",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 국가 신분증(PhilSys National ID) 외국인 발급 신청 및 ACR I-Card 연동 정보",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]

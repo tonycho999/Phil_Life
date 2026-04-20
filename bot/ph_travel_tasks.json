@@ -2588,5 +2588,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Villar City Golf Course (빌라르 시티 골프 코스)",
+    "region": "카비테",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Hijo Resorts Davao (히호 리조트 다바오)",
+    "region": "다바오",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "San Vicente Long Beach (산 빈센트 롱 비치)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Bien Unido Double Barrier Reef (비엔 우니도 더블 배리어 리프)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
