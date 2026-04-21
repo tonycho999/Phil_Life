@@ -1167,5 +1167,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 임시 취업 허가 (PWP) 및 특별 취업 허가 (SWP) 발급 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 몬테소리 (Montessori) 교육 기관 입학 및 학제 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 산 후안 데 디오스 병원 (San Juan de Dios Hospital) 진료 및 외국인 환자 가이드",
+    "region": "메트로 마닐라 파사이",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 위성 인터넷 카치피 (Kacific) 오지 및 도서 지역 설치 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 주택토지관리위원회 (DHSUD) 부동산 분양 및 매매 관련 행정 서비스",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "pending"
   }
 ]
