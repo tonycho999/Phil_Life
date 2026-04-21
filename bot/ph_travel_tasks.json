@@ -2644,5 +2644,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Aklan Golf Club (아클란 골프 클럽)",
+    "region": "아클란",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "The Alpha Suites (더 알파 스위츠)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Loboc River Cruise (로복 강 크루즈)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Crocodile Island (크로커다일 아일랜드)",
+    "region": "보라카이",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
