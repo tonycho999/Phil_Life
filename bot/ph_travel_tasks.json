@@ -2728,5 +2728,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Mount Malindig Golf and Country Club (마운트 말린딕 골프 & 컨트리 클럽)",
+    "region": "마린두케",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Nobu Hotel Manila (노부 호텔 마닐라)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Panampangan Island (파남팡안 섬)",
+    "region": "타위타위",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Capul Island Diving Points (카풀 섬 다이빙 포인트)",
+    "region": "북사마르",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
