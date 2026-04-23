@@ -2784,5 +2784,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "바사 에어 베이스 골프 클럽 (Basa Air Base Golf Club)",
+    "region": "팜팡가",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "캠프 네타냐 리조트 앤 스파 (Camp Netanya Resort and Spa)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "다히칸 비치 (Dahican Beach)",
+    "region": "다바오 오리엔탈",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "툴라포스 해양 보호구역 (Tulapos Marine Sanctuary)",
+    "region": "시퀴호르",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
