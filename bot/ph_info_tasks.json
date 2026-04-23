@@ -1202,5 +1202,40 @@
     "category_main": "info",
     "category_sub": "law",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 다스마리냐스 분소 (BI Dasmariñas Field Office) 비자 연장 및 행정 서비스",
+    "region": "카비테(Cavite)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 명문 여학교 테레사 칼리지 (St. Theresa's College, Quezon City) 입학 절차 및 교육 과정",
+    "region": "퀘존 시티(Quezon City)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "프로비던스 병원 (Providence Hospital Quezon City) 진료 예약 및 외국인 환자 서비스 안내",
+    "region": "퀘존 시티(Quezon City)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "파라삿 HD (Parasat HD) 민다나오 지역 특화 광인터넷 및 디지털 TV 서비스 가입 안내",
+    "region": "민다나오 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 테스다 (TESDA) 외국인 기술 교육 이수 및 자격증 취득 절차 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]

@@ -2756,5 +2756,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Isabela Golf and Country Club (이사벨라 골프 앤 컨트리 클럽)",
+    "region": "이사벨라 (Isabela)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "La Jolla Luxury Beach Resort (라 홀라 럭셔리 비치 리조트)",
+    "region": "바탄 (Bataan)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Minalungao National Park (미날룽가오 국립공원)",
+    "region": "누에바에시하 (Nueva Ecija)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Cagayancillo Diving Points (카가얀실로 다이빙 포인트)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
