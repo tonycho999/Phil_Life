@@ -2812,5 +2812,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "New Asia Golf and Spa Resort (뉴 아시아 골프 & 스파 리조트)",
+    "region": "Tarlac",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "The Peacock Garden (더 피콕 가든)",
+    "region": "Bohol",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Corregidor Island (코레히도르 섬)",
+    "region": "Cavite",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Kansantik Dive Site (칸산틱 다이브 사이트)",
+    "region": "Cebu",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
