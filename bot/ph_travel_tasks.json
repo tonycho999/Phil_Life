@@ -2840,5 +2840,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Lanang Golf and Country Club (라낭 골프 & 컨트리 클럽)",
+    "region": "Davao",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Seda Capitol Central (세다 캐피톨 센트럴)",
+    "region": "Bacolod",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Magpupungko Rock Pools (마그푸풍코 락 풀)",
+    "region": "Siargao",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Angel's Cove, Samal Island (엔젤스 코브, 사말 아일랜드)",
+    "region": "Davao",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
