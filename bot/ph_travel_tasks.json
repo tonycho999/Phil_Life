@@ -2896,5 +2896,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Rancho Palos Verdes Golf & Country Club (란초 팔로스 베르데스 골프 & 컨트리 클럽)",
+    "region": "다바오 (Davao)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Banwa Private Island (반와 프라이빗 아일랜드)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Hinatuan Enchanted River (히나투안 인챈티드 리버)",
+    "region": "수리가오 델 수르 (Surigao del Sur)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Ticao Island Manta Bowl (티카오 아일랜드 만타 볼)",
+    "region": "마스바테 (Masbate)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
