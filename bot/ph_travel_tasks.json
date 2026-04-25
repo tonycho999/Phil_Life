@@ -2868,5 +2868,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Mountainview Golf & Country Club (마운틴뷰 골프 & 컨트리 클럽)",
+    "region": "카가얀 데 오로",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Discovery Samal (디스커버리 사말)",
+    "region": "다바오",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Mount Hamiguitan (마운트 하미구이탄)",
+    "region": "다바오 오리엔탈",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Limasawa Island (리마사와 섬)",
+    "region": "남부 레이테",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
