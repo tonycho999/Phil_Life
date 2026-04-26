@@ -2952,5 +2952,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "에버크레스트 골프 클럽 (Evercrest Golf Club)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "아쿠아티코 비치 리조트 (Acuatico Beach Resort)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "포트 산 페드로 (Fort San Pedro)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "팔리톤 월 다이빙 포인트 (Paliton Wall Diving Point)",
+    "region": "시퀴호르",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
