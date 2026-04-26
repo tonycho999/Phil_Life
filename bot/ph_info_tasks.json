@@ -1272,5 +1272,40 @@
     "category_main": "info",
     "category_sub": "law",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 라오아그 분소 (BI Laoag District Office) 비자 연장 및 행정 서비스",
+    "region": "일로코스 노르테 (Laoag)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 산 아구스틴 학교 (Colegio San Agustin - Makati) 입학 절차 및 학제 안내",
+    "region": "메트로 마닐라 (Makati)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 노터데임 드 샤르트르 병원 (Notre Dame de Chartres Hospital) 바기오 지역 의료 서비스 안내",
+    "region": "바기오 (Baguio)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 위성 인터넷 밤부넷 (Bambunet) 오지 및 격오지 설치 가이드",
+    "region": "필리핀 전역 (도서 지역)",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 투자위원회 (BOI) 외국인 투자 등록 및 세제 혜택 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "public",
+    "status": "pending"
   }
 ]

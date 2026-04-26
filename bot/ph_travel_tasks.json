@@ -2924,5 +2924,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "일로코스 수르 골프 & 컨트리 클럽 (Ilocos Sur Golf and Country Club)",
+    "region": "일로코스 수르",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "호텔 오쿠라 마닐라 (Hotel Okura Manila)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "마사사 비치 (Masasa Beach)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "카테드랄 케이브 (Cathedral Cave)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
