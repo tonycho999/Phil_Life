@@ -1307,5 +1307,40 @@
     "category_main": "info",
     "category_sub": "public",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 산 페르난도 분소 (BI San Fernando District Office, La Union) 비자 연장 및 행정 서비스",
+    "region": "라 유니온 (La Union)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 세인트 페드로 포베다 대학 (Saint Pedro Poveda College) 입학 절차 및 명문 사립 교육 과정",
+    "region": "메트로 마닐라 (퀘존/만달루용)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 마운트 그레이스 병원 (Mount Grace Hospitals) 네트워크 이용 및 지역별 협력 병원 진료 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 위성 통신 서비스 큐 사트 (Q-SAT) 오지 인터넷 설치 및 가입 안내",
+    "region": "필리핀 전역 (오지 및 도서 지역)",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 관광부 (DOT) 관광 사업자 인증 및 외국인 투자자 행정 지원 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "admin",
+    "status": "pending"
   }
 ]

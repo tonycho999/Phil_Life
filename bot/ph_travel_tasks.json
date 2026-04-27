@@ -3008,5 +3008,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "술탄 쿠다라트 골프 앤 컨트리 클럽 (Sultan Kudarat Golf and Country Club)",
+    "region": "술탄 쿠다라트",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "마카티 다이아몬드 레지던스 (Makati Diamond Residences)",
+    "region": "마카티",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "카그발레테 섬 (Cagbalete Island)",
+    "region": "퀘존",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "탕난 월 (Tangnan Wall)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
