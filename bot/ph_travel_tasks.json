@@ -2980,5 +2980,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "민다나오 시빅 센터 골프 코스 (Mindanao Civic Center Golf Course)",
+    "region": "라나오 델 노르테",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "벨몬트 호텔 보라카이 (Belmont Hotel Boracay)",
+    "region": "보라카이",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "방기 윈드 팜 (Bangui Wind Farm)",
+    "region": "일로코스 노르테",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "마니구인 섬 다이빙 포인트 (Maniguin Island Diving Point)",
+    "region": "안티케",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
