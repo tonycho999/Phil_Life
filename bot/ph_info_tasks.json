@@ -1327,14 +1327,14 @@
     "region": "필리핀 전역",
     "category_main": "info",
     "category_sub": "medical",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 위성 통신 서비스 큐 사트 (Q-SAT) 오지 인터넷 설치 및 가입 안내",
     "region": "필리핀 전역 (오지 및 도서 지역)",
     "category_main": "info",
     "category_sub": "comm",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 관광부 (DOT) 관광 사업자 인증 및 외국인 투자자 행정 지원 가이드",

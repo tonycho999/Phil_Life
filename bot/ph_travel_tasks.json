@@ -3036,5 +3036,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Camp Evangelista Golf Club",
+    "region": "Cagayan de Oro",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Tugawe Cove Resort",
+    "region": "Caramoan",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Kapurpurawan Rock Formation",
+    "region": "Ilocos Norte",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Magic Island Diving Point",
+    "region": "Moalboal",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
