@@ -3064,5 +3064,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Naga Golf and Country Club (나카 골프 앤 컨트리 클럽)",
+    "region": "카마리네스 수르 (Camarines Sur)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Princesa Garden Island Resort and Spa (프린세사 가든 아일랜드 리조트 앤 스파)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Villa Escudero Plantations and Resort (빌라 에스쿠데로 플랜테이션 앤 리조트)",
+    "region": "퀘존 (Quezon)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Kasai Wall Diving Point (카사이 월 다이빙 포인트)",
+    "region": "세부 (Cebu)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
