@@ -3120,5 +3120,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Negros Occidental Golf and Country Club (네그로스 옥시덴탈 골프 & 컨트리 클럽)",
+    "region": "바콜로드",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Discovery Primea (디스커버리 프리메아)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Malumpati Cold Spring (말룸파티 콜드 스프링)",
+    "region": "안티케",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Blue Cathedral Diving Point (블루 카테드랄 다이빙 포인트)",
+    "region": "시아르가오",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
