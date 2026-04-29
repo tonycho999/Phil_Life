@@ -3092,5 +3092,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "수리가오 골프 앤 컨트리 클럽 (Surigao Golf and Country Club)",
+    "region": "수리가오",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "노스 젠 빌라스 (North Zen Villas)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "퀴틴데이 그린 힐즈 (Quitinday Green Hills)",
+    "region": "알바이",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "트라이버드 비행기 난파선 (Tribird Airplane Wreck)",
+    "region": "보라카이",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

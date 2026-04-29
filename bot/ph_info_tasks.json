@@ -1342,5 +1342,40 @@
     "category_main": "info",
     "category_sub": "admin",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 바탄 분소 (BI Bataan District Office) 비자 연장 및 행정 서비스",
+    "region": "바탄 (Bataan)",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "어섬션 칼리지 산 로렌초 (Assumption College San Lorenzo) 입학 절차 및 교육 과정",
+    "region": "마카티 (Makati)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "퍼페추얼 헬프 메디컬 센터 (Perpetual Help Medical Center - Las Piñas) 진료 및 외국인 의료 서비스",
+    "region": "라스피냐스 (Las Piñas)",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 위성 인터넷 빅스카이 (BigSky) 오지 및 도서 지역 설치 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 환경관리국 (EMB) 환경 허가증 (ECC/CNC) 발급 및 사업장 환경 규정 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "public_office",
+    "status": "pending"
   }
 ]
