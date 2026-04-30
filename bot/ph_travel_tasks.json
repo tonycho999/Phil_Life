@@ -3148,5 +3148,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Royale Tagaytay Country Club (로얄 타가이타이 컨트리 클럽)",
+    "region": "타가이타이",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "The Farm at San Benito (더 팜 앳 산 베니토)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Puerto Galera Muelle Bay (푸에르토 갈레라 무엘레 베이)",
+    "region": "민도로",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Tubbataha Reefs Natural Park (투바타하 리프 자연공원)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
