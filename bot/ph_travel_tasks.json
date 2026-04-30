@@ -3176,5 +3176,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "도냐 로사리오 골프 앤 컨트리 클럽 (Doña Rosario Golf and Country Club)",
+    "region": "부투안",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "마르코 폴로 오르티가스 마닐라 (Marco Polo Ortigas Manila)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "판가방안 아일랜드 (Pangabangan Island)",
+    "region": "디나갓 제도",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "수녹 어류 보호구역 (Sunok Fish Sanctuary)",
+    "region": "남부 레이테",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

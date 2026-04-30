@@ -1377,5 +1377,40 @@
     "category_main": "info",
     "category_sub": "public_office",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 9D 조약 상사(Treaty Trader) 비자 신청 및 자격 요건 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "엔더런 컬리지 (Enderun Colleges) 입학 절차 및 호스피탈리티 학위 과정 안내",
+    "region": "마닐라 (BGC)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "유나이티드 의학 센터 (United Doctors Medical Center) 진료 예약 및 주요 전문의 안내",
+    "region": "퀘존 시티",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 공공 무료 와이파이 (Free Wi-Fi for All) 프로젝트 및 주요 접속 지점 확인법",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 고등교육위원회 (CHED) 대학 학력 인증(CAV) 및 아포스티유 서류 발급 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "admin",
+    "status": "pending"
   }
 ]
