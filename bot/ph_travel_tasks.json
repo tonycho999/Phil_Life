@@ -3288,5 +3288,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Boracay Newcoast Golf Course (보라카이 뉴코스트 골프 코스)",
+    "region": "보라카이",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "The Farm at San Benito (더 팜 앳 산 베니토)",
+    "region": "바탕가스",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Calle Crisologo (칼레 크리솔로고)",
+    "region": "비간",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Moalboal Sardine Run (모알보알 사딘 런)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
