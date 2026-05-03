@@ -3344,5 +3344,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "안티케 골프 앤 컨트리 클럽 (Antique Golf and Country Club)",
+    "region": "안티케",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "뉴 월드 마카티 호텔 (New World Makati Hotel)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "아귀니드 폭포 (Aguinid Falls)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "렘루나이 월 (Lemlunay Wall)",
+    "region": "사랑가니",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
