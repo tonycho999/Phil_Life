@@ -3316,5 +3316,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "코타바토 골프 앤 컨트리 클럽 (Cotabato Golf and Country Club)",
+    "region": "코타바토",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "미도리 클락 호텔 앤 카지노 (Midori Clark Hotel and Casino)",
+    "region": "클락",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "티니팍 강 (Tinipak River)",
+    "region": "리잘",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "안툴랑 월 다이빙 포인트 (Antulang Wall Diving Point)",
+    "region": "네그로스 오리엔탈",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
