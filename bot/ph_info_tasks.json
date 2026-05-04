@@ -1467,14 +1467,14 @@
     "region": "메트로 마닐라 퀘존",
     "category_main": "info",
     "category_sub": "medical",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 위성 통신 서비스 아이샛 (iSAT) 오지 인터넷 설치 및 요금제 정보",
     "region": "필리핀 전역",
     "category_main": "info",
     "category_sub": "comm",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 민간항공청 (CAAP) 드론(UAV) 소유자 등록 및 비행 허가 신청 절차",
