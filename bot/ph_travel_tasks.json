@@ -3428,5 +3428,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Calapan Golf Club (칼라판 골프 클럽)",
+    "region": "민도로 (Mindoro)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Duli Beach Resort (둘리 비치 리조트)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Paoay Sand Dunes (파오아이 사구)",
+    "region": "일로코스 노르테 (Ilocos Norte)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Honda Bay Diving Points (혼다 베이 다이빙 포인트)",
+    "region": "팔라완 (Palawan)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

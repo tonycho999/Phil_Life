@@ -1482,5 +1482,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 두마게티 분소 (BI Dumaguete Field Office) 비자 서비스",
+    "region": "네그로스 오리엔탈",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "홀리 엔젤 대학교 (Holy Angel University) 입학 및 학제 안내",
+    "region": "중부 루손 (팜팡가)",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "실리만 대학교 의료 센터 (Silliman University Medical Center) 진료 가이드",
+    "region": "비사야 지역",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "퍼스트 파이버 (First Fiber) 지역 특화 광인터넷 신청 및 요금제",
+    "region": "필리핀 일부 지역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 보험위원회 (Insurance Commission) 보험 분쟁 및 민원 해결",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "pending"
   }
 ]
