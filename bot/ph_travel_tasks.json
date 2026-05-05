@@ -3456,5 +3456,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "알바이 골프 앤 컨트리 클럽 (Albay Golf and Country Club)",
+    "region": "알바이 (Albay)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "칼리나우 리조트 (Kalinaw Resort)",
+    "region": "샤르가오 (Siargao)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "디카살라린 코브 (Dicasalarin Cove)",
+    "region": "오로라 (Aurora)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "로옥 어류 보호구역 (Looc Fish Sanctuary)",
+    "region": "롬블론 (Romblon)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
