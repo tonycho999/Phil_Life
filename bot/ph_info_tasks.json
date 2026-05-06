@@ -1517,5 +1517,40 @@
     "category_main": "info",
     "category_sub": "law",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 관광 비자(9A) 12개월 초과 연장 시 이민국 TVS 인터뷰 승인 및 구비 서류 가이드",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 세인트 스콜라스티카 대학 (St. Scholastica's College Manila) 외국인 입학 및 학제 안내",
+    "region": "메트로 마닐라",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 파시그 시티 종합병원 (Pasig City General Hospital) 진료 및 외국인 응급 의료 가이드",
+    "region": "메트로 마닐라",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 넷투폰 (Net2Phone) 기업용 클라우드 인터넷 전화 서비스 가입 및 활용법",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 농무부(DA) 산하 식물검역소(BPI) 식물 및 종자 수입 허가(SPSIC) 신청 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]
