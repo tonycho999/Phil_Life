@@ -3484,5 +3484,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Camp John Hay Golf Club (캠프 존 헤이 골프 클럽)",
+    "region": "바기오",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Banwa Private Island (반와 프라이빗 아일랜드)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Hinagdanan Cave (히낙다난 동굴)",
+    "region": "보홀",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Manta Bowl (만타 볼)",
+    "region": "티카오 아일랜드",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
