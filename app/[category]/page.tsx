@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 // ★ 추가됨: 메타데이터 타입을 가져옵니다.
 import { Metadata } from "next";
+// ★ 추가됨: 방금 만든 똑똑한 페이지네이션 컴포넌트 불러오기!
+import Pagination from "@/components/common/Pagination";
 
 // ★ 글 썼을 때 바로 보이게 하는 설정 & Cloudflare Edge 런타임 설정
 export const dynamic = "force-dynamic";
@@ -15,7 +17,7 @@ type PageProps = {
 };
 
 // ─────────────────────────────────────────────────────────
-// ★ 수정됨: 구글 검색 노출용 동적 SEO 메타데이터 생성기 (타이틀 커스텀 추가)
+// 구글 검색 노출용 동적 SEO 메타데이터 생성기 (타이틀 커스텀 추가)
 // ─────────────────────────────────────────────────────────
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const currentMenu = MENUS.find((m: any) => m.id === params.category);
@@ -27,7 +29,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   // 2. 검색에 자주 노출되는 핵심 게시판만 아주 매력적인 문구로 수동 지정!
   if (params.category === 'travel') {
-    // ★ 관리자님이 요청하신 여행/맛집 전용 완벽한 SEO 문구 적용!
     customTitle = "필리핀 여행/맛집 리얼 후기 및 꿀팁 - 필카페24";
     customDescription = "마닐라, 세부, 보라카이, 클락 등 필리핀 자유여행의 모든 것! 현지 교민이 강력 추천하는 숨은 로컬 맛집, 가성비 숙소, 안전한 렌터카 예약 꿀팁을 가장 빠르게 확인하세요.";
   } else if (params.category === 'market') {
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-// ★ 수정됨: 최신 0~10레벨, S등급(99), M(10레벨) 색상 함수 적용
+// 최신 0~10레벨, S등급(99), M(10레벨) 색상 함수 적용
 function getLevelBadgeInfo(level: any) {
   const strLevel = String(level);
   if (strLevel === "10") return { label: "M", style: "bg-gray-800 text-white border-gray-900" }; 
@@ -75,7 +76,7 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
   // profiles 테이블에서 nickname과 level을 함께 가져옵니다.
   let query = supabase
     .from("posts")
-    .select("*, profiles(nickname, level), comments(count)", { count: "exact" }) // ✅ 추가!
+    .select("*, profiles(nickname, level), comments(count)", { count: "exact" })
     .eq("category_main", params.category)
     .neq("is_hidden", true)
     .order("is_pinned", { ascending: false })
@@ -105,7 +106,7 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
             const subMenu = currentMenu?.sub?.find((s: any) => s.id === post.category_sub);
             const subLabel = subMenu ? subMenu.label : post.category_sub;
             
-            // ★ 작성자 레벨 뱃지 가져오기
+            // 작성자 레벨 뱃지 가져오기
             const userLevel = post.profiles?.level ?? 1;
             const badge = getLevelBadgeInfo(userLevel);
             const commentCount = post.comments?.[0]?.count || post.comment_count || 0;
@@ -137,7 +138,7 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
                     [{subLabel}]
                   </span>
                   {post.title}
-                  {/* ★ 추가됨: 댓글이 1개 이상일 때만 빨간색으로 표시 */}
+                  {/* 댓글이 1개 이상일 때만 빨간색으로 표시 */}
                   {commentCount > 0 && (
                     <span className="text-red-500 text-xs font-bold font-mono ml-1">
                       [{commentCount}]
@@ -147,7 +148,7 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
 
                 <div className="flex justify-between items-center text-xs text-gray-400">
                   <div className="flex items-center gap-2">
-                    {/* ★ 메인 화면과 동일한 최신 뱃지 적용 */}
+                    {/* 메인 화면과 동일한 최신 뱃지 적용 */}
                     <span className={`px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold border ${badge.style}`}>
                       {badge.label}
                     </span>
@@ -162,26 +163,8 @@ async function PostList({ params, searchParams, currentMenu }: { params: PagePro
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-6 gap-2 pb-8">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={`/${params.category}?page=${p}${
-                searchParams.q ? `&q=${searchParams.q}` : ""
-              }`}
-              className={`px-3 py-1 rounded border text-sm ${
-                p === page
-                  ? "bg-blue-600 text-white border-blue-600 font-bold"
-                  : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
-              }`}
-            >
-              {p}
-            </Link>
-          ))}
-        </div>
-      )}
+      {/* ★ 핵심 수정: 무식하게 1부터 끝까지 찍어내던 코드를 지우고, 방금 만든 스마트한 페이지네이션으로 교체! */}
+      <Pagination totalPages={totalPages} currentPage={page} />
     </>
   );
 }
