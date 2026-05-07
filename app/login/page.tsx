@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Mail, Lock } from "lucide-react";
 
 export default function LoginPage() {
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient()); // ★ 수정: Supabase 클라이언트를 한 번만 생성하도록 변경
   const router = useRouter();
 
   const [isLoginTab, setIsLoginTab] = useState(true); // true: 로그인 탭, false: 가입 탭
@@ -15,13 +15,20 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // 추가: 비밀번호 확인용 상태
   const [loading, setLoading] = useState(false);
+  const [origin, setOrigin] = useState(""); // ★ 추가: 접속 도메인 주소 저장용
+
+  // ★ 추가: 마운트 시 브라우저의 origin 주소를 가져옵니다 (SSR 에러 방지)
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
 
   // 1. 소셜 로그인 (구글)
   const handleOAuthLogin = async (provider: 'google') => {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        // ★ 수정: origin이 설정된 후에만 실행되도록 안전하게 처리
+        redirectTo: `${origin || ""}/auth/callback`,
         queryParams: provider === 'google' ? { access_type: 'offline', prompt: 'consent' } : undefined,
       },
     });
