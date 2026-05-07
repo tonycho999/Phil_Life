@@ -3540,5 +3540,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Panay Golf and Country Club (파나이 골프 앤 컨트리 클럽)",
+    "region": "Capiz (카피스)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Sundowners Vacation Villas (선다우너스 베케이션 빌라)",
+    "region": "Pangasinan (팡가시난)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Ditumabo Mother Falls (디투마보 마더 폭포)",
+    "region": "Aurora (오로라)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Entalula Island Diving Point (엔탈룰라 아일랜드 다이빙 포인트)",
+    "region": "Palawan (팔라완)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
