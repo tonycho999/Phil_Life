@@ -1572,14 +1572,14 @@
     "region": "마닐라 빈오도",
     "category_main": "info",
     "category_sub": "medical",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 번호 이동성 서비스 (MNP - Mobile Number Portability) 통신사 전환 및 절차 안내",
     "region": "필리핀 전역",
     "category_main": "info",
     "category_sub": "comm",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 에너지규제위원회 (ERC) 전기 요금 이의 신청 및 소비자 보호 행정 절차",
