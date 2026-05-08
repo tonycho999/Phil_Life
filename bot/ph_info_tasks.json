@@ -1552,5 +1552,40 @@
     "category_main": "info",
     "category_sub": "gov",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 바탕가스 분소 (BI Batangas Field Office) 비자 행정 및 거주 서비스",
+    "region": "바탕가스 및 남부 루손",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 엘리자베스 세턴 학교 (Elizabeth Seton School) 입학 절차 및 교육 과정 안내",
+    "region": "라스피냐스 및 카비테",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "필리핀 메트로폴리탄 메디컬 센터 (Metropolitan Medical Center) 진료 예약 및 의료 서비스 가이드",
+    "region": "마닐라 빈오도",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 번호 이동성 서비스 (MNP - Mobile Number Portability) 통신사 전환 및 절차 안내",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 에너지규제위원회 (ERC) 전기 요금 이의 신청 및 소비자 보호 행정 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "law",
+    "status": "pending"
   }
 ]
