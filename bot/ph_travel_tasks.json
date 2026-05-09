@@ -3652,5 +3652,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Rancho Palos Verdes Golf & Country Club (란초 팔로스 베르데스 골프 & 컨트리 클럽)",
+    "region": "Davao City",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Eskaya Beach Resort & Spa (에스카야 비치 리조트 & 스파)",
+    "region": "Bohol",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Hinatuan Enchanted River (히나투안 인챈티드 리버)",
+    "region": "Surigao del Sur",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Moalboal Pescador Island (모알보알 페스카도르 섬)",
+    "region": "Cebu",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
