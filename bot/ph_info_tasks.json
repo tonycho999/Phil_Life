@@ -1587,5 +1587,40 @@
     "category_main": "info",
     "category_sub": "law",
     "status": "completed"
+  },
+  {
+    "target_name": "필리핀 이민국 미성년자 입국 동의서 (WEG - Waiver of Exclusion Ground) 발급 및 부모 미동반 입국 규정",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "visa",
+    "status": "completed"
+  },
+  {
+    "target_name": "독일 유럽 국제학교 마닐라 (German European School Manila - GESM) 입학 절차 및 IB/독일 커리큘럼 안내",
+    "region": "메트로 마닐라 파라냐케",
+    "category_main": "info",
+    "category_sub": "edu",
+    "status": "completed"
+  },
+  {
+    "target_name": "메디카드 (MediCard) 라이프스타일 센터 및 사설 건강보험(HMO) 전용 클리닉 이용 가이드",
+    "region": "필리핀 주요 도시",
+    "category_main": "info",
+    "category_sub": "medical",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 유심 카드 분실 시 기존 번호 유지 및 재발급 (SIM Swap)을 위한 통신사 행정 절차",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "comm",
+    "status": "pending"
+  },
+  {
+    "target_name": "필리핀 정보통신부 (DICT) 개인용 디지털 서명 (PNPKI) 발급 및 전자 행정 서비스 활용법",
+    "region": "필리핀 전역",
+    "category_main": "info",
+    "category_sub": "gov",
+    "status": "pending"
   }
 ]

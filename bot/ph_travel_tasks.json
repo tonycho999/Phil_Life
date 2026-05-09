@@ -3680,5 +3680,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "판가시난 골프 앤 컨트리 클럽 (Pangasinan Golf and Country Club)",
+    "region": "판가시난",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "달루용 비치 앤 마운틴 리조트 (Daluyon Beach and Mountain Resort)",
+    "region": "팔라완",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "핀토 미술관 (Pinto Art Museum)",
+    "region": "안티폴로",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "다킷다킷 아일랜드 다이빙 포인트 (Dakit-Dakit Island)",
+    "region": "말라파스쿠아",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
