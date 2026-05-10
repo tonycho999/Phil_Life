@@ -3736,5 +3736,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "클락 썬밸리 리조트 (Sun Valley Resort Clark)",
+    "region": "클락",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "쉐라톤 마닐라 베이 (Sheraton Manila Bay)",
+    "region": "마닐라",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "푸에르토 갈레라 화이트 비치 (White Beach, Puerto Galera)",
+    "region": "민도로",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "모알보알 칠리 바 앞 다이빙 포인트 (Chilli Bar Point, Moalboal)",
+    "region": "세부",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]
