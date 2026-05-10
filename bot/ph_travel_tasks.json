@@ -3708,5 +3708,33 @@
     "category_main": "travel",
     "category_sub": "diving",
     "status": "completed"
+  },
+  {
+    "target_name": "Urdaneta City Golf Club (우르다네타 시티 골프 클럽)",
+    "region": "Pangasinan (팡가시난)",
+    "category_main": "travel",
+    "category_sub": "golf",
+    "status": "completed"
+  },
+  {
+    "target_name": "Vitalis Villas (바이탈리스 빌라)",
+    "region": "Ilocos Sur (일로코스 수르)",
+    "category_main": "travel",
+    "category_sub": "hotel",
+    "status": "completed"
+  },
+  {
+    "target_name": "Nagsasa Cove (낙사사 코브)",
+    "region": "Zambales (잠발레스)",
+    "category_main": "travel",
+    "category_sub": "attraction",
+    "status": "completed"
+  },
+  {
+    "target_name": "Lusong Coral Garden (루송 코랄 가든)",
+    "region": "Palawan (팔라완)",
+    "category_main": "travel",
+    "category_sub": "diving",
+    "status": "completed"
   }
 ]

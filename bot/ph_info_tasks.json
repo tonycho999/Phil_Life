@@ -1607,14 +1607,14 @@
     "region": "필리핀 주요 도시",
     "category_main": "info",
     "category_sub": "medical",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 유심 카드 분실 시 기존 번호 유지 및 재발급 (SIM Swap)을 위한 통신사 행정 절차",
     "region": "필리핀 전역",
     "category_main": "info",
     "category_sub": "comm",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "target_name": "필리핀 정보통신부 (DICT) 개인용 디지털 서명 (PNPKI) 발급 및 전자 행정 서비스 활용법",
