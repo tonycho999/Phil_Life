@@ -53,20 +53,25 @@ export default function MainHeader() {
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const usdRes = await fetch("https://api.frankfurter.app/latest?from=USD&to=KRW");
-        const usdData = await usdRes.json();
-        const phpRes = await fetch("https://api.frankfurter.app/latest?from=PHP&to=KRW");
-        const phpData = await phpRes.json();
+        const res = await fetch("https://open.er-api.com/v6/latest/USD");
+        if (!res.ok) throw new Error("환율 데이터를 불러올 수 없습니다.");
+        
+        const data = await res.json();
+
+        const usdToKrw = data.rates.KRW;
+        const phpToKrw = data.rates.KRW / data.rates.PHP;
 
         setExchange({
-          usd: usdData.rates.KRW,
-          php: phpData.rates.KRW,
-          loading: false
+          usd: usdToKrw,
+          php: phpToKrw,
+          loading: false // 계산이 끝나면 로딩 창을 없앱니다!
         });
       } catch (e) {
         console.error("환율 로딩 실패", e);
+        setExchange({ usd: 0, php: 0, loading: false }); 
       }
     };
+
 
     const fetchWeather = async () => {
       if (!WEATHER_API_KEY) {
