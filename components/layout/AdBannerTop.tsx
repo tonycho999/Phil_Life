@@ -12,9 +12,38 @@ export default function AdBannerTop() {
   // =========================================================================
   // 🎨 [1] 사용할 광고 배너들을 미리 만들어 둡니다.
   // =========================================================================
+  
+  // ✈️ 1. 키위닷컴 (Kiwi.com) 배너 - 메인 페이지용
+  const kiwiBanner = (
+    <a 
+      href="https://invl.me/clnkz1r?aff_sub=phcafe24" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="block w-full min-w-full h-[90px] mb-6 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden border border-teal-600 bg-gradient-to-r from-teal-500 to-cyan-500 shrink-0"
+    >
+      <div className="flex items-center justify-between px-6 h-full">
+        <div className="flex flex-col justify-center text-white min-w-0 h-full">
+          <span className="text-xs md:text-sm font-bold text-teal-100 mb-0.5 animate-pulse">
+            ✈️ 전 세계 최저가 항공권 검색
+          </span>
+          <h3 className="text-base md:text-xl font-black tracking-tight truncate">
+            Kiwi.com 특가 항공권 지금 바로 예약하기!
+          </h3>
+          <p className="text-xs md:text-sm text-white/90 mt-0.5 hidden md:block truncate">
+            숨겨진 특가와 최적의 환승 루트로 여행 경비를 아껴보세요 👉
+          </p>
+        </div>
+        <div className="shrink-0 bg-white text-teal-600 font-black px-4 py-2 md:px-5 md:py-2.5 rounded-full text-sm md:text-base whitespace-nowrap shadow-inner hover:bg-gray-50 transition ml-4">
+          최저가 검색 〉
+        </div>
+      </div>
+    </a>
+  );
+
+  // 🛒 2. 쇼피 (Shopee) 배너 - 링크 수정됨
   const shopeeBanner = (
     <a 
-      href="https://invl.me/clnd1iv" 
+      href="https://invl.me/clnjo20" 
       target="_blank" 
       rel="noopener noreferrer"
       className="block w-full min-w-full h-[90px] mb-6 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden border border-orange-600 bg-gradient-to-r from-orange-500 to-red-500 shrink-0"
@@ -42,11 +71,11 @@ export default function AdBannerTop() {
   // 🎯 [2] 게시판별로 어떤 배너를 띄울지 매칭해 줍니다.
   // =========================================================================
   const adData: any = {
-    main: shopeeBanner,      
+    main: kiwiBanner,       // 메인에만 키위닷컴 지정
     news: shopeeBanner,      
     info: shopeeBanner,      
     community: shopeeBanner, 
-    travel: shopeeBanner,    
+    travel: shopeeBanner,    // 나중에 여행 게시판만 kiwiBanner 등으로 쉽게 변경 가능!
     default: shopeeBanner,   
   };
 
