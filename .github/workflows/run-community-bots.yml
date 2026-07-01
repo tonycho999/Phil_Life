@@ -2,10 +2,10 @@ name: 🗣️ 가상 유저 소통 봇 자동 실행기
 
 on:
   workflow_dispatch: # 수동 실행 버튼
-  schedule:
+#  schedule:
     # 필리핀 시간(UTC+8) 기준 09:00 ~ 23:00 매시간 정각 실행
     # UTC 기준으로는 01:00 ~ 15:00 입니다.
-    - cron: '0 1-15 * * *'
+#    - cron: '0 1-15 * * *'
 
 jobs:
   run-community-bots:
