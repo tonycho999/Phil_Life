@@ -1,9 +1,8 @@
 // components/layout/AdBannerLeft.tsx
-
 export default function AdBannerLeft() {
   return (
-    <div className="hidden lg:block relative w-[160px]">
-      {/* sticky를 유지하여 스크롤 시에도 광고가 따라다니게 합니다. */}
+    // h-full: 부모 높이만큼 늘어나야 안쪽 sticky가 스크롤을 따라 움직일 수 있습니다.
+    <div className="relative w-[160px] h-full">
       <a
         href="https://tolt.link/assdqxw"
         target="_blank"
@@ -18,9 +17,7 @@ export default function AdBannerLeft() {
           <h3 className="text-3xl font-black tracking-tighter mb-6 text-white">
             SPEAK
           </h3>
-
           <div className="w-8 h-0.5 bg-cyan-400 mx-auto mb-8"></div>
-
           <p className="text-sm font-medium leading-loose break-keep text-zinc-300">
             사람보다 편한<br />
             1:1 AI 영어회화<br />
