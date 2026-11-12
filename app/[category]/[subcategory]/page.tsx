@@ -1,9 +1,9 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { MENUS } from "@/lib/constants";
 import WriteButton from "@/components/ui/WriteButton";
-import PostList from "@/components/board/PostList"; 
-// ★ 추가됨: 방금 만든 똑똑한 페이지네이션 컴포넌트 불러오기!
+import PostList from "@/components/board/PostList";
 import Pagination from "@/components/common/Pagination";
 
 export const dynamic = "force-dynamic";
@@ -15,16 +15,23 @@ type PageProps = {
 };
 
 export default async function BoardPage({ params, searchParams }: PageProps) {
+  // ★ 1. 먼저 MENUS에 있는 게시판인지 확인 (DB 조회 없음)
+  const currentMenu = MENUS.find((m: any) => m.id === params.category);
+  const currentSub = currentMenu?.sub?.find((s: any) => s.id === params.subcategory);
+
+  // ★ 2. 없는 게시판(.git/config 같은 봇 주소)이면 DB 조회 없이 바로 404
+  if (!currentMenu || !currentSub) {
+    notFound();
+  }
+
   const supabase = createClient();
-  const page = Number(searchParams.page) || 1;
+
+  const page = Math.max(1, Number(searchParams.page) || 1);
   const pageSize = 15;
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  const currentMenu = MENUS.find((m: any) => m.id === params.category);
-  const currentSub = currentMenu?.sub.find((s: any) => s.id === params.subcategory);
-
-  // 1. 권한 확인 (DB)
+  // 3. 권한 확인 (DB)
   const { data: boardConfig } = await supabase
     .from("boards")
     .select("write_level")
@@ -34,14 +41,14 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
 
   const requiredLevel = boardConfig?.write_level ?? 1;
 
-  // 2. 글 조회
+  // 4. 글 조회
   let query = supabase
     .from("posts")
-    .select("*, profiles(nickname, level), comments(count)", { count: "exact" }) 
+    .select("*, profiles(nickname, level), comments(count)", { count: "exact" })
     .eq("category_main", params.category)
-    .eq("category_sub", params.subcategory) // 소분류 일치
+    .eq("category_sub", params.subcategory)
     .neq("is_hidden", true)
-    .order("is_pinned", { ascending: false }) 
+    .order("is_pinned", { ascending: false })
     .order("created_at", { ascending: false })
     .range(from, to);
 
@@ -60,26 +67,25 @@ export default async function BoardPage({ params, searchParams }: PageProps) {
           <h2 className="text-xl font-bold text-gray-800">{currentSub?.label || "게시판"}</h2>
           <p className="text-xs text-gray-500 mt-1">{currentMenu?.label} &gt; {currentSub?.label}</p>
         </div>
-        
+
         {/* 글쓰기 버튼 */}
-        <WriteButton 
-          requiredLevel={requiredLevel} 
+        <WriteButton
+          requiredLevel={requiredLevel}
           href={`/post/write?main=${params.category}&sub=${params.subcategory}`}
         />
       </div>
 
       {/* 게시글 리스트 */}
-      <PostList 
-        posts={posts || []} 
-        showSubCategory={false} // 소분류 화면이니까 제목 옆 [카테고리] 숨김
+      <PostList
+        posts={posts || []}
+        showSubCategory={false}
         totalCount={count || 0}
         currentPage={page}
         pageSize={pageSize}
       />
 
-      {/* ★ 핵심 수정: 무식하게 1부터 끝까지 찍어내던 코드를 지우고, 방금 만든 스마트한 페이지네이션으로 교체! */}
+      {/* 페이지네이션 */}
       <Pagination totalPages={totalPages} currentPage={page} />
-      
     </div>
   );
 }
