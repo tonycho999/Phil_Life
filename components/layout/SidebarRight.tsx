@@ -1,11 +1,25 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
 
-// ★ 캐시 방지: 누군가 새 글이나 댓글을 쓰면 즉시 사이드바에 반영되도록 합니다.
-export const dynamic = "force-dynamic";
+// ★ 사이드바 전용 클라이언트: 로그인 정보 없이 공개 데이터만 조회합니다.
+//    조회 결과를 60초 동안 캐시해서 DB 호출 횟수를 크게 줄입니다.
+//    (기존 export const dynamic = "force-dynamic"은 컴포넌트에서 효과가 없어 삭제)
+function createCachedClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      auth: { persistSession: false, autoRefreshToken: false },
+      global: {
+        fetch: (input, init) =>
+          fetch(input, { ...init, next: { revalidate: 60 } } as RequestInit),
+      },
+    }
+  );
+}
 
 export default async function SidebarRight() {
-  const supabase = createClient();
+  const supabase = createCachedClient();
 
   // 1. 최신글 5개 가져오기 (숨김 처리된 글 제외)
   const { data: recentPosts } = await supabase
@@ -15,22 +29,22 @@ export default async function SidebarRight() {
     .order("created_at", { ascending: false })
     .limit(5);
 
-  // 2. 최신 댓글 5개 가져오기 (첨부해주신 스크린샷의 content 컬럼 적용)
+  // 2. 최신 댓글 5개 가져오기 (숨김 처리된 댓글 제외)
   const { data: recentComments } = await supabase
     .from("comments")
     .select("id, content, post_id, created_at")
-    .neq("is_hidden", true) // 숨김 처리된 댓글 제외
+    .neq("is_hidden", true)
     .order("created_at", { ascending: false })
     .limit(5);
 
   return (
     <aside className="space-y-6">
-      
-      {/* 배너 이미지 추가 (새 창으로 열기, 경로 수정됨) */}
-      <a 
-        href="https://tonycho.pages.dev/" 
-        target="_blank" 
-        rel="noopener noreferrer" 
+
+      {/* 배너 이미지 (새 창으로 열기) */}
+      <a
+        href="https://tonycho.pages.dev/"
+        target="_blank"
+        rel="noopener noreferrer"
         className="block rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:opacity-90 transition-opacity"
       >
         <img src="/images/tony_link.png" alt="광고 배너" className="w-full h-auto" />
@@ -88,7 +102,6 @@ export default async function SidebarRight() {
           )}
         </ul>
       </div>
-
     </aside>
   );
 }
